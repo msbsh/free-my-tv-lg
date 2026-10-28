@@ -2,28 +2,24 @@
  * Free My TV's service on LG webOS: one call to the TV's remote control API (127.0.0.1:3000) for the web app.
  * Newer webOS gives each app's page its own origin (file://io.freemytv-webos), and the API closes any connection
  * that isn't from file:// ("invalid origin"); from here the handshake says file://.
- * Plain ES5 with Node's net only: older webOS ships an old Node.
+ * Node's net only: no packages to ship.
  */
 var net = require('net');
 var Service = require('webos-service');
 
 var service = new Service(require('./package.json').name);
 
-function buffer(x) {   // Buffer.from is missing before Node 4.5
-  return Buffer.from ? Buffer.from(x) : new Buffer(x);
-}
-
 /** A client's text frame: masked, as the protocol asks. */
 function frame(text) {
-  var data = buffer(text), n = data.length;
-  var mask = buffer([Math.random() * 256 | 0, Math.random() * 256 | 0, Math.random() * 256 | 0, Math.random() * 256 | 0]);
+  var data = Buffer.from(text), n = data.length;
+  var mask = Buffer.from([Math.random() * 256 | 0, Math.random() * 256 | 0, Math.random() * 256 | 0, Math.random() * 256 | 0]);
   for (var i = 0; i < n; i++) data[i] ^= mask[i % 4];
-  return Buffer.concat([buffer(n < 126 ? [0x81, 0x80 | n] : [0x81, 0xfe, n >> 8, n & 0xff]), mask, data]);
+  return Buffer.concat([Buffer.from(n < 126 ? [0x81, 0x80 | n] : [0x81, 0xfe, n >> 8, n & 0xff]), mask, data]);
 }
 
 /** done({clientKey, payload}), {refused: true} when the person said no on the TV, or null. */
 function call(uri, clientKey, done) {
-  var socket = net.connect(3000, '127.0.0.1'), buf = buffer([]), open = false, text = '', finished = false;
+  var socket = net.connect(3000, '127.0.0.1'), buf = Buffer.from([]), open = false, text = '', finished = false;
   var timer = setTimeout(function () { finish(null); }, 90000);   // time to answer the TV's prompt
   function finish(result) {
     if (finished) return;

@@ -4,7 +4,7 @@
  * a language needs another word. Text built at runtime is a pattern with named placeholders: trf('{n} min ago', {n: 12});
  * a count is plural('plural|one:{n} season|other:{n} seasons', 3); a date or time is formatDate('format|h:mm a', at).
  * tools/translate.py keeps the catalogues in step with this code.
- * Written for the Chromium of older TVs (webOS 3): ES5, and Intl only where it's there.
+ * webOS 6 runs Chromium 79: Intl has plural rules and formatToParts, but no DisplayNames yet (NAMES).
  */
 var I18N = (function () {
   'use strict';
@@ -22,26 +22,6 @@ var I18N = (function () {
     nl: 'Nederlands', pl: 'Polski', sv: 'Svenska', da: 'Dansk', nb: 'Norsk bokmål', fi: 'Suomi', cs: 'Čeština',
     ro: 'Română', tr: 'Türkçe', ru: 'Русский', uk: 'Українська', el: 'Ελληνικά', ja: '日本語', ko: '한국어',
     'zh-CN': '简体中文', 'zh-TW': '繁體中文', hi: 'हिन्दी', id: 'Indonesia', vi: 'Tiếng Việt', th: 'ไทย'};
-
-  /**
-   * The CLDR plural category of a whole number, for TVs without Intl.PluralRules (Chromium before 63). Only the
-   * languages whose catalogues use more than "one" and "other" need a rule; the rest are one for 1, else other.
-   */
-  var PLURALS = {
-    ru: slavic,
-    uk: slavic,
-    pl: function (n) {
-      var t = n % 10, h = n % 100;
-      return n === 1 ? 'one' : t >= 2 && t <= 4 && (h < 12 || h > 14) ? 'few' : 'many';
-    },
-    cs: function (n) { return n === 1 ? 'one' : n >= 2 && n <= 4 ? 'few' : 'other'; },
-    ro: function (n) { var h = n % 100; return n === 1 ? 'one' : n === 0 || (h >= 1 && h <= 19) ? 'few' : 'other'; }
-  };
-
-  function slavic(n) {
-    var t = n % 10, h = n % 100;
-    return t === 1 && h !== 11 ? 'one' : t >= 2 && t <= 4 && (h < 12 || h > 14) ? 'few' : 'many';
-  }
 
   /** The text for this English key in the current language (the English itself when there is none). */
   function tr(english) {
@@ -75,9 +55,7 @@ var I18N = (function () {
   }
 
   function pluralOf(n) {
-    if (pluralRules) return pluralRules.select(n);
-    var rule = PLURALS[base(lang)];
-    return rule ? rule(Math.abs(n)) : n === 1 ? 'one' : 'other';
+    return pluralRules ? pluralRules.select(n) : n === 1 ? 'one' : 'other';
   }
 
   // MARK: - Dates and times, from the catalogues' SimpleDateFormat patterns
@@ -170,12 +148,10 @@ var I18N = (function () {
     return rest;
   }
 
-  /** AM or PM in the language ("오후" in Korean), where the TV's Intl can say it. */
+  /** AM or PM in the language ("오후" in Korean). */
   function dayPeriod(d, loc) {
-    try {
-      var parts = new Intl.DateTimeFormat(loc, {hour: 'numeric', hour12: true}).formatToParts(d);
-      for (var i = 0; i < parts.length; i++) if (parts[i].type === 'dayPeriod') return parts[i].value;
-    } catch (e) { /* older Chromium: no formatToParts */ }
+    var parts = new Intl.DateTimeFormat(loc, {hour: 'numeric', hour12: true}).formatToParts(d);
+    for (var i = 0; i < parts.length; i++) if (parts[i].type === 'dayPeriod') return parts[i].value;
     return d.getHours() < 12 ? 'AM' : 'PM';
   }
 

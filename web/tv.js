@@ -2,21 +2,13 @@
  * The TV's side of the web home screen: its apps, opening one, its inputs, its settings, the Back key, its time zone.
  *  - LG webOS: the TV's service bus (Luna), the same calls LG's launcher makes.
  *  - A desktop browser: a stand-in with sample apps, so the screen can be previewed and tested on a computer.
- * Plain ES5: older TVs run a Chromium from 2015-2017 (webOS 3 and 4).
+ * For webOS 6 and newer (Chromium 79).
  */
 var TV = (function () {
   'use strict';
 
   var webos = typeof window.PalmServiceBridge !== 'undefined';
   var calls = [];   // a bridge is collected if nothing holds it before its reply arrives
-  // TVs under 2 GB that draw the page at twice its size repaint every shadow on every frame of a focus animation
-  // (an LG on webOS TV Lite 10, MT5889, 1.3 GB, ratio 2: 23-28 fps moving along the shelf, 60 with lite; shadows off
-  // alone, 45): home.css turns them off. deviceMemory rounds down to 1 under 2 GB on webOS 5+, where 1.5 GB TVs at a
-  // ratio of 1 run smoothly.
-  if (webos && navigator.deviceMemory && navigator.deviceMemory <= 1 && (window.devicePixelRatio || 1) > 1) {
-    document.documentElement.className += ' lite';
-  }
-
   /** One Luna call; done(result) with null on failure. */
   function luna(uri, params, done) {
     if (!webos) {
@@ -248,13 +240,6 @@ var TV = (function () {
         // Denied to Developer Mode apps (webOS 6 and newer): once the TV has allowed the remote control API, it lists
         // every app with its icon; until then, the known apps the TV says it has, while the TV asks once (an answer
         // only counts from the next load on, and a "no" isn't asked again).
-        // webOS 3 has neither getAppLoadStatus nor a remote control API that takes file:// pages ("invalid origin"):
-        // there the list comes from the computer (webos/apps.py), built into the LG package.
-        var built = (window.CONFIG && CONFIG.installedApps) || [];
-        if (built.length) {
-          done(built.filter(function (a) { return a.id !== self && !HIDDEN.test(a.id); }));
-          return;
-        }
         var paired = false, refused = false;
         try { paired = !!localStorage.getItem(SSAP_KEY); refused = !!localStorage.getItem(SSAP_REFUSED); } catch (e) {}
         if (paired) {

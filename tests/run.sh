@@ -14,12 +14,6 @@ only_package=false
 if [ "${1:-}" = "--package" ]; then only_package=true; shift; fi
 if [ "${1:-}" = "--" ]; then shift; fi
 
-# A TV's own app list (webos/apps.py) would go into the package and the screen: the baseline is without one.
-if [ -f webos-apps.local.json ]; then
-  echo "webos-apps.local.json is here: move it away while the tests run." >&2
-  exit 1
-fi
-
 # The build leaves FreeMyTV-webos.ipk where your own build leaves yours (with your city and key): keep yours.
 kept="$(mktemp -d)"
 if [ -f FreeMyTV-webos.ipk ]; then cp FreeMyTV-webos.ipk "$kept/"; fi
