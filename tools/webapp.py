@@ -1,6 +1,6 @@
 """What the LG (webos/build.py) and Samsung (tizen/build.py) packages share: the settings and the web app's files.
 
-The settings come from config.properties, the same file as the Android build. --generic leaves it out (the GitHub
+The settings come from config.properties. --generic leaves it out (the GitHub
 release is built that way): no TMDB key, and the TV's time zone picks the city, the currency and the region.
 """
 import json

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
-"""Translation catalogues for the Android app and the LG/Samsung web app (assets/i18n/<lang>.json).
+"""Translation catalogues for the LG web app (assets/i18n/<lang>.json).
 
-    python3 tools/translate.py                 # extract en.json from the code, report what each language lacks
+    python3 tools/translate.py                 # extract en.json from web/, report what each language lacks
     python3 tools/translate.py --fill          # also translate the missing strings (needs ANTHROPIC_API_KEY)
     python3 tools/translate.py --fill --lang pt   # a hand-translated language (HAND): filled only when named
     python3 tools/translate.py --fill --lang fr --model claude-haiku-5-5
@@ -9,13 +9,12 @@
     python3 tools/translate.py --prune         # also remove keys the code no longer uses
     python3 tools/translate.py --new fr        # start a catalogue for a new language (then --fill --lang fr)
 
-The English text in the code is the source: every Ui.tr("...") / Ui.trf("...", ...) / Ui.plural("...", n) call (the
-first argument), plus Ui.datePattern("format|..."), and in web/ the same calls without "Ui." (tr, trf, plural and
-formatDate; tools/webapp.py packs the keys the web app uses into its i18n.js). en.json maps each key to its English
-text: a key "context|Text" is "Text" in a given context (a word that needs another translation there), and "{name}"
-is a placeholder filled at runtime. A key "plural|one:{n} season|other:{n} seasons" (Ui.plural) is a count: each language
-gives one form per plural category it uses (CLDR: zero, one, two, few, many, other). Each <lang>.json maps the same keys
-to that language.
+The English text in web/ is the source: every tr("..."), trf("...", ...), plural("...", n) and formatDate("...", at)
+call (the first argument); tools/webapp.py packs the keys into the app's i18n.js. en.json maps each key to its
+English text: a key "context|Text" is "Text" in a given context (a word that needs another translation there), and
+"{name}" is a placeholder filled at runtime. A key "plural|one:{n} season|other:{n} seasons" is a count: each language
+gives one form per plural category it uses (CLDR: zero, one, two, few, many, other). A key "format|..." holds a
+SimpleDateFormat pattern. Each <lang>.json maps the same keys to that language.
 
 --fill sends only the strings (with their context word; no code, keys or settings) to the Anthropic Messages API,
 and only the ones a catalogue lacks (or whose placeholders don't match the English). Every translation it gets back
@@ -34,13 +33,11 @@ import urllib.error
 import urllib.request
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-SRC = os.path.join(ROOT, "app", "src")
 WEB = os.path.join(ROOT, "web")
 I18N = os.path.join(ROOT, "assets", "i18n")
 CACHE = os.path.join(ROOT, "tools", ".i18n-cache.json")   # translations made with --fill, by hash (not committed)
 DEFAULT_MODEL = "claude-haiku-5-5"
 HAND = {"pt", "es", "de", "ru", "th", "tr"}   # hand translations: --fill leaves them to a person unless --lang names one
-CALL = re.compile(r"\bUi\.(trf?|plural|datePattern)\(")
 WEB_CALL = re.compile(r"(?:(?<![\w.$])|(?<=\bI18N\.))(trf?|plural|formatDate)\(")
 PLURAL_FORM = re.compile(r"^(zero|one|two|few|many|other):")
 PLACEHOLDER = re.compile(r"\{[a-zA-Z_][a-zA-Z_0-9]*\}")
@@ -48,7 +45,7 @@ PLACEHOLDER = re.compile(r"\{[a-zA-Z_][a-zA-Z_0-9]*\}")
 
 # MARK: - Extraction
 
-def java_args(text, start):
+def call_args(text, start):
     """Splits the arguments of the call whose '(' ends at start; returns (list of raw args, end index)."""
     args, depth, i, cur = [], 0, start, []
     while i < len(text):
@@ -84,15 +81,14 @@ def java_args(text, start):
     raise ValueError("unbalanced call")
 
 
-LITERAL = re.compile(r'"((?:[^"\\]|\\.)*)"')
 JS_LITERAL = re.compile(r'"((?:[^"\\]|\\.)*)"|\'((?:[^\'\\]|\\.)*)\'')
 
 
-def java_string(arg, literal=LITERAL):
+def string_value(arg):
     """The value of an argument made only of string literals joined with +, else None."""
     rest, out = arg.strip(), []
     while rest:
-        m = literal.match(rest)
+        m = JS_LITERAL.match(rest)
         if not m:
             return None
         out.append(next(g for g in m.groups() if g is not None))
@@ -106,29 +102,8 @@ def java_string(arg, literal=LITERAL):
                   else {"n": "\n", "t": "\t"}.get(m.group(1), m.group(1)), raw)
 
 
-def calls():
-    """Every translatable call in the code: yields (file, line, kind, [argument values or None])."""
-    yield from java_calls()
-    yield from web_calls()
-
-
-def java_calls():
-    for dirpath, _, files in os.walk(SRC):
-        for name in sorted(files):
-            if not name.endswith(".java"):
-                continue
-            path = os.path.join(dirpath, name)
-            text = open(path, encoding="utf-8").read()
-            for m in CALL.finditer(text):
-                line = text.count("\n", 0, m.start()) + 1
-                prefix = text[text.rfind("\n", 0, m.start()) + 1:m.start()].lstrip()
-                if prefix.startswith(("*", "//", "/*")):
-                    continue   # an example in a comment
-                args, _ = java_args(text, m.end())
-                yield os.path.relpath(path, ROOT), line, m.group(1), [java_string(a) for a in args]
-
-
 def web_calls():
+    """Every translatable call in web/: yields (file, line, kind, [argument values or None])."""
     for name in sorted(os.listdir(WEB)):
         if not name.endswith(".js") or name == "strings.js":   # strings.js is where the calls are made, not used
             continue
@@ -139,8 +114,8 @@ def web_calls():
             prefix = text[text.rfind("\n", 0, m.start()) + 1:m.start()].lstrip()
             if prefix.startswith(("*", "//", "/*")) or prefix.endswith("function "):
                 continue
-            args, _ = java_args(text, m.end())
-            yield os.path.relpath(path, ROOT), line, m.group(1), [java_string(a, JS_LITERAL) for a in args]
+            args, _ = call_args(text, m.end())
+            yield os.path.relpath(path, ROOT), line, m.group(1), [string_value(a) for a in args]
 
 
 def web_keys():
@@ -161,7 +136,7 @@ def english_of(key):
 def extract():
     """{key: English text} from the code; warns about calls whose text isn't a literal."""
     keys = {}
-    for path, line, kind, args in calls():
+    for path, line, kind, args in web_calls():
         key = args[0]
         if key is None:
             print(f"warning: {path}:{line}: {kind} with text that isn't a string literal", file=sys.stderr)
@@ -282,11 +257,11 @@ Rules:
 - Friendly, plain, everyday words, like the TV's own menus in {name}. Address the viewer informally if the language usually does on TV.
 - Keep every placeholder like {{n}} or {{app}} exactly as written (they are filled in at runtime); move them where the grammar needs them.
   {{ago}} is already a full phrase in {name} ("12 min ago"), {{list}} a comma-separated list of things, {{error}} an error message,
-  {{app}} an app's name, {{time}} a clock time, {{mode}} "Free My TV" or "Original".
+  {{app}} an app's name, {{time}} a clock time.
 - A "context" note says where the string appears. Context "format" means the text is a java.text.SimpleDateFormat pattern: give the usual pattern for {name} instead of a translation.
 - Avoid plural agreement with a number placeholder when the language needs several plural forms: use a form that reads right for any number (an abbreviation, or "label: {{n}}").
 - Context "plural" means the text is a count in plural forms, "one:…|other:…": answer with one form per Unicode CLDR plural category {name} uses for whole numbers, joined by "|" and always including "other" (Russian: "one:{{n}} сезон|few:{{n}} сезона|many:{{n}} сезонов|other:{{n}} сезона"; Japanese: "other:{{n}}シーズン").
-- Keep product and brand names (Free My TV, Netflix, YouTube, TMDB, HDMI, Android, Claude Code) as they are.
+- Keep product and brand names (Free My TV, Netflix, YouTube, TMDB, HDMI) as they are.
 Answer with a JSON object only, mapping each id to its translation."""
 
 

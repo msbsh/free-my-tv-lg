@@ -17,7 +17,6 @@
   "vendor": "Free My TV",
   "version": "1.2.0"
  },
- "catalogues": "70f0e572f1b2523c172f1df5d836135e8e3040797f5db06866441d2426e3a378",
  "control": {
   "Architecture": "all",
   "Description": "A fast, ad-free home screen.",

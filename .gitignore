@@ -1,16 +1,14 @@
-# Your settings and signing key stay on your machine
+# Your settings and keys stay on your machine
 config.properties
 # The tests' settings: a fake key, a fixed city
 !tests/fixtures/config.properties
 *.keystore
-*.idsig
 # An LG TV's app list and icons (webos/apps.py)
 webos-apps.local.json
 webos-icons.local/
 
 # Build output
 out/
-*.apk
 *.ipk
 !docs/webos/FreeMyTV-webos-*.ipk
 *.wgt

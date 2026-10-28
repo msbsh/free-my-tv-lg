@@ -6,7 +6,7 @@
     python3 webos/build.py --config other.properties
     python3 webos/build.py --generic  # without config.properties: the TV's time zone picks the city (releases)
 
-Reads config.properties (the same file as the Android build), puts the web home screen (web/), the symbols,
+Reads config.properties, puts the web home screen (web/), the symbols,
 font, catalogues and coin logos (assets/) and webos/appinfo.json together, and packs them the way LG's
 ares-package does (an ar archive with control.tar.gz and data.tar.gz), so no LG tools are needed. Python 3 only.
 """

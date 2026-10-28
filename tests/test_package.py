@@ -5,8 +5,9 @@
     python3 tests/test_package.py --update   # write the baseline from it (only on the code it is meant to describe)
 
 Every file the baseline lists must come out byte for byte the same, unless CHANGED, REMOVED or ADDED below names it
-with the reason. The catalogues are compared by content (i18n.js names the folder they come from in a comment).
-Standard library only.
+with the reason. The texts are compared as the screen gets them (tests/baseline/i18n.json holds the catalogues the
+rework started from): every key web/ calls, in every language, through strings.js's fallback from "context|Text" to
+"Text". Standard library only.
 """
 import gzip
 import hashlib
@@ -20,6 +21,9 @@ import unittest
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 IPK = os.environ.get('FMTV_IPK', os.path.join(ROOT, 'tests', '.out', 'FreeMyTV-webos.ipk'))
 BASELINE = os.path.join(ROOT, 'tests', 'baseline', 'package.json')
+TEXTS = os.path.join(ROOT, 'tests', 'baseline', 'i18n.json')
+sys.path.insert(0, os.path.join(ROOT, 'tools'))
+import translate  # noqa: E402  (the keys web/ calls)
 
 # Files whose content may change, and why. Everything else in the baseline must stay byte for byte.
 CHANGED = {
@@ -83,6 +87,14 @@ def catalogues(i18n_js):
     return json.loads(text[start:].rstrip().rstrip(';'))
 
 
+def shown(catalogue, key):
+    """What strings.js's tr() shows for a key: its text, else the text of "Text" for "context|Text", else Text."""
+    if key in catalogue:
+        return catalogue[key]
+    plain = key.split('|', 1)[1] if '|' in key else key
+    return catalogue.get(plain, plain)
+
+
 def manifest(path):
     """What the baseline records of a package."""
     with open(path, 'rb') as f:
@@ -110,8 +122,7 @@ def manifest(path):
     return {
         'control': control,
         'files': files,
-        'catalogues': sha(json.dumps(catalogues(data[app_base + 'i18n.js']), sort_keys=True,
-                                     ensure_ascii=False).encode('utf-8')),
+        'catalogues': catalogues(data[app_base + 'i18n.js']),
         'appinfo': appinfo,
         'packageinfo': packageinfo,
         'service': service_files,
@@ -140,8 +151,15 @@ class Package(unittest.TestCase):
         for path in sorted(set(now) - set(base)):
             self.assertIn(path, ADDED, '%s is new in the package' % path)
 
-    def test_catalogues_unchanged(self):
-        self.assertEqual(self.now['catalogues'], self.base['catalogues'], 'the texts packed into i18n.js changed')
+    def test_texts_unchanged(self):
+        with open(TEXTS, encoding='utf-8') as f:
+            base = json.load(f)
+        now = self.now['catalogues']
+        self.assertEqual(sorted(now), sorted(base), 'languages added or gone')
+        keys = sorted({args[0] for _, _, _, args in translate.web_calls() if args and args[0] is not None})
+        for lang in sorted(base):
+            for key in keys:
+                self.assertEqual(shown(now[lang], key), shown(base[lang], key), '%s: %r reads differently' % (lang, key))
 
     def test_appinfo(self):
         base, now = self.base['appinfo'], self.now['appinfo']
@@ -174,7 +192,12 @@ if __name__ == '__main__':
     if '--update' in sys.argv:
         os.makedirs(os.path.dirname(BASELINE), exist_ok=True)
         with open(BASELINE, 'w', encoding='utf-8') as f:
-            json.dump(manifest(IPK), f, indent=1, sort_keys=True, ensure_ascii=False)
+            m = manifest(IPK)
+            texts = m.pop('catalogues')
+            json.dump(m, f, indent=1, sort_keys=True, ensure_ascii=False)
+            f.write('\n')
+        with open(TEXTS, 'w', encoding='utf-8') as f:
+            json.dump(texts, f, indent=1, sort_keys=True, ensure_ascii=False)
             f.write('\n')
         print('Wrote %s' % os.path.relpath(BASELINE, ROOT))
     else:
