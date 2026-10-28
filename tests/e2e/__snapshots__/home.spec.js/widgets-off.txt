@@ -18,7 +18,6 @@ div#stage
           "Movies"
         button.tab
           "Shows"
-      div#quotes
       div#buttons
         button.round
           span.sym
@@ -59,7 +58,7 @@ div#stage
             "Action · 1h 40m · Netflix"
       div#clock
         span.time
-          "10:02"
+          "10:01"
         span.date
           "Tuesday, October 20"
     div#platter
@@ -90,7 +89,7 @@ div#stage
       div.tile bg="linear-gradient(rgb(29, 185, 84), rgb(15, 122, 54))"
         div.word
           "Spotify"
-  div#drawer.layer
+  div#drawer.layer.bare
     div.row-title
       "Inputs"
     div.key.glass
@@ -187,18 +186,6 @@ div#stage
               "Next hours"
               span.chev
                 "›"
-          div.row
-            "Quotes widget"
-            div.toggle
-          div.row.dim
-            "Bitcoin"
-            div.toggle
-          div.row.dim
-            "Ethereum"
-            div.toggle
-          div.row.dim
-            "Solana"
-            div.toggle
           div.row
             "TMDB key"
             span.value

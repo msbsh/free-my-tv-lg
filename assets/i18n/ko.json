@@ -1,5 +1,4 @@
 {
- "24h change": "24시간 변동",
  "API Read Access Token or API Key": "API Read Access Token 또는 API Key",
  "About this TV": "이 TV 정보",
  "All Apps": "모든 앱",
@@ -15,9 +14,7 @@
  "Couldn't reach TMDB: {error}": "TMDB에 연결할 수 없음: {error}",
  "Couldn't search now: {error}": "지금은 검색할 수 없습니다: {error}",
  "Create an account at themoviedb.org.": "themoviedb.org에서 계정을 만드세요.",
- "Crypto": "암호화폐",
  "Dark": "어둡게",
- "Dollar": "달러",
  "Drizzle": "이슬비",
  "Explore": "둘러보기",
  "Firmware": "펌웨어",
@@ -52,7 +49,6 @@
  "Picks from": "추천 출처",
  "Picks per tab": "탭당 추천 수",
  "Press OK to watch on {app} · any other button to close": "OK를 눌러 {app}에서 시청 · 다른 버튼을 누르면 닫힘",
- "Quotes widget": "시세 위젯",
  "Rain": "비",
  "Remove": "삭제",
  "Remove the TMDB key?": "TMDB 키를 삭제할까요?",
@@ -99,13 +95,10 @@
  "light|Settings": "설정",
  "night|Clear": "맑음",
  "plural|one:{n} season|other:{n} seasons": "other:시즌 {n}개",
- "quotes|{ago}": "{ago}",
  "services|All": "모두",
  "services|Some": "일부",
  "shelf|Off": "끔",
  "unit|Automatic": "자동",
  "{h}h {m}m": "{h}시간 {m}분",
- "{m}m": "{m}분",
- "{n} h ago": "{n}시간 전",
- "{n} min ago": "{n}분 전"
+ "{m}m": "{m}분"
 }

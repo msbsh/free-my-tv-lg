@@ -1,5 +1,4 @@
 {
- "24h change": "μεταβολή 24 ωρών",
  "API Read Access Token or API Key": "API Read Access Token ή API Key",
  "About this TV": "Σχετικά με την τηλεόραση",
  "All Apps": "Όλες οι εφαρμογές",
@@ -15,9 +14,7 @@
  "Couldn't reach TMDB: {error}": "Δεν ήταν δυνατή η σύνδεση με το TMDB: {error}",
  "Couldn't search now: {error}": "Η αναζήτηση δεν είναι δυνατή τώρα: {error}",
  "Create an account at themoviedb.org.": "Δημιουργήστε λογαριασμό στο themoviedb.org.",
- "Crypto": "Κρυπτο",
  "Dark": "Σκούρο",
- "Dollar": "Δολάριο",
  "Drizzle": "Ψιχάλα",
  "Explore": "Εξερεύνηση",
  "Firmware": "Υλικολογισμικό",
@@ -52,7 +49,6 @@
  "Picks from": "Προτάσεις από",
  "Picks per tab": "Προτάσεις ανά καρτέλα",
  "Press OK to watch on {app} · any other button to close": "Πατήστε OK για να δείτε στο {app} · οποιοδήποτε άλλο κουμπί κλείνει",
- "Quotes widget": "Widget τιμών",
  "Rain": "Βροχή",
  "Remove": "Αφαίρεση",
  "Remove the TMDB key?": "Αφαίρεση του κλειδιού TMDB;",
@@ -99,13 +95,10 @@
  "light|Settings": "Ρυθμίσεις",
  "night|Clear": "Αίθριος",
  "plural|one:{n} season|other:{n} seasons": "one:{n} σεζόν|other:{n} σεζόν",
- "quotes|{ago}": "{ago}",
  "services|All": "Όλες",
  "services|Some": "Ορισμένες",
  "shelf|Off": "Ανενεργό",
  "unit|Automatic": "Αυτόματο",
  "{h}h {m}m": "{h} ώ {m} λ",
- "{m}m": "{m} λ",
- "{n} h ago": "πριν από {n} ώ.",
- "{n} min ago": "πριν από {n} λ."
+ "{m}m": "{m} λ"
 }

@@ -1,5 +1,4 @@
 {
- "24h change": "muutos 24 h",
  "API Read Access Token or API Key": "API Read Access Token tai API Key",
  "About this TV": "Tietoja tästä televisiosta",
  "All Apps": "Kaikki sovellukset",
@@ -15,9 +14,7 @@
  "Couldn't reach TMDB: {error}": "TMDB ei vastaa: {error}",
  "Couldn't search now: {error}": "Haku ei onnistu nyt: {error}",
  "Create an account at themoviedb.org.": "Luo tili osoitteessa themoviedb.org.",
- "Crypto": "Krypto",
  "Dark": "Tumma",
- "Dollar": "Dollari",
  "Drizzle": "Tihkusadetta",
  "Explore": "Tutki",
  "Firmware": "Laiteohjelmisto",
@@ -52,7 +49,6 @@
  "Picks from": "Ehdotukset palveluista",
  "Picks per tab": "Ehdotuksia per välilehti",
  "Press OK to watch on {app} · any other button to close": "Paina OK katsoaksesi palvelussa {app} · mikä tahansa muu painike sulkee",
- "Quotes widget": "Kurssiwidget",
  "Rain": "Sadetta",
  "Remove": "Poista",
  "Remove the TMDB key?": "Poistetaanko TMDB-avain?",
@@ -99,13 +95,10 @@
  "light|Settings": "Asetukset",
  "night|Clear": "Selkeää",
  "plural|one:{n} season|other:{n} seasons": "one:{n} kausi|other:{n} kautta",
- "quotes|{ago}": "{ago}",
  "services|All": "Kaikki",
  "services|Some": "Osa",
  "shelf|Off": "Pois",
  "unit|Automatic": "Automaattinen",
  "{h}h {m}m": "{h} h {m} min",
- "{m}m": "{m} min",
- "{n} h ago": "{n} h sitten",
- "{n} min ago": "{n} min sitten"
+ "{m}m": "{m} min"
 }

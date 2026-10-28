@@ -1,4 +1,4 @@
-// What the tests put around the home screen: the internet (TMDB, Open-Meteo, Binance), a fixed clock, and for the
+// What the tests put around the home screen: the internet (TMDB, Open-Meteo), a fixed clock, and for the
 // webOS runs a fake TV (Luna's PalmServiceBridge, PalmSystem, the remote control API's WebSocket).
 const path = require('path');
 const zlib = require('zlib');
@@ -93,10 +93,8 @@ function forecast(lat, lon) {
   };
 }
 
-const PRICES = {BTC: [61234.56, 60012.3], ETH: [2345.67, 2401.0], SOL: [145.2, 139.9], USDT: [0.93, 0.92]};
-
 /** Answers every request the page makes from the fixtures; anything else fails the test. Returns the log. */
-async function internet(page, clockAt) {
+async function internet(page) {
   const log = {requests: [], unexpected: [], pending: 0};
   const json = (route, body, status) => route.fulfill({status: status || 200, contentType: 'application/json',
     headers: {'Access-Control-Allow-Origin': '*'}, body: JSON.stringify(body)});
@@ -119,13 +117,6 @@ async function internet(page, clockAt) {
           {name: 'Hamburg', latitude: 53.55073, longitude: 9.99302, admin1: 'Hamburg', country: 'Germany'},
           {name: 'Hamburg', latitude: 40.55565, longitude: -75.98186, admin1: 'Pennsylvania', country: 'United States'},
           {name: 'Hamburg', latitude: 53.55073, longitude: 9.99302, admin1: 'Hamburg', country: 'Germany'}]} : {});
-      } else if (/^api\.binance\.(com|us)$/.test(url.host)) {
-        const symbols = JSON.parse(url.searchParams.get('symbols'));
-        const now = Date.parse(clockAt);
-        await json(route, symbols.map((s) => {
-          const p = PRICES[s.replace(/(USDT|EUR|BRL|USD)$/, '')] || [1, 1];
-          return {symbol: s, lastPrice: String(p[0]), openPrice: String(p[1]), closeTime: now};
-        }));
       } else if (url.host === 'api.tmdb.org') {
         await tmdb(route, url, json);
       } else {
@@ -277,7 +268,7 @@ async function open(page, {at = DAY, prefs = null, tv = null, storage = {}} = {}
       Object.keys(s).forEach((k) => localStorage.setItem(k, s[k]));
     }, start);
   }
-  const net = await internet(page, at);
+  const net = await internet(page);
   await page.goto(APP);
   await settle(page, net);
   return {net, errors, check: () => {
@@ -343,7 +334,7 @@ async function dom(page) {
   });
 }
 
-/** Home Settings, the TV's own keys and choices it keeps (not the cached forecast, prices and picks). */
+/** Home Settings, the TV's own keys and choices it keeps (not the cached forecast and picks). */
 async function storage(page) {
   return page.evaluate(() => {
     const out = {};

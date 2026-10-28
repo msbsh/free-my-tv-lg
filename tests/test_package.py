@@ -27,12 +27,13 @@ import translate  # noqa: E402  (the keys web/ calls)
 
 # Files whose content may change, and why. Everything else in the baseline must stay byte for byte.
 CHANGED = {
-    'index.html': 'the title names the fork',
+    'index.html': 'the title names the fork; no crypto quotes',
     'tv.js': 'Samsung and webOS 3-5 code removed, the fallback app id',
-    'home.js': 'Samsung code removed, the About row names the fork',
-    'data.js': 'the Intl fallback for Tizen 2 removed',
+    'home.js': 'Samsung code removed, the About row names the fork; no crypto, the weather above the inputs',
+    'data.js': 'the Intl fallback for Tizen 2 removed; no crypto prices',
     'strings.js': 'polyfills for Chromium before 79 removed',
-    'home.css': 'the lite mode for slow TVs removed',
+    'home.css': 'the lite mode for slow TVs removed; no crypto, the weather above the inputs',
+    'config.js': 'no show_crypto and currency',
     'appinfo.json': 'id, version, title and vendor of the fork (compared field by field below)',
     'service/service.js': 'the Buffer fallback for old Node removed',
     'service/package.json': 'the service id follows the app id',
@@ -42,7 +43,7 @@ CHANGED = {
 REMOVED = {
     'icons/deezer.svg': 'Samsung only', 'icons/fox.svg': 'Samsung only', 'icons/googleplay.svg': 'Samsung only',
     'icons/redbull.svg': 'Samsung only', 'icons/steam.svg': 'Samsung only', 'icons/ted.svg': 'Samsung only',
-    'icons/youtubekids.svg': 'Samsung only',
+    'icons/youtubekids.svg': 'Samsung only', 'coins.js': 'no crypto prices',
 }
 # Files that may be new, and why.
 ADDED = {

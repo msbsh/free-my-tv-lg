@@ -1,5 +1,4 @@
 {
- "24h change": "24時間の変動",
  "API Read Access Token or API Key": "API Read Access Token または API Key",
  "About this TV": "このテレビについて",
  "All Apps": "すべてのアプリ",
@@ -15,9 +14,7 @@
  "Couldn't reach TMDB: {error}": "TMDB に接続できません: {error}",
  "Couldn't search now: {error}": "今は検索できません：{error}",
  "Create an account at themoviedb.org.": "themoviedb.org でアカウントを作成します。",
- "Crypto": "暗号資産",
  "Dark": "ダーク",
- "Dollar": "ドル",
  "Drizzle": "霧雨",
  "Explore": "見つける",
  "Firmware": "ファームウェア",
@@ -52,7 +49,6 @@
  "Picks from": "おすすめの元",
  "Picks per tab": "タブごとのおすすめ数",
  "Press OK to watch on {app} · any other button to close": "OKで{app}で視聴 · ほかのボタンで閉じる",
- "Quotes widget": "相場ウィジェット",
  "Rain": "雨",
  "Remove": "削除",
  "Remove the TMDB key?": "TMDB キーを削除しますか?",
@@ -99,13 +95,10 @@
  "light|Settings": "設定",
  "night|Clear": "快晴",
  "plural|one:{n} season|other:{n} seasons": "other:{n}シーズン",
- "quotes|{ago}": "{ago}",
  "services|All": "すべて",
  "services|Some": "一部",
  "shelf|Off": "オフ",
  "unit|Automatic": "自動",
  "{h}h {m}m": "{h}時間{m}分",
- "{m}m": "{m}分",
- "{n} h ago": "{n}時間前",
- "{n} min ago": "{n}分前"
+ "{m}m": "{m}分"
 }

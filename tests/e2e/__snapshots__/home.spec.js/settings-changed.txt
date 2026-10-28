@@ -18,17 +18,6 @@ div#stage
           "Movies"
         button.tab
           "Shows"
-      div#quotes
-        span.q
-          svg
-            path
-          span
-            "61.2k"
-        span.q
-          svg
-            path
-          span
-            "145"
       div#buttons
         button.round
           span.sym
@@ -77,7 +66,7 @@ div#stage
             "Series · Sci-Fi & Fantasy · 4 seasons · Disney+"
       div#clock
         span.time
-          "10:04"
+          "10:03"
         span.date
           "Tuesday, October 20"
     div#platter
@@ -205,29 +194,6 @@ div#stage
         span
           span.sym
           "Sunset 6:12 PM"
-    div#prices.panel.glass
-      div.head
-        "Crypto"
-      div.side
-        "24h change"
-      div.coin
-        svg
-          path
-        span.n
-          "Bitcoin"
-        span.p
-          "€61,235"
-        span.c.up
-          "+2.0%"
-      div.coin
-        svg
-          path
-        span.n
-          "Solana"
-        span.p
-          "€145.20"
-        span.c.up
-          "+3.8%"
   div#apps.layer.sheet
     h2
     div.grid
@@ -288,18 +254,6 @@ div#stage
               "Next days"
               span.chev
                 "›"
-          div.row
-            "Quotes widget"
-            div.toggle.on
-          div.row
-            "Bitcoin"
-            div.toggle.on
-          div.row
-            "Ethereum"
-            div.toggle
-          div.row
-            "Solana"
-            div.toggle.on
           div.row
             "TMDB key"
             span.value

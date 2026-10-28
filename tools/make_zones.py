@@ -5,7 +5,7 @@
     python3 tools/make_zones.py path/to/zoneinfo
 
 The home screen uses it when it was built without a city (--generic): the TV's time zone ("America/Sao_Paulo")
-gives the weather's city, and its country (BR) the currency and TMDB region.
+gives the weather's city, and its country (BR) the TMDB region.
 zone.tab and tzdata.zi are in the public domain.
 """
 import json

@@ -1,5 +1,4 @@
 {
- "24h change": "24 saatlik değişim",
  "API Read Access Token or API Key": "API Read Access Token veya API Key",
  "About this TV": "Bu TV hakkında",
  "All Apps": "Tüm Uygulamalar",
@@ -15,9 +14,7 @@
  "Couldn't reach TMDB: {error}": "TMDB'ye ulaşılamadı: {error}",
  "Couldn't search now: {error}": "Şu anda aranamadı: {error}",
  "Create an account at themoviedb.org.": "themoviedb.org'da bir hesap oluşturun.",
- "Crypto": "Kripto",
  "Dark": "Koyu",
- "Dollar": "Dolar",
  "Drizzle": "Çiseleme",
  "Explore": "Keşfet",
  "Firmware": "Donanım yazılımı",
@@ -52,7 +49,6 @@
  "Picks from": "Önerilerin kaynağı",
  "Picks per tab": "Sekme başına öneri",
  "Press OK to watch on {app} · any other button to close": "{app} uygulamasında izlemek için OK'e basın · başka bir tuş kapatır",
- "Quotes widget": "Fiyat widget'ı",
  "Rain": "Yağmur",
  "Remove": "Kaldır",
  "Remove the TMDB key?": "TMDB anahtarı kaldırılsın mı?",
@@ -99,13 +95,10 @@
  "light|Settings": "Ayarlar",
  "night|Clear": "Açık",
  "plural|one:{n} season|other:{n} seasons": "one:{n} sezon|other:{n} sezon",
- "quotes|{ago}": "{ago}",
  "services|All": "Tümü",
  "services|Some": "Bazıları",
  "shelf|Off": "Kapalı",
  "unit|Automatic": "Otomatik",
  "{h}h {m}m": "{h} sa {m} dk",
- "{m}m": "{m} dk",
- "{n} h ago": "{n} sa önce",
- "{n} min ago": "{n} dk önce"
+ "{m}m": "{m} dk"
 }

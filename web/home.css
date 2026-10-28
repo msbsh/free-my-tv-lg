@@ -1,7 +1,7 @@
 /*
  * The home screen on a 1920 × 1080 stage: the title and tabs at the top
  * left, icon-only glass buttons at the top right, three picks, and the glass shelf at the bottom; ↓ on the shelf opens
- * the drawer (inputs, shortcuts, weather, prices). Light by day, dark from sunset to sunrise.
+ * the drawer (weather, then inputs and shortcuts). Light by day, dark from sunset to sunrise.
  * No backdrop-filter: blur is too heavy for the TVs' GPUs. Only transform and opacity animate.
  */
 @font-face {
@@ -131,27 +131,6 @@ button { font: inherit; color: inherit; background: none; border: 0; padding: 0;
 .night #title, .night .tab.on { color: #F5F5F7; }
 .night .tab { color: rgba(245, 245, 247, 0.62); }
 .night .tab.focus { color: #1D1D1F; box-shadow: 0 8px 26px rgba(0, 0, 0, 0.4); }
-
-/* Crypto quotes at the right end of the tab row: a quiet detail. */
-#quotes {
-  position: absolute;
-  right: 80px;
-  top: 178px;
-  height: 28px;
-  font-size: 21px;
-  line-height: 28px;
-  color: #8E8E93;
-  white-space: nowrap;
-  -webkit-transition: opacity 0.17s;
-  transition: opacity 0.17s;
-  -webkit-font-feature-settings: 'tnum';
-  font-feature-settings: 'tnum';
-}
-#quotes .q { display: inline-block; margin-left: 24px; }
-#quotes svg { width: 15px; height: 15px; vertical-align: -1px; margin-right: 6px; fill: rgba(142, 142, 147, 0.7); }
-#quotes.hide { opacity: 0; }
-.night #quotes { color: rgba(245, 245, 247, 0.62); }
-.night #quotes svg { fill: rgba(245, 245, 247, 0.55); }
 
 /* Live TV, HDMI Inputs and Settings: glass circles; the focused one turns white, with its name below. */
 .round {
@@ -389,9 +368,9 @@ button { font: inherit; color: inherit; background: none; border: 0; padding: 0;
 .more.back { -webkit-transform: scaleX(-1); transform: scaleX(-1); }
 .night .more { color: rgba(255, 255, 255, 0.8); }
 
-/* MARK: - Drawer: inputs and shortcuts, weather, prices */
+/* MARK: - Drawer: the weather card, then the inputs and shortcuts (up in its place when the card is off) */
 
-.row-title { position: absolute; top: 494px; font-size: 25px; font-weight: 600; color: #6E6E73; white-space: nowrap; }
+.row-title { position: absolute; top: 836px; font-size: 25px; font-weight: 600; color: #6E6E73; white-space: nowrap; }
 .night .row-title { color: rgba(255, 255, 255, 0.7); }
 
 .glass {
@@ -407,7 +386,7 @@ button { font: inherit; color: inherit; background: none; border: 0; padding: 0;
 
 .key {
   position: absolute;
-  top: 540px;
+  top: 882px;
   height: 126px;
   border-radius: 20px;
   text-align: center;
@@ -422,8 +401,10 @@ button { font: inherit; color: inherit; background: none; border: 0; padding: 0;
 .night .key { color: rgba(255, 255, 255, 0.95); }
 .night .key.off { color: rgba(255, 255, 255, 0.42); }
 .night .key.focus { color: #1C1C1E; }
+#drawer.bare .row-title { top: 494px; }
+#drawer.bare .key { top: 540px; }
 
-.panel { position: absolute; top: 708px; height: 300px; border-radius: 30px; overflow: hidden; color: #1D1D1F; }
+.panel { position: absolute; top: 494px; height: 300px; border-radius: 30px; overflow: hidden; color: #1D1D1F; }
 .night .panel { color: #F5F5F7; }
 .panel .head { position: absolute; left: 34px; top: 30px; font-size: 25px; font-weight: 600; color: #6E6E73; white-space: nowrap; }
 .panel .side { position: absolute; right: 34px; top: 33px; font-size: 21px; font-weight: 500; color: #8E8E93; white-space: nowrap; }
@@ -447,17 +428,6 @@ button { font: inherit; color: inherit; background: none; border: 0; padding: 0;
 #weather .sun span { margin-right: 36px; }
 .night #weather .range, .night #weather .hour .t, .night #weather .hour .low, .night #weather .sun { color: rgba(255, 255, 255, 0.68); }
 .night #weather .split { background: rgba(255, 255, 255, 0.14); }
-
-#prices .coin { position: absolute; left: 34px; right: 34px; height: 40px; font-size: 29px; font-weight: 500; white-space: nowrap; }
-#prices .coin svg { position: absolute; left: 2px; top: 6px; width: 26px; height: 26px; fill: #6E6E73; }
-#prices .coin .n { position: absolute; left: 50px; top: 0; }
-#prices .coin .p { position: absolute; right: 128px; top: 1px; font-size: 26px; -webkit-font-feature-settings: 'tnum'; font-feature-settings: 'tnum'; }
-#prices .coin .c { position: absolute; right: 0; top: 2px; width: 108px; height: 34px; line-height: 34px; border-radius: 17px; text-align: center; font-size: 21px; font-weight: 600; -webkit-font-feature-settings: 'tnum'; font-feature-settings: 'tnum'; }
-#prices .up { color: #248A3D; background: rgba(36, 138, 61, 0.2); }
-#prices .down { color: #D70015; background: rgba(215, 0, 21, 0.2); }
-.night #prices .coin svg { fill: rgba(255, 255, 255, 0.8); }
-.night #prices .up { color: #30D158; background: rgba(48, 209, 88, 0.2); }
-.night #prices .down { color: #FF453A; background: rgba(255, 69, 58, 0.2); }
 
 /* MARK: - Sheets over the home screen: All Apps, Settings, Shelf, Language, About */
 

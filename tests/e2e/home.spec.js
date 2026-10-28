@@ -14,7 +14,7 @@ async function openSettings(page, net) {
   await m.press(page, net, 'Enter');
 }
 
-test('start: picks, shelf, weather and prices', async ({page}) => {
+test('start: picks, shelf and weather', async ({page}) => {
   const s = await m.open(page);
   await snap(page, 'start');
   expect(m.requests(s.net)).toMatchSnapshot('start-requests.txt');
@@ -85,8 +85,6 @@ test('Home Settings: every row and its values', async ({page}) => {
   await m.press(page, s.net, 'Enter');
   await m.moveTo(page, s.net, '#settings .row', 'Forecast');
   await m.press(page, s.net, 'Right');
-  await m.moveTo(page, s.net, '#settings .row', 'Ethereum');
-  await m.press(page, s.net, 'Enter');
   await m.moveTo(page, s.net, '#settings .row', 'Netflix');
   await m.press(page, s.net, 'Enter');
   await m.moveTo(page, s.net, '#settings .row', 'Watch from the screensaver');
@@ -101,16 +99,16 @@ test('Home Settings: every row and its values', async ({page}) => {
   s.check();
 });
 
-test('Home Settings: weather and quotes widgets off', async ({page}) => {
+test('Home Settings: weather widget off', async ({page}) => {
   const s = await m.open(page);
   await openSettings(page, s.net);
   await m.moveTo(page, s.net, '#settings .row', 'Weather widget');
   await m.press(page, s.net, 'Enter');
-  await m.moveTo(page, s.net, '#settings .row', 'Quotes widget');
-  await m.press(page, s.net, 'Enter');
   await snap(page, 'widgets-off-settings');
   await m.press(page, s.net, 'Back');
   await snap(page, 'widgets-off');
+  await m.press(page, s.net, 'Down');
+  await snap(page, 'widgets-off-drawer');   // the inputs and shortcuts up in the weather's place
   expect(await m.storage(page)).toMatchSnapshot('widgets-off-storage.txt');
   s.check();
 });

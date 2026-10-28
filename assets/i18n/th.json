@@ -1,5 +1,4 @@
 {
- "24h change": "เปลี่ยนแปลง 24 ชม.",
  "API Read Access Token or API Key": "API Read Access Token หรือ API Key",
  "About this TV": "เกี่ยวกับทีวีเครื่องนี้",
  "All Apps": "แอปทั้งหมด",
@@ -15,9 +14,7 @@
  "Couldn't reach TMDB: {error}": "ติดต่อ TMDB ไม่ได้: {error}",
  "Couldn't search now: {error}": "ค้นหาตอนนี้ไม่ได้: {error}",
  "Create an account at themoviedb.org.": "สร้างบัญชีที่ themoviedb.org",
- "Crypto": "คริปโต",
  "Dark": "มืด",
- "Dollar": "ดอลลาร์",
  "Drizzle": "ฝนปรอย ๆ",
  "Explore": "สำรวจ",
  "Firmware": "เฟิร์มแวร์",
@@ -52,7 +49,6 @@
  "Picks from": "คำแนะนำจาก",
  "Picks per tab": "คำแนะนำต่อแท็บ",
  "Press OK to watch on {app} · any other button to close": "กด OK เพื่อดูใน {app} · ปุ่มอื่นเพื่อปิด",
- "Quotes widget": "วิดเจ็ตราคา",
  "Rain": "ฝนตก",
  "Remove": "ลบ",
  "Remove the TMDB key?": "ลบคีย์ TMDB หรือไม่",
@@ -99,13 +95,10 @@
  "light|Settings": "ตั้งค่า",
  "night|Clear": "ท้องฟ้าใสยามค่ำ",
  "plural|one:{n} season|other:{n} seasons": "other:{n} ซีซัน",
- "quotes|{ago}": "{ago}",
  "services|All": "ทั้งหมด",
  "services|Some": "บางส่วน",
  "shelf|Off": "ปิด",
  "unit|Automatic": "อัตโนมัติ",
  "{h}h {m}m": "{h} ชม. {m} นาที",
- "{m}m": "{m} นาที",
- "{n} h ago": "{n} ชม.ที่แล้ว",
- "{n} min ago": "{n} นาทีที่แล้ว"
+ "{m}m": "{m} นาที"
 }

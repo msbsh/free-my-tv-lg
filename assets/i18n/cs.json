@@ -1,5 +1,4 @@
 {
- "24h change": "změna za 24 h",
  "API Read Access Token or API Key": "API Read Access Token nebo API Key",
  "About this TV": "O tomto televizoru",
  "All Apps": "Všechny aplikace",
@@ -15,9 +14,7 @@
  "Couldn't reach TMDB: {error}": "TMDB je nedostupné: {error}",
  "Couldn't search now: {error}": "Teď nelze hledat: {error}",
  "Create an account at themoviedb.org.": "Založte si účet na themoviedb.org.",
- "Crypto": "Krypto",
  "Dark": "Tmavý",
- "Dollar": "Dolar",
  "Drizzle": "Mrholení",
  "Explore": "Objevovat",
  "Firmware": "Firmware",
@@ -52,7 +49,6 @@
  "Picks from": "Tipy z",
  "Picks per tab": "Tipů na záložku",
  "Press OK to watch on {app} · any other button to close": "Stiskněte OK a sledujte v {app} · jiným tlačítkem zavřete",
- "Quotes widget": "Widget kurzů",
  "Rain": "Déšť",
  "Remove": "Odstranit",
  "Remove the TMDB key?": "Odstranit klíč TMDB?",
@@ -99,13 +95,10 @@
  "light|Settings": "Nastavení",
  "night|Clear": "Jasno",
  "plural|one:{n} season|other:{n} seasons": "one:{n} řada|few:{n} řady|many:{n} řady|other:{n} řad",
- "quotes|{ago}": "{ago}",
  "services|All": "Všechny",
  "services|Some": "Některé",
  "shelf|Off": "Vypnuto",
  "unit|Automatic": "Automaticky",
  "{h}h {m}m": "{h} h {m} min",
- "{m}m": "{m} min",
- "{n} h ago": "před {n} h",
- "{n} min ago": "před {n} min"
+ "{m}m": "{m} min"
 }

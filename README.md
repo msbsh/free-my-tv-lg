@@ -11,7 +11,7 @@ Trending picks from your own apps, the weather at a glance, and a look that foll
 Based on [simbasjungles/free-my-tv](https://github.com/simbasjungles/free-my-tv) by Simba ([@simbasjungles](https://github.com/simbasjungles)) and its [contributors](https://github.com/simbasjungles/free-my-tv/graphs/contributors).
 This fork keeps only the LG app; Google TV, Android TV and Samsung live upstream.
 
-<img src=".github/preview.webp" width="880" alt="The home screen: a glass shelf of apps, trending picks, and a drawer with the weather and crypto prices">
+<img src=".github/preview.webp" width="880" alt="The home screen: a glass shelf of apps, trending picks, and a drawer with the weather and the inputs">
 
 </div>
 
@@ -20,10 +20,10 @@ This fork keeps only the LG app; Google TV, Android TV and Samsung live upstream
 - **No ads.** No sponsored rows, banners or autoplaying promos.
 - **Your apps, front and center.** The streaming apps you use, on a glass shelf. Pick them and their order on the TV.
 - **Trending, not sponsored.** Three fresh picks every hour (up to six, in Home Settings) from what's trending this week and the latest releases, only from apps you already have. Movies and Shows get their own tabs.
-- **Inputs, weather and markets, one press away.** ↓ opens a drawer with the antenna and HDMI inputs, the hour-by-hour forecast (or the next 5 days), sunrise and sunset, and crypto prices.
+- **Weather and inputs, one press away.** ↓ opens a drawer with the hour-by-hour forecast (or the next 5 days), sunrise and sunset, and below it the antenna and HDMI inputs.
 - **Light by day, dark by night.** It follows your city's sunset.
 - **A screensaver to match.** Full-screen photos of the picks with a big clock. Optionally (*Watch from the screensaver*), OK opens the title on screen in its app.
-- **Set up on the TV.** Language, city, temperature, theme, how many picks and which streaming services they come from, the weather and prices cards, which coins, the TMDB key and the apps on the shelf, in *Home Settings*.
+- **Set up on the TV.** Language, city, temperature, theme, how many picks and which streaming services they come from, the weather card, the TMDB key and the apps on the shelf, in *Home Settings*.
 - **Nothing changed on the TV.** It installs through LG's Developer Mode. LG's home screen stays; Free My TV (LG) is one press of a number key away.
 
 ## Install
@@ -61,15 +61,13 @@ The first values come from `config.properties`. Most can also be changed on the 
 | `city` | The name on the weather card | `Weather` |
 | `hide_animation` | Leave cartoons and anime out of the picks | `false` |
 | `language` | `auto` (follows the TV), or a language with a [translation](#translations) (`en`, `pt`, `es`, `de`, `ru`, `fr`, `ja`…) | `auto` |
-| `show_crypto` | Show Binance crypto prices on home and screensaver | `true` |
-| `currency` | Crypto prices in `USD`, `EUR`, `BRL`… | `USD` |
 | `temperature` | `C`, `F` or `auto` | `auto` |
 | `theme` | `auto` (dark from sunset to sunrise), `light` or `dark` | `auto` |
 | `hide_apps` | Apps to leave out of the shelf, All Apps and the picks, by id or name (part of it), comma separated | empty |
 | `shelf_apps` | The shelf's apps in this order, by id or name (part of it), comma separated; changing it wins once over the shelf picked on the TV | empty |
 | `drawer_first` | `true` opens the home screen with the drawer already out, so nothing has to be scrolled to reach the inputs | `false` |
 
-Changed something? Run `python3 webos/build.py` and `python3 webos/install.py <IP>` again. `--generic` builds without `config.properties`: no key, and the TV's time zone picks the city, the currency and the region.
+Changed something? Run `python3 webos/build.py` and `python3 webos/install.py <IP>` again. `--generic` builds without `config.properties`: no key, and the TV's time zone picks the city and the region.
 
 ### The TMDB key
 
@@ -82,17 +80,17 @@ You can also type it on the TV, in *Home Settings* → *TMDB key*: the short *AP
 - **Plain HTML, CSS and JavaScript** ([`web/`](web)), no frameworks, for the Chromium 79 of webOS 6.
 - [`webos/build.py`](webos/build.py) packs it with `config.properties` into an `.ipk` without LG's tools, and [`webos/install.py`](webos/install.py) installs it through Developer Mode over SSH.
 - It lists and opens apps and inputs through the TV's own service bus (Luna), as LG's launcher does. Where LG denies the app list, a small JS service in the package ([`webos/service`](webos/service)) asks the TV's remote control API.
-- **Data** from TMDB (trending titles, new releases and which app streams what in your country), Open-Meteo (forecast, sunrise and sunset), and optionally Binance (24-hour prices when `show_crypto=true`).
+- **Data** from TMDB (trending titles, new releases and which app streams what in your country) and Open-Meteo (forecast, sunrise and sunset).
 - **Preview on a computer:** `python3 webos/build.py --preview`, then open `out/webos/index.html` (a stand-in lists sample apps).
 
 | File | What it is |
 |---|---|
 | [`web/home.js`](web/home.js) | The home screen |
 | [`web/tv.js`](web/tv.js) | The TV's apps, inputs and settings (Luna) |
-| [`web/data.js`](web/data.js) | Picks, weather and prices |
+| [`web/data.js`](web/data.js) | Picks and weather |
 | [`web/strings.js`](web/strings.js) | Translations, dates and plurals |
 | [`webos/build.py`](webos/build.py), [`webos/install.py`](webos/install.py) | The package and its install |
-| [`assets/`](assets) | Catalogues, symbols, font and coin logos the package carries |
+| [`assets/`](assets) | Catalogues, symbols and font the package carries |
 | [`tests/`](tests) | The package and the screen against their baseline |
 
 ## Checks and tests
@@ -110,15 +108,15 @@ Each language is one file, [`assets/i18n/<lang>.json`](assets/i18n), keyed by th
 
 ## Privacy
 
-No accounts, no analytics, no tracking. The app talks to TMDB, Open-Meteo (with the coordinates you set, or your time zone's main city), and Binance only when `show_crypto=true`. A TMDB key typed on the TV goes to TMDB only, to check it. Your settings stay on your computer and your TV.
+No accounts, no analytics, no tracking. The app talks to TMDB and Open-Meteo (with the coordinates you set, or your time zone's main city). A TMDB key typed on the TV goes to TMDB only, to check it. Your settings stay on your computer and your TV.
 
 ## Credits
 
 - [Free My TV](https://github.com/simbasjungles/free-my-tv) by Simba ([@simbasjungles](https://github.com/simbasjungles)) and [contributors](https://github.com/simbasjungles/free-my-tv/graphs/contributors) (MIT): the app this fork is cut from, built with [Claude Code](https://claude.com/claude-code).
 - The LG version builds on what [@danielthejoker18](https://github.com/danielthejoker18) found in [FreeMyTvWebOS](https://github.com/danielthejoker18/FreeMyTvWebOS) (MIT): installing through Developer Mode and opening apps through the TV's service bus.
 - This product uses the TMDB API but is not endorsed or certified by [TMDB](https://www.themoviedb.org/).
-- Weather data by [Open-Meteo.com](https://open-meteo.com/) (CC BY 4.0). Prices from the [Binance](https://www.binance.com/) public API.
-- Icons: [Material Symbols](https://fonts.google.com/icons) (Apache 2.0). Font: [Inter](https://rsms.me/inter/) (SIL OFL 1.1). Coin logos: [cryptocurrency-icons](https://github.com/spothq/cryptocurrency-icons) (CC0). App logos: [Simple Icons](https://simpleicons.org) (CC0).
+- Weather data by [Open-Meteo.com](https://open-meteo.com/) (CC BY 4.0).
+- Icons: [Material Symbols](https://fonts.google.com/icons) (Apache 2.0). Font: [Inter](https://rsms.me/inter/) (SIL OFL 1.1). App logos: [Simple Icons](https://simpleicons.org) (CC0).
 - Not affiliated with LG or any streaming service. App names and logos belong to their owners.
 
 ## License

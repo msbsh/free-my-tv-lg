@@ -18,22 +18,6 @@ div#stage
           "Movies"
         button.tab.on
           "Shows"
-      div#quotes
-        span.q
-          svg
-            path
-          span
-            "61.2k"
-        span.q
-          svg
-            path
-          span
-            "2.35k"
-        span.q
-          svg
-            path
-          span
-            "145"
       div#buttons
         button.round
           span.sym
@@ -198,38 +182,6 @@ div#stage
         span
           span.sym
           "Sunset 6:12 PM"
-    div#prices.panel.glass
-      div.head
-        "Crypto"
-      div.side
-        "24h change"
-      div.coin
-        svg
-          path
-        span.n
-          "Bitcoin"
-        span.p
-          "€61,235"
-        span.c.up
-          "+2.0%"
-      div.coin
-        svg
-          path
-        span.n
-          "Ethereum"
-        span.p
-          "€2,346"
-        span.c.down
-          "−2.3%"
-      div.coin
-        svg
-          path
-        span.n
-          "Solana"
-        span.p
-          "€145.20"
-        span.c.up
-          "+3.8%"
   div#apps.layer.sheet
     h2
     div.grid

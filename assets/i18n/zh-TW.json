@@ -1,5 +1,4 @@
 {
- "24h change": "24 小時漲跌",
  "API Read Access Token or API Key": "API Read Access Token 或 API Key",
  "About this TV": "關於這台電視",
  "All Apps": "所有應用程式",
@@ -15,9 +14,7 @@
  "Couldn't reach TMDB: {error}": "無法連線到 TMDB：{error}",
  "Couldn't search now: {error}": "目前無法搜尋：{error}",
  "Create an account at themoviedb.org.": "在 themoviedb.org 註冊帳號。",
- "Crypto": "加密貨幣",
  "Dark": "深色",
- "Dollar": "美元",
  "Drizzle": "毛毛雨",
  "Explore": "探索",
  "Firmware": "韌體",
@@ -52,7 +49,6 @@
  "Picks from": "推薦來源",
  "Picks per tab": "每個分頁的推薦數",
  "Press OK to watch on {app} · any other button to close": "按 OK 在 {app} 中觀看 · 按其他鍵關閉",
- "Quotes widget": "加密貨幣行情小工具",
  "Rain": "下雨",
  "Remove": "移除",
  "Remove the TMDB key?": "要移除 TMDB 金鑰嗎？",
@@ -99,13 +95,10 @@
  "light|Settings": "設定",
  "night|Clear": "晴朗",
  "plural|one:{n} season|other:{n} seasons": "other:{n} 季",
- "quotes|{ago}": "{ago}",
  "services|All": "全部",
  "services|Some": "部分",
  "shelf|Off": "關閉",
  "unit|Automatic": "自動",
  "{h}h {m}m": "{h} 小時 {m} 分鐘",
- "{m}m": "{m} 分鐘",
- "{n} h ago": "{n} 小時前",
- "{n} min ago": "{n} 分鐘前"
+ "{m}m": "{m} 分鐘"
 }

@@ -7,7 +7,7 @@
     python3 webos/build.py --generic  # without config.properties: the TV's time zone picks the city
 
 Reads config.properties, puts the web home screen (web/), the symbols,
-font, catalogues and coin logos (assets/) and webos/appinfo.json together, and packs them the way LG's
+font and catalogues (assets/) and webos/appinfo.json together, and packs them the way LG's
 ares-package does (an ar archive with control.tar.gz and data.tar.gz), so no LG tools are needed. Python 3 only.
 """
 import io

@@ -1,0 +1,249 @@
+html.- body.drawer-open
+div#stage
+  div#sky.layer
+    div.grad.day
+    div.grad.night
+    canvas#bgA
+    canvas#bgB.on
+    div.veil
+    div.lift
+  div#home.layer
+    div#top.layer
+      h1#title
+        "For You"
+      div#tabs
+        button.tab.on
+          "Explore"
+        button.tab
+          "Movies"
+        button.tab
+          "Shows"
+      div#buttons
+        button.round
+          span.sym
+          div.tip
+            "Live TV"
+        button.round
+          span.sym
+          div.tip
+            "HDMI Inputs"
+        button.round.last
+          span.sym
+          div.tip
+            "Settings"
+      div#cards
+        div.card.wide
+          div.img
+            div.layer bg="url(\"https://image.tmdb.org/t/p/w342/mp104.jpg\")"
+            div.layer.back bg="url(\"https://image.tmdb.org/t/p/w1280/m104b.jpg\")"
+          div.name
+            "Movie 104 (English)"
+          div.meta
+            "Action · 1h 39m · Disney+"
+        div.card
+          div.img
+            div.layer bg="url(\"https://image.tmdb.org/t/p/w342/tp204.jpg\")"
+            div.layer.back
+          div.name
+            "Show 204 (English)"
+          div.meta
+            "Series · Sci-Fi & Fantasy · 1 season · Netflix"
+        div.card
+          div.img
+            div.layer bg="url(\"https://image.tmdb.org/t/p/w342/mp105.jpg\")"
+            div.layer.back
+          div.name
+            "Movie 105 (English)"
+          div.meta
+            "Action · 1h 40m · Netflix"
+      div#clock
+        span.time
+          "10:01"
+        span.date
+          "Tuesday, October 20"
+    div#platter
+      span.sym.more.back
+      span.sym.more
+    div#tiles
+      div.tile bg="linear-gradient(rgb(10, 10, 10), rgb(0, 0, 0))"
+        div.word
+          "Netflix"
+      div.tile bg="linear-gradient(rgb(28, 28, 30), rgb(9, 9, 10))"
+        div.word
+          "YouTube"
+      div.tile bg="linear-gradient(rgb(42, 168, 255), rgb(10, 104, 212))"
+        div.word
+          "Prime Video"
+      div.tile bg="linear-gradient(rgb(23, 53, 132), rgb(8, 20, 63))"
+        div.word
+          "Disney+"
+      div.tile bg="linear-gradient(rgb(92, 48, 232), rgb(34, 22, 132))"
+        div.word
+          "Max"
+      div.tile bg="linear-gradient(rgb(28, 28, 30), rgb(0, 0, 0))"
+        div.word
+          "Apple TV"
+      div.tile bg="linear-gradient(rgb(255, 138, 31), rgb(255, 45, 90))"
+        div.word
+          "Globoplay"
+      div.tile bg="linear-gradient(rgb(29, 185, 84), rgb(15, 122, 54))"
+        div.word
+          "Spotify"
+  div#drawer.layer.bare
+    div.row-title
+      "Inputs"
+    div.key.glass.focus
+      span.sym
+      div.label
+        "Live TV"
+    div.key.glass
+      span.sym
+      div.label
+        "HDMI 1"
+    div.key.glass.off
+      span.sym
+      div.label
+        "HDMI 2"
+    div.key.glass.off
+      span.sym
+      div.label
+        "HDMI 3"
+    div.key.glass.off
+      span.sym
+      div.label
+        "HDMI 4"
+    div.row-title
+      "Shortcuts"
+    div.key.glass
+      span.sym
+      div.label
+        "All Apps"
+    div.key.glass
+      span.sym
+      div.label
+        "Home Settings"
+    div.key.glass
+      span.sym
+      div.label
+        "TV Settings"
+  div#apps.layer.sheet
+    h2
+    div.grid
+  div#settings.layer.sheet
+    div.box
+      div.title
+        span.sym
+        "Home Settings"
+      div.list
+        div.rows
+          div.row
+            "Language"
+            span.value
+              "Automatic"
+              span.chev
+                "›"
+          div.row
+            "Temperature"
+            span.value
+              span.chev
+                "‹"
+              "Automatic"
+              span.chev
+                "›"
+          div.row
+            "Theme"
+            span.value
+              span.chev
+                "‹"
+              "Automatic"
+              span.chev
+                "›"
+          div.row
+            "Picks per tab"
+            span.value
+              span.chev
+                "‹"
+              "3"
+              span.chev
+                "›"
+          div.row
+            "Watch from the screensaver"
+            div.toggle
+          div.row
+            "Weather widget"
+            div.toggle
+          div.row
+            "City"
+            span.value
+              "Berlin"
+              span.chev
+                "›"
+          div.row
+            "Forecast"
+            span.value
+              span.chev
+                "‹"
+              "Next hours"
+              span.chev
+                "›"
+          div.row
+            "TMDB key"
+            span.value
+              "•••• cdef"
+              span.chev
+                "›"
+          div.row
+            "Picks from"
+            span.value
+              span.chev
+                "‹"
+              "All"
+              span.chev
+                "›"
+          div.row
+            "Netflix"
+            div.toggle.on
+          div.row
+            "Prime Video"
+            div.toggle.on
+          div.row
+            "Disney+"
+            div.toggle.on
+          div.row
+            "Globoplay"
+            div.toggle.on
+          div.row
+            "Max"
+            div.toggle.on
+          div.row
+            "Apple TV"
+            div.toggle.on
+          div.row
+            "Crunchyroll"
+            div.toggle.on
+          div.row
+            "Shelf"
+            span.value
+              "›"
+          div.row
+            "About this TV"
+            span.value
+              "›"
+          div.row
+            "TV Settings"
+            span.value
+              "›"
+      div.hint
+        "OK or the arrows change the value."
+  div#shelfedit.layer.sheet
+    div.box
+  div#langpick.layer.sheet
+    div.box
+  div#citypick.layer.sheet
+    div.box
+  div#keypick.layer.sheet
+    div.box
+  div#about.layer.sheet
+    div.box
+  div#saver.layer
+  div#toast

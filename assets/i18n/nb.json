@@ -1,5 +1,4 @@
 {
- "24h change": "endring siste 24 t",
  "API Read Access Token or API Key": "API Read Access Token eller API Key",
  "About this TV": "Om denne TV-en",
  "All Apps": "Alle apper",
@@ -15,9 +14,7 @@
  "Couldn't reach TMDB: {error}": "Fikk ikke kontakt med TMDB: {error}",
  "Couldn't search now: {error}": "Kunne ikke søke nå: {error}",
  "Create an account at themoviedb.org.": "Opprett en konto på themoviedb.org.",
- "Crypto": "Krypto",
  "Dark": "Mørkt",
- "Dollar": "Dollar",
  "Drizzle": "Yr",
  "Explore": "Utforsk",
  "Firmware": "Fastvare",
@@ -52,7 +49,6 @@
  "Picks from": "Forslag fra",
  "Picks per tab": "Forslag per fane",
  "Press OK to watch on {app} · any other button to close": "Trykk OK for å se i {app} · en annen knapp lukker",
- "Quotes widget": "Kurswidget",
  "Rain": "Regn",
  "Remove": "Fjern",
  "Remove the TMDB key?": "Fjerne TMDB-nøkkelen?",
@@ -99,13 +95,10 @@
  "light|Settings": "Innstillinger",
  "night|Clear": "Klart",
  "plural|one:{n} season|other:{n} seasons": "one:{n} sesong|other:{n} sesonger",
- "quotes|{ago}": "{ago}",
  "services|All": "Alle",
  "services|Some": "Noen",
  "shelf|Off": "Av",
  "unit|Automatic": "Automatisk",
  "{h}h {m}m": "{h} t {m} min",
- "{m}m": "{m} min",
- "{n} h ago": "for {n} t siden",
- "{n} min ago": "for {n} min siden"
+ "{m}m": "{m} min"
 }

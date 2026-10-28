@@ -1,5 +1,4 @@
 {
- "24h change": "variație în 24 h",
  "API Read Access Token or API Key": "API Read Access Token sau API Key",
  "About this TV": "Despre acest televizor",
  "All Apps": "Toate aplicațiile",
@@ -15,9 +14,7 @@
  "Couldn't reach TMDB: {error}": "TMDB nu răspunde: {error}",
  "Couldn't search now: {error}": "Nu pot căuta acum: {error}",
  "Create an account at themoviedb.org.": "Creează un cont pe themoviedb.org.",
- "Crypto": "Cripto",
  "Dark": "Întunecat",
- "Dollar": "Dolar",
  "Drizzle": "Burniță",
  "Explore": "Explorează",
  "Firmware": "Firmware",
@@ -52,7 +49,6 @@
  "Picks from": "Recomandări din",
  "Picks per tab": "Recomandări pe filă",
  "Press OK to watch on {app} · any other button to close": "Apasă OK pentru a viziona în {app} · orice alt buton închide",
- "Quotes widget": "Widget cotații",
  "Rain": "Ploaie",
  "Remove": "Elimină",
  "Remove the TMDB key?": "Elimini cheia TMDB?",
@@ -99,13 +95,10 @@
  "light|Settings": "Setări",
  "night|Clear": "Senin",
  "plural|one:{n} season|other:{n} seasons": "one:{n} sezon|few:{n} sezoane|other:{n} de sezoane",
- "quotes|{ago}": "{ago}",
  "services|All": "Toate",
  "services|Some": "Unele",
  "shelf|Off": "Dezactivat",
  "unit|Automatic": "Automat",
  "{h}h {m}m": "{h} h {m} min",
- "{m}m": "{m} min",
- "{n} h ago": "acum {n} h",
- "{n} min ago": "acum {n} min"
+ "{m}m": "{m} min"
 }

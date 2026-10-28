@@ -1,5 +1,4 @@
 {
- "24h change": "24 घंटे का बदलाव",
  "API Read Access Token or API Key": "API Read Access Token या API Key",
  "About this TV": "इस टीवी के बारे में",
  "All Apps": "सभी ऐप",
@@ -15,9 +14,7 @@
  "Couldn't reach TMDB: {error}": "TMDB तक नहीं पहुँच सके: {error}",
  "Couldn't search now: {error}": "अभी खोज नहीं हो सकती: {error}",
  "Create an account at themoviedb.org.": "themoviedb.org पर खाता बनाएँ।",
- "Crypto": "क्रिप्टो",
  "Dark": "डार्क",
- "Dollar": "डॉलर",
  "Drizzle": "बूँदाबाँदी",
  "Explore": "खोजें",
  "Firmware": "फ़र्मवेयर",
@@ -52,7 +49,6 @@
  "Picks from": "सुझाव यहाँ से",
  "Picks per tab": "प्रति टैब सुझाव",
  "Press OK to watch on {app} · any other button to close": "{app} पर देखने के लिए OK दबाएँ · कोई और बटन बंद करता है",
- "Quotes widget": "भाव विजेट",
  "Rain": "बारिश",
  "Remove": "हटाएँ",
  "Remove the TMDB key?": "TMDB कुंजी हटाएँ?",
@@ -99,13 +95,10 @@
  "light|Settings": "सेटिंग",
  "night|Clear": "साफ़",
  "plural|one:{n} season|other:{n} seasons": "one:{n} सीज़न|other:{n} सीज़न",
- "quotes|{ago}": "{ago}",
  "services|All": "सभी",
  "services|Some": "कुछ",
  "shelf|Off": "बंद",
  "unit|Automatic": "अपने-आप",
  "{h}h {m}m": "{h} घं {m} मि",
- "{m}m": "{m} मि",
- "{n} h ago": "{n} घं पहले",
- "{n} min ago": "{n} मि पहले"
+ "{m}m": "{m} मि"
 }

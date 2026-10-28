@@ -1,4 +1,4 @@
 {
  "fmtv.night": "false",
- "fmtv.prefs": "{\"temperature\":\"C\",\"theme\":\"light\",\"cards\":4,\"forecast\":\"days\",\"coins\":[true,false,true,true],\"servicesOff\":[\"netflix\"],\"saverWatch\":true}"
+ "fmtv.prefs": "{\"temperature\":\"C\",\"theme\":\"light\",\"cards\":4,\"forecast\":\"days\",\"servicesOff\":[\"netflix\"],\"saverWatch\":true}"
 }

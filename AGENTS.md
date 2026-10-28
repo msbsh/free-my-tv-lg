@@ -1,8 +1,8 @@
 # Free My TV (LG): guide for agents
 
 A home screen app for LG webOS TVs (webOS 6 and newer), installed through LG's Developer Mode: `web/` is the app
-(plain HTML, CSS and JS), `webos/` packs and installs it, `assets/` holds the catalogues, symbols, font and coin logos
-it carries. Python 3 and OpenSSH on the computer; no LG tools, no frameworks.
+(plain HTML, CSS and JS), `webos/` packs and installs it, `assets/` holds the catalogues, symbols and font it
+carries. Python 3 and OpenSSH on the computer; no LG tools, no frameworks.
 It's a fork of [simbasjungles/free-my-tv](https://github.com/simbasjungles/free-my-tv), cut down to LG; Google TV,
 Android TV and Samsung live upstream. Keep the upstream credit in README.md and the original notice in LICENSE.
 
@@ -30,8 +30,8 @@ before you do it, and let them do the taps on the TV.
    (webostv.developer.lge.com) → *Dev Mode Status* on (the TV restarts) → *Key Server* on. It shows the IP and a
    passphrase.
 3. **Settings:** the first `python3 webos/build.py` creates `config.properties`. Fill in `latitude` and `longitude`
-   (decimal degrees) and `city`, `tmdb_region` (two-letter country), `show_crypto`, `currency` and `temperature` to
-   match. The TMDB key rules above apply.
+   (decimal degrees) and `city`, `tmdb_region` (two-letter country) and `temperature` to match. The TMDB key rules
+   above apply.
 4. **Build:** `python3 webos/build.py` must end with `Built FreeMyTV-webos.ipk`.
 5. **Install:** the first time needs the TV's passphrase, typed by them: ask them to run
    `python3 webos/install.py <IP>` in their own terminal (yours can't answer its prompt, and the passphrase doesn't go
@@ -62,15 +62,15 @@ them remove the old one (LG's app list, edit mode) before the first install.
   in the package whose handshake says `file://`, makes the call. In a desktop browser, `tv.js` is a stand-in with
   sample apps.
 - `web/home.js` draws the screen and handles the remote (arrows, OK, Back 461, the Magic Remote's pointer);
-  `web/data.js` has the picks (TMDB), weather (Open-Meteo), prices (Binance) and `Prefs` (Home Settings, in
-  localStorage, winning over `config.properties`).
+  `web/data.js` has the picks (TMDB), weather (Open-Meteo) and `Prefs` (Home Settings, in localStorage, winning over
+  `config.properties`).
 - TMDB is reached at `api.tmdb.org`, TMDB's own mirror of `api.themoviedb.org` on the images' domain: some ISPs block
   the other name.
 - The TMDB key typed on the TV (`Prefs.tmdbKey()`) wins over `CONFIG.tmdbKey`; `Data.keyChanged()` fetches the picks
   again. Never log it.
 - Settings come from `config.properties` through the generated `config.js` (`tools/webapp.py`). Built with
   `--generic`, the place values are empty and `web/zones.js` (`tools/make_zones.py`, from the tz database) turns the
-  TV's time zone into the city, the currency and the region.
+  TV's time zone into the city and the region.
 - On-screen text: the catalogues in `assets/i18n/<lang>.json`, keyed by the English, packed into `i18n.js` (only the
   keys `web/` uses): `tr('Live TV')`, `trf('{n} min ago', {n: 12})`, `plural('plural|one:{n} season|other:{n} seasons', n)`
   and `formatDate('format|h:mm a', at)` (a SimpleDateFormat pattern, written by `web/strings.js`). Never concatenate

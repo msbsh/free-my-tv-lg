@@ -1,5 +1,4 @@
 {
- "24h change": "perubahan 24 jam",
  "API Read Access Token or API Key": "API Read Access Token atau API Key",
  "About this TV": "Tentang TV ini",
  "All Apps": "Semua Aplikasi",
@@ -15,9 +14,7 @@
  "Couldn't reach TMDB: {error}": "Tidak dapat menghubungi TMDB: {error}",
  "Couldn't search now: {error}": "Tidak bisa mencari sekarang: {error}",
  "Create an account at themoviedb.org.": "Buat akun di themoviedb.org.",
- "Crypto": "Kripto",
  "Dark": "Gelap",
- "Dollar": "Dolar",
  "Drizzle": "Gerimis",
  "Explore": "Jelajahi",
  "Firmware": "Firmware",
@@ -52,7 +49,6 @@
  "Picks from": "Rekomendasi dari",
  "Picks per tab": "Rekomendasi per tab",
  "Press OK to watch on {app} · any other button to close": "Tekan OK untuk menonton di {app} · tombol lain untuk menutup",
- "Quotes widget": "Widget harga",
  "Rain": "Hujan",
  "Remove": "Hapus",
  "Remove the TMDB key?": "Hapus kunci TMDB?",
@@ -99,13 +95,10 @@
  "light|Settings": "Setelan",
  "night|Clear": "Cerah",
  "plural|one:{n} season|other:{n} seasons": "other:{n} musim",
- "quotes|{ago}": "{ago}",
  "services|All": "Semua",
  "services|Some": "Sebagian",
  "shelf|Off": "Mati",
  "unit|Automatic": "Otomatis",
  "{h}h {m}m": "{h} j {m} mnt",
- "{m}m": "{m} mnt",
- "{n} h ago": "{n} jam lalu",
- "{n} min ago": "{n} mnt lalu"
+ "{m}m": "{m} mnt"
 }

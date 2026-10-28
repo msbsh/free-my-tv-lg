@@ -1,5 +1,4 @@
 {
- "24h change": "variation sur 24 h",
  "API Read Access Token or API Key": "API Read Access Token ou API Key",
  "About this TV": "À propos de ce téléviseur",
  "All Apps": "Toutes les apps",
@@ -15,9 +14,7 @@
  "Couldn't reach TMDB: {error}": "Impossible de joindre TMDB : {error}",
  "Couldn't search now: {error}": "Recherche impossible pour l'instant : {error}",
  "Create an account at themoviedb.org.": "Créez un compte sur themoviedb.org.",
- "Crypto": "Crypto",
  "Dark": "Sombre",
- "Dollar": "Dollar",
  "Drizzle": "Bruine",
  "Explore": "Explorer",
  "Firmware": "Micrologiciel",
@@ -52,7 +49,6 @@
  "Picks from": "Suggestions de",
  "Picks per tab": "Suggestions par onglet",
  "Press OK to watch on {app} · any other button to close": "Appuyez sur OK pour regarder sur {app} · tout autre bouton ferme",
- "Quotes widget": "Widget des cours",
  "Rain": "Pluie",
  "Remove": "Supprimer",
  "Remove the TMDB key?": "Supprimer la clé TMDB ?",
@@ -99,13 +95,10 @@
  "light|Settings": "Réglages",
  "night|Clear": "Ciel dégagé",
  "plural|one:{n} season|other:{n} seasons": "one:{n} saison|many:{n} de saisons|other:{n} saisons",
- "quotes|{ago}": "{ago}",
  "services|All": "Tous",
  "services|Some": "Certains",
  "shelf|Off": "Désactivé",
  "unit|Automatic": "Automatique",
  "{h}h {m}m": "{h} h {m} min",
- "{m}m": "{m} min",
- "{n} h ago": "il y a {n} h",
- "{n} min ago": "il y a {n} min"
+ "{m}m": "{m} min"
 }
