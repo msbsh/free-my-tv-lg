@@ -1,7 +1,9 @@
 #!/usr/bin/env python3
 """Installs Free My TV (LG) on an LG TV in Developer Mode, over your Wi-Fi.
 
-    python3 webos/install.py 192.168.1.50              # install or update, then open it
+    python3 webos/install.py 192.168.1.50              # build, install or update, then open it
+    python3 webos/install.py 192.168.1.50 --generic    # the same with build.py's --generic (or --config PATH)
+    python3 webos/install.py 192.168.1.50 --no-build   # install FreeMyTV-webos.ipk as it is
     python3 webos/install.py 192.168.1.50 --uninstall  # remove it
 
 Before the first install, on the TV: install "Developer Mode" from the LG Content Store, sign in with a free LG
@@ -102,15 +104,21 @@ def main():
     ip = args[0]
     if not shutil.which('ssh') or not shutil.which('ssh-keygen'):
         sys.exit('OpenSSH (ssh and ssh-keygen) is needed.')
+    uninstall = '--uninstall' in sys.argv
+    # Always build, so an update never installs an old package; before the key, so a failed build asks nothing.
+    if not uninstall and '--no-build' not in sys.argv:
+        options = [a for a in sys.argv[1:] if a not in (ip, '--no-build')]
+        if subprocess.run([sys.executable, os.path.join(ROOT, 'webos', 'build.py')] + options).returncode:
+            sys.exit(1)
+    if not uninstall and not os.path.exists(IPK):
+        sys.exit('There is no FreeMyTV-webos.ipk yet: leave out --no-build.')
     key = fetch_key(ip)
 
-    if '--uninstall' in sys.argv:
+    if uninstall:
         out = luna(ip, key, 'luna://com.webos.appInstallService/dev/remove', {'id': APP_ID}, replies=3, wait=30)
         print('Removed.' if '"returnValue":true' in out else 'The TV said: ' + out.strip())
         return
 
-    if not os.path.exists(IPK):
-        subprocess.run([sys.executable, os.path.join(ROOT, 'webos', 'build.py')], check=True)
     print('Copying the app to the TV ...')
     with open(IPK, 'rb') as f:
         copy = ssh(ip, key, 'mkdir -p /media/developer/temp && cat > ' + TEMP, stdin=f)

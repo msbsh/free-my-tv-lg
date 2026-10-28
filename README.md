@@ -37,7 +37,7 @@ You need an LG TV with webOS 6 or newer (tested: OLED48C11LB, webOS 6.5) and a c
    python3 webos/build.py
    ```
    The first build creates `config.properties`: put your city and your [TMDB key](#the-tmdb-key) there, then build again.
-3. **Install.** The first time, it asks for the TV's passphrase; updates don't:
+3. **Install.** It builds the app again first. The first time, it asks for the TV's passphrase; updates don't:
    ```bash
    python3 webos/install.py 192.168.1.50
    ```
@@ -67,7 +67,7 @@ The first values come from `config.properties`. Most can also be changed on the 
 | `shelf_apps` | The shelf's apps in this order, by id or name (part of it), comma separated; changing it wins once over the shelf picked on the TV | empty |
 | `drawer_first` | `true` opens the home screen with the drawer already out, so nothing has to be scrolled to reach the inputs | `false` |
 
-Changed something? Run `python3 webos/build.py` and `python3 webos/install.py <IP>` again. `--generic` builds without `config.properties`: no key, and the TV's time zone picks the city and the region.
+Changed something? Run `python3 webos/install.py <IP>` again: it builds before it installs (`--no-build` installs `FreeMyTV-webos.ipk` as it is). `--generic`, for `build.py` and `install.py`, builds without `config.properties`: no key, and the TV's time zone picks the city and the region.
 
 ### The TMDB key
 

@@ -35,8 +35,9 @@ before you do it, and let them do the taps on the TV.
 4. **Build:** `python3 webos/build.py` must end with `Built FreeMyTV-webos.ipk`.
 5. **Install:** the first time needs the TV's passphrase, typed by them: ask them to run
    `python3 webos/install.py <IP>` in their own terminal (yours can't answer its prompt, and the passphrase doesn't go
-   in the chat). It keeps the unlocked key in `~/.ssh/freemytv_webos_<IP>` (dots as underscores), so later updates
-   run from your terminal with the same command.
+   in the chat). It builds first (`--generic` and `--config` go to `build.py`, `--no-build` skips it). It keeps the
+   unlocked key in `~/.ssh/freemytv_webos_<IP>` (dots as underscores), so later updates run from your terminal with
+   the same command.
 6. **Tell them:** while the app is open, holding a number key pins it to that key (it's also in LG's app list).
    Developer Mode lasts about 40 days; *EXTEND* in that app renews it (if it runs out, the TV removes developer apps,
    and installing again brings it back). `--uninstall` removes the app.
