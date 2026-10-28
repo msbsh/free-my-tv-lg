@@ -1,5 +1,5 @@
 /*
- * The home screen on a 1920 × 1080 stage, with the Android app's measurements (HomeView): the title and tabs at the top
+ * The home screen on a 1920 × 1080 stage: the title and tabs at the top
  * left, icon-only glass buttons at the top right, three picks, and the glass shelf at the bottom; ↓ on the shelf opens
  * the drawer (inputs, shortcuts, weather, prices). Light by day, dark from sunset to sunrise.
  * No CSS variables, grid or backdrop-filter: older LG TVs (webOS 3 and 4) don't have them, and blur is too heavy for
@@ -596,5 +596,5 @@ button { font: inherit; color: inherit; background: none; border: 0; padding: 0;
 /* The Magic Remote's pointer: no text selection, no outlines. */
 * { -webkit-user-select: none; user-select: none; -webkit-tap-highlight-color: transparent; }
 
-/* Tizen 2 and 1 GB TVs (see tv.js): no shadows or animations; their GPUs can't keep up while the focus moves. */
+/* 1 GB TVs (see tv.js): no shadows or animations; their GPUs can't keep up while the focus moves. */
 .lite * { box-shadow: none !important; -webkit-transition: none !important; transition: none !important; }

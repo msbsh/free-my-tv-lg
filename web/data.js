@@ -3,7 +3,7 @@
  *  - the picks: what's trending this week and recent releases, only from the streaming apps on this TV (TMDB, with
  *    the person's own free key from config.properties), 3 per hour (up to 6 in Home Settings);
  *  - weather, sunrise and sunset (Open-Meteo, every 30 min) and optional crypto prices (Binance, every 5 min).
- * Settings changed on the TV (Prefs) win over config.properties, as on Android. Built without a city (--generic), the
+ * Settings changed on the TV (Prefs) win over config.properties. Built without a city (--generic), the
  * TV's time zone gives the city, and its country the currency and the region (zones.js).
  */
 var CONFIG = window.CONFIG || {};
@@ -383,7 +383,7 @@ var Data = (function () {
     return out;
   }
 
-  /** TMDB's language, as on Android: Latin American Spanish unless the TV is in Spain, and Germany's German. */
+  /** TMDB's language: Latin American Spanish unless the TV is in Spain, and Germany's German. */
   function lang() {
     if (I18N.lang === 'es') return /-ES\b/i.test(navigator.language || '') ? 'es-ES' : 'es-MX';
     if (I18N.lang === 'de') return 'de-DE';   // TMDB's de-AT and de-CH have few translations of their own
@@ -589,9 +589,6 @@ var Data = (function () {
   // MARK: - Formatting
 
   function fmt(v, digits) {
-    // Old WebKit (Tizen 2) has no Intl: toLocaleString ignores its options and prints every digit, without failing.
-    // English separators there; a per-language table if someone asks.
-    if (typeof Intl === 'undefined') return v.toFixed(digits).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
     try { return v.toLocaleString(I18N.locale(), {minimumFractionDigits: digits, maximumFractionDigits: digits}); } catch (e) { return v.toFixed(digits); }
   }
 

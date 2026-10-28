@@ -1,5 +1,5 @@
 /*
- * The home screen for web-app TVs (LG webOS, Samsung Tizen), with the Android app's design and behavior (HomeView):
+ * The home screen for LG webOS TVs:
  *  - top: the "For You" title and the tabs (Explore, Movies, Shows); icon-only glass buttons at the right (Live TV,
  *    HDMI Inputs, Settings) and the crypto quotes at the end of the tab row;
  *  - three picks for this hour in the selected tab; the background is the first one's photo, blurred and almost white;
@@ -34,9 +34,6 @@
     var ns = 'http://www.w3.org/2000/svg';
     var svg = document.createElementNS(ns, 'svg');
     svg.setAttribute('viewBox', '0 0 32 32');
-    // Old WebKit (Tizen 2) draws an SVG without them at 300×150; the CSS still sets the size everywhere it's shown.
-    svg.setAttribute('width', '15');
-    svg.setAttribute('height', '15');
     for (var k = 0; k < c.length; k++) {
       var p = document.createElementNS(ns, 'path');
       p.setAttribute('d', c[k]);
@@ -63,7 +60,7 @@
 
   // MARK: - Apps on the shelf
 
-  /** Shelf apps in this order when installed, like the Android app: key, LG app id, name on the TV, brand gradient. */
+  /** Shelf apps in this order when installed: key, LG app id, name on the TV, brand gradient. */
   var SHELF = [
     ['netflix', /^netflix$/, /netflix/i, ['#0A0A0A', '#000000']],
     ['youtube', /youtube/, /^youtube$/i, ['#1C1C1E', '#09090A']],
@@ -79,7 +76,7 @@
     ['jellyfin', /jellyfin/i, /jellyfin/i, ['#AA5CC3', '#00A4DC']],
     ['spotify', /spotify/, /spotify/i, ['#1DB954', '#0F7A36']]
   ];
-  // Apps shown at once, as on Android: 8 (today's smallest tiles, 178 wide); the shelf scrolls for the rest. The
+  // Apps shown at once: 8 (today's smallest tiles, 178 wide); the shelf scrolls for the rest. The
   // built-in list keeps 8 too.
   var SHELF_VISIBLE = 8, FEW_APPS = 8;
 
@@ -102,9 +99,9 @@
 
   // MARK: - Logos
 
-  // The TV's icons are small squares with their own background (white behind Netflix, black behind Max). Like the
-  // Android app does with the TV art, the logo is lifted off it once: the background goes transparent and the rest is
-  // cropped to the logo, which then fills the tile on the brand's color.
+  // The TV's icons are small squares with their own background (white behind Netflix, black behind Max). The logo is
+  // lifted off it once: the background goes transparent and the rest is cropped to the logo, which then fills the tile
+  // on the brand's color.
   var lifted = {};   // icon url -> {src, bg: [r, g, b], ink: luminance histogram} or false (keep the icon as it is)
   var LIFT_SIZE = 240;
 
@@ -417,7 +414,7 @@
     var list = Data.picks(TAB_KIND[st.tab]);
     var holder = $('cards');
     setClass(body, 'no-picks', !list.length);
-    setClass(body, 'no-key', !Data.hasKey());   // as on Android: no title or tabs that could never show anything
+    setClass(body, 'no-key', !Data.hasKey());   // no title or tabs that could never show anything
     if (!Data.hasKey() && st.zone === Z.TOP && st.top < 3) st.top = 3;
     var same = list.length === cards.length;
     for (var i = 0; same && i < list.length; i++) same = list[i].id === cards[i].id && list[i].backdrop === cards[i].backdrop && list[i].meta === cards[i].meta;
@@ -505,7 +502,7 @@
 
   function renderShelf() {
     var n = Math.min(shelf.length, SHELF_VISIBLE), gap = 48, pad = 40;
-    // 16:9 tiles, as on Android: never taller than 126, and the glass keeps its bottom edge.
+    // 16:9 tiles: never taller than 126, and the glass keeps its bottom edge.
     var tw = Math.min(126 * 16 / 9, (1760 - Math.max(0, n - 1) * gap) / Math.max(1, n)), th = tw * 9 / 16;
     var width = n * tw + Math.max(0, n - 1) * gap, left = (1920 - width) / 2;
     var platter = $('platter');
@@ -529,7 +526,7 @@
       hover(t, Z.SHELF, i);
     }
     // More apps than fit: a small arrow inside the glass's edge on each side that has more, where no tile reaches
-    // even focused (inside the screen's safe area, as on Android).
+    // even focused (inside the screen's safe area).
     platter.innerHTML = '';
     for (var a = 0; a < 2; a++) {
       var arrow = sym('chevron_right', platter);
@@ -580,7 +577,7 @@
     drawerInputs = drawerItems.length;
     drawerItems.push({label: tr('All Apps'), symbol: 'apps', run: openApps});
     drawerItems.push({label: tr('Home Settings'), symbol: 'settings', run: openSettings});
-    if (TV.canOpenSettings) drawerItems.push({label: tr('TV Settings'), symbol: 'tv_settings', run: tvSettings});
+    drawerItems.push({label: tr('TV Settings'), symbol: 'tv_settings', run: tvSettings});
     var n = drawerItems.length, gap = 18, groupGap = 56, groups = drawerInputs > 0 && drawerInputs < n ? 2 : 1;
     var tw = Math.min(230, (1760 - Math.max(0, n - groups) * gap - (groups - 1) * groupGap) / Math.max(1, n));
     var xPos = 80;
@@ -776,7 +773,7 @@
     }
     rows.push({label: tr('Shelf'), value: '›', shelf: true, step: function (d) { if (d >= 0) openShelfEdit(); }});
     rows.push({label: tr('About this TV'), value: '›', about: true, step: function (d) { if (d >= 0) openAbout(); }});
-    if (TV.canOpenSettings) rows.push({label: tr('TV Settings'), value: '›', step: function (d) { if (d >= 0) tvSettings(); }});
+    rows.push({label: tr('TV Settings'), value: '›', step: function (d) { if (d >= 0) tvSettings(); }});
     return rows;
   }
 
@@ -819,7 +816,7 @@
     updateFocus();
   }
 
-  // MARK: - Language: a list of every catalogue in its own name, as on Android (moving through it doesn't switch the app)
+  // MARK: - Language: a list of every catalogue in its own name (moving through it doesn't switch the app)
 
   var langHint = null;
 
@@ -903,7 +900,7 @@
     if (typingIn(sheet)) fieldOf(sheet).blur();
   }
 
-  // MARK: - City: typed with the TV's keyboard, found by Open-Meteo, as on Android (the weather is for its coordinates)
+  // MARK: - City: typed with the TV's keyboard, found by Open-Meteo (the weather is for its coordinates)
 
   var cityFound = [], cityStatus = '', cityTimer = 0, citySeq = 0;
 
@@ -1115,7 +1112,7 @@
     else askRemoveKey(true);
   }
 
-  // MARK: - About this TV: what to quote when reporting a problem, without LG's or Samsung's slow menus
+  // MARK: - About this TV: what to quote when reporting a problem, without LG's slow menus
 
   function renderAbout(info) {
     var box = $('about').firstChild;
@@ -1133,7 +1130,7 @@
     el('div', 'hint', box, tr('Back closes.'));
   }
 
-  /** A long value (Samsung's firmware) gets smaller instead of running over its label, and ends in "…" if even the smallest size is too wide. */
+  /** A long value gets smaller instead of running over its label, and ends in "…" if even the smallest size is too wide. */
   function fitValue(row, label, value) {
     var room = row.clientWidth - label.offsetWidth - 2 * 24 - 24;   // the row's padding, and a gap after the label
     for (var size = 30; value.offsetWidth > room && size > 18; size -= 2) value.style.fontSize = size - 2 + 'px';
@@ -1493,14 +1490,14 @@
   document.addEventListener('mousemove', function () { poke(); });
 
   /**
-   * In a text field, the keys type (← → move in the text, Delete erases). OK or the keyboard's Done searches (or saves); Back,
-   * its Cancel or ↑ ↓ leave the field. Samsung's keyboard sends Done as 65376 and Cancel as 65385. True: handled here.
+   * In a text field, the keys type (← → move in the text, Delete erases). OK searches (or saves); Back or ↑ ↓ leave the
+   * field. True: handled here.
    */
   function typing(k) {
     var sheet = st.zone === Z.CITY ? 'citypick' : st.zone === Z.KEY ? 'keypick' : '';
     if (!sheet || !typingIn(sheet)) return false;
-    if (k === TV.keys.ok || k === 65376) { if (st.zone === Z.CITY) searchCity(); else saveKey(); }
-    else if (k === TV.keys.back || k === 27 || k === 65385) { closeField(sheet); updateFocus(); }
+    if (k === TV.keys.ok) { if (st.zone === Z.CITY) searchCity(); else saveKey(); }
+    else if (k === TV.keys.back || k === 27) { closeField(sheet); updateFocus(); }
     else if (k === TV.keys.up || k === TV.keys.down) { closeField(sheet); move(0, k === TV.keys.up ? -1 : 1); }
     return true;   // anything else types into the field
   }
@@ -1575,7 +1572,6 @@
 
   window.addEventListener('resize', fit);
   document.addEventListener('webOSRelaunch', reopened);   // LG: opened again while running
-  window.addEventListener('appcontrol', reopened);        // Samsung: the same
   document.addEventListener('visibilitychange', function () {
     if (document.hidden) { hideSaver(); return; }
     idleAt = Date.now();
