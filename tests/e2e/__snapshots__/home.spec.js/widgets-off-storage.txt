@@ -1,0 +1,4 @@
+{
+ "fmtv.night": "false",
+ "fmtv.prefs": "{\"weather\":false,\"quotes\":false}"
+}

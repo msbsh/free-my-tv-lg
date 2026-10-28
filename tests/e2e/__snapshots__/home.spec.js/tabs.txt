@@ -1,0 +1,249 @@
+html.- body.-
+div#stage
+  div#sky.layer
+    div.grad.day
+    div.grad.night
+    canvas#bgA
+    canvas#bgB.on
+    div.veil
+    div.lift
+  div#home.layer
+    div#top.layer
+      h1#title
+        "For You"
+      div#tabs
+        button.tab.on.focus
+          "Explore"
+        button.tab
+          "Movies"
+        button.tab
+          "Shows"
+      div#quotes
+        span.q
+          svg
+            path
+          span
+            "61.2k"
+        span.q
+          svg
+            path
+          span
+            "2.35k"
+        span.q
+          svg
+            path
+          span
+            "145"
+      div#buttons
+        button.round
+          span.sym
+          div.tip
+            "Live TV"
+        button.round
+          span.sym
+          div.tip
+            "HDMI Inputs"
+        button.round.last
+          span.sym
+          div.tip
+            "Settings"
+      div#cards
+        div.card
+          div.img
+            div.layer bg="url(\"https://image.tmdb.org/t/p/w342/mp104.jpg\")"
+            div.layer.back bg="url(\"https://image.tmdb.org/t/p/w1280/m104b.jpg\")"
+          div.name
+            "Movie 104 (English)"
+          div.meta
+            "Action · 1h 39m · Disney+"
+        div.card.wide
+          div.img
+            div.layer bg="url(\"https://image.tmdb.org/t/p/w342/tp204.jpg\")"
+            div.layer.back bg="url(\"https://image.tmdb.org/t/p/w1280/t204b.jpg\")"
+          div.name
+            "Show 204 (English)"
+          div.meta
+            "Series · Sci-Fi & Fantasy · 1 season · Netflix"
+        div.card
+          div.img
+            div.layer bg="url(\"https://image.tmdb.org/t/p/w342/mp105.jpg\")"
+            div.layer.back
+          div.name
+            "Movie 105 (English)"
+          div.meta
+            "Action · 1h 40m · Netflix"
+      div#clock
+        span.time
+          "10:00"
+        span.date
+          "Tuesday, October 20"
+    div#platter
+      span.sym.more.back
+      span.sym.more
+    div#tiles
+      div.tile bg="linear-gradient(rgb(10, 10, 10), rgb(0, 0, 0))"
+        div.word
+          "Netflix"
+      div.tile bg="linear-gradient(rgb(28, 28, 30), rgb(9, 9, 10))"
+        div.word
+          "YouTube"
+      div.tile bg="linear-gradient(rgb(42, 168, 255), rgb(10, 104, 212))"
+        div.word
+          "Prime Video"
+      div.tile bg="linear-gradient(rgb(23, 53, 132), rgb(8, 20, 63))"
+        div.word
+          "Disney+"
+      div.tile bg="linear-gradient(rgb(92, 48, 232), rgb(34, 22, 132))"
+        div.word
+          "Max"
+      div.tile bg="linear-gradient(rgb(28, 28, 30), rgb(0, 0, 0))"
+        div.word
+          "Apple TV"
+      div.tile bg="linear-gradient(rgb(255, 138, 31), rgb(255, 45, 90))"
+        div.word
+          "Globoplay"
+      div.tile bg="linear-gradient(rgb(29, 185, 84), rgb(15, 122, 54))"
+        div.word
+          "Spotify"
+  div#drawer.layer
+    div.row-title
+      "Inputs"
+    div.key.glass
+      span.sym
+      div.label
+        "Live TV"
+    div.key.glass
+      span.sym
+      div.label
+        "HDMI 1"
+    div.key.glass.off
+      span.sym
+      div.label
+        "HDMI 2"
+    div.key.glass.off
+      span.sym
+      div.label
+        "HDMI 3"
+    div.key.glass.off
+      span.sym
+      div.label
+        "HDMI 4"
+    div.row-title
+      "Shortcuts"
+    div.key.glass
+      span.sym
+      div.label
+        "All Apps"
+    div.key.glass
+      span.sym
+      div.label
+        "Home Settings"
+    div.key.glass
+      span.sym
+      div.label
+        "TV Settings"
+    div#weather.panel.glass
+      div.head
+        "Berlin"
+      div.now
+        span.sym
+        span.temp
+          "12°"
+      div.cond
+        "Partly Cloudy"
+      div.range
+        "H:14° L:6°"
+      div.split
+      div.hours
+        div.hour
+          div.t
+            "11 AM"
+          span.sym
+          div.d
+            "11°"
+        div.hour
+          div.t
+            "12 PM"
+          span.sym
+          div.d
+            "12°"
+        div.hour
+          div.t
+            "1 PM"
+          span.sym
+          div.d
+            "13°"
+        div.hour
+          div.t
+            "2 PM"
+          span.sym
+          div.d
+            "14°"
+        div.hour
+          div.t
+            "3 PM"
+          span.sym
+          div.d
+            "14°"
+        div.hour
+          div.t
+            "4 PM"
+          span.sym
+          div.d
+            "14°"
+      div.sun
+        span
+          span.sym
+          "Sunrise 7:35 AM"
+        span
+          span.sym
+          "Sunset 6:12 PM"
+    div#prices.panel.glass
+      div.head
+        "Crypto"
+      div.side
+        "24h change"
+      div.coin
+        svg
+          path
+        span.n
+          "Bitcoin"
+        span.p
+          "€61,235"
+        span.c.up
+          "+2.0%"
+      div.coin
+        svg
+          path
+        span.n
+          "Ethereum"
+        span.p
+          "€2,346"
+        span.c.down
+          "−2.3%"
+      div.coin
+        svg
+          path
+        span.n
+          "Solana"
+        span.p
+          "€145.20"
+        span.c.up
+          "+3.8%"
+  div#apps.layer.sheet
+    h2
+    div.grid
+  div#settings.layer.sheet
+    div.box
+  div#shelfedit.layer.sheet
+    div.box
+  div#langpick.layer.sheet
+    div.box
+  div#citypick.layer.sheet
+    div.box
+  div#keypick.layer.sheet
+    div.box
+  div#about.layer.sheet
+    div.box
+  div#saver.layer
+  div#toast

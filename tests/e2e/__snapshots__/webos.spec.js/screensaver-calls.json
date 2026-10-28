@@ -1,0 +1,22 @@
+{
+ "luna": [
+  {
+   "uri": "luna://com.webos.service.tvpower/power/responseScreenSaverRequest",
+   "params": {
+    "clientName": "test.app",
+    "ack": false,
+    "timestamp": 1001
+   }
+  },
+  {
+   "uri": "luna://com.webos.service.tvpower/power/responseScreenSaverRequest",
+   "params": {
+    "clientName": "test.app",
+    "ack": true,
+    "timestamp": 1002
+   }
+  }
+ ],
+ "ws": [],
+ "palm": []
+}

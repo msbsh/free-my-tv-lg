@@ -1,0 +1,4 @@
+{
+ "fmtv.night": "false",
+ "fmtv.prefs": "{\"tmdbKey\":\"abcdefabcdefabcdefabcdefabcdef12\"}"
+}

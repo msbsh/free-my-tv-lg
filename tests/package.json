@@ -1,0 +1,8 @@
+{
+  "name": "free-my-tv-lg-tests",
+  "private": true,
+  "description": "Browser tests for the LG home screen: tests/run.sh",
+  "devDependencies": {
+    "@playwright/test": "1.64.0"
+  }
+}

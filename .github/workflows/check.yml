@@ -40,4 +40,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
+      # The browser for tests/e2e. Screenshots stay local: their pixels differ between systems.
+      - run: cd tests && npm ci && npx playwright install --with-deps chromium
       - run: tools/check.sh web
+        env:
+          FMTV_NO_SCREENSHOTS: "1"

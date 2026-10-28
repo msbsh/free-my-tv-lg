@@ -1,0 +1,12 @@
+{
+ "luna": [
+  {
+   "uri": "luna://com.webos.applicationManager/launch",
+   "params": {
+    "id": "com.palm.app.settings"
+   }
+  }
+ ],
+ "ws": [],
+ "palm": []
+}

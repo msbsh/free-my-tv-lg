@@ -1,0 +1,249 @@
+html.- body.-
+div#stage
+  div#sky.layer
+    div.grad.day
+    div.grad.night
+    canvas#bgA
+    canvas#bgB.on
+    div.veil
+    div.lift
+  div#home.layer
+    div#top.layer
+      h1#title
+        "Für dich"
+      div#tabs
+        button.tab.on
+          "Entdecken"
+        button.tab
+          "Filme"
+        button.tab
+          "Serien"
+      div#quotes
+        span.q
+          svg
+            path
+          span
+            "61,2k"
+        span.q
+          svg
+            path
+          span
+            "2,35k"
+        span.q
+          svg
+            path
+          span
+            "145"
+      div#buttons
+        button.round
+          span.sym
+          div.tip
+            "Live-TV"
+        button.round
+          span.sym
+          div.tip
+            "HDMI-Eingänge"
+        button.round.last
+          span.sym
+          div.tip
+            "Einstellungen"
+      div#cards
+        div.card.wide
+          div.img
+            div.layer bg="url(\"https://image.tmdb.org/t/p/w342/mp104.jpg\")"
+            div.layer.back bg="url(\"https://image.tmdb.org/t/p/w1280/m104b.jpg\")"
+          div.name
+            "Movie 104"
+          div.meta
+            "Action · 1 h 39 min · Disney+"
+        div.card
+          div.img
+            div.layer bg="url(\"https://image.tmdb.org/t/p/w342/tp204.jpg\")"
+            div.layer.back
+          div.name
+            "Show 204"
+          div.meta
+            "Serie · Sci-Fi & Fantasy · 1 Staffel · Netflix"
+        div.card
+          div.img
+            div.layer bg="url(\"https://image.tmdb.org/t/p/w342/mp105.jpg\")"
+            div.layer.back
+          div.name
+            "Movie 105"
+          div.meta
+            "Action · 1 h 40 min · Netflix"
+      div#clock
+        span.time
+          "10:00"
+        span.date
+          "Dienstag, 20. Oktober"
+    div#platter
+      span.sym.more.back
+      span.sym.more
+    div#tiles
+      div.tile.focus bg="linear-gradient(rgb(10, 10, 10), rgb(0, 0, 0))"
+        div.word
+          "Netflix"
+      div.tile bg="linear-gradient(rgb(28, 28, 30), rgb(9, 9, 10))"
+        div.word
+          "YouTube"
+      div.tile bg="linear-gradient(rgb(42, 168, 255), rgb(10, 104, 212))"
+        div.word
+          "Prime Video"
+      div.tile bg="linear-gradient(rgb(23, 53, 132), rgb(8, 20, 63))"
+        div.word
+          "Disney+"
+      div.tile bg="linear-gradient(rgb(92, 48, 232), rgb(34, 22, 132))"
+        div.word
+          "Max"
+      div.tile bg="linear-gradient(rgb(28, 28, 30), rgb(0, 0, 0))"
+        div.word
+          "Apple TV"
+      div.tile bg="linear-gradient(rgb(255, 138, 31), rgb(255, 45, 90))"
+        div.word
+          "Globoplay"
+      div.tile bg="linear-gradient(rgb(29, 185, 84), rgb(15, 122, 54))"
+        div.word
+          "Spotify"
+  div#drawer.layer
+    div.row-title
+      "Eingänge"
+    div.key.glass
+      span.sym
+      div.label
+        "Live-TV"
+    div.key.glass
+      span.sym
+      div.label
+        "HDMI 1"
+    div.key.glass.off
+      span.sym
+      div.label
+        "HDMI 2"
+    div.key.glass.off
+      span.sym
+      div.label
+        "HDMI 3"
+    div.key.glass.off
+      span.sym
+      div.label
+        "HDMI 4"
+    div.row-title
+      "Verknüpfungen"
+    div.key.glass
+      span.sym
+      div.label
+        "Alle Apps"
+    div.key.glass
+      span.sym
+      div.label
+        "Start-Einstellungen"
+    div.key.glass
+      span.sym
+      div.label
+        "TV-Einstellungen"
+    div#weather.panel.glass
+      div.head
+        "Berlin"
+      div.now
+        span.sym
+        span.temp
+          "12°"
+      div.cond
+        "Teilweise bewölkt"
+      div.range
+        "H:14° T:6°"
+      div.split
+      div.hours
+        div.hour
+          div.t
+            "11 Uhr"
+          span.sym
+          div.d
+            "11°"
+        div.hour
+          div.t
+            "12 Uhr"
+          span.sym
+          div.d
+            "12°"
+        div.hour
+          div.t
+            "13 Uhr"
+          span.sym
+          div.d
+            "13°"
+        div.hour
+          div.t
+            "14 Uhr"
+          span.sym
+          div.d
+            "14°"
+        div.hour
+          div.t
+            "15 Uhr"
+          span.sym
+          div.d
+            "14°"
+        div.hour
+          div.t
+            "16 Uhr"
+          span.sym
+          div.d
+            "14°"
+      div.sun
+        span
+          span.sym
+          "Sonnenaufgang 7:35"
+        span
+          span.sym
+          "Sonnenuntergang 18:12"
+    div#prices.panel.glass
+      div.head
+        "Krypto"
+      div.side
+        "Änderung in 24 h"
+      div.coin
+        svg
+          path
+        span.n
+          "Bitcoin"
+        span.p
+          "€61.235"
+        span.c.up
+          "+2,0%"
+      div.coin
+        svg
+          path
+        span.n
+          "Ethereum"
+        span.p
+          "€2.346"
+        span.c.down
+          "−2,3%"
+      div.coin
+        svg
+          path
+        span.n
+          "Solana"
+        span.p
+          "€145,20"
+        span.c.up
+          "+3,8%"
+  div#apps.layer.sheet
+    h2
+    div.grid
+  div#settings.layer.sheet
+    div.box
+  div#shelfedit.layer.sheet
+    div.box
+  div#langpick.layer.sheet
+    div.box
+  div#citypick.layer.sheet
+    div.box
+  div#keypick.layer.sheet
+    div.box
+  div#about.layer.sheet
+    div.box
+  div#saver.layer
+  div#toast

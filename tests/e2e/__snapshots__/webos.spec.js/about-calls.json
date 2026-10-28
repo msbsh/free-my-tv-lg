@@ -1,0 +1,28 @@
+{
+ "luna": [
+  {
+   "uri": "luna://com.webos.service.tv.systemproperty/getSystemInfo",
+   "params": {
+    "keys": [
+     "modelName",
+     "firmwareVersion",
+     "sdkVersion"
+    ]
+   }
+  },
+  {
+   "uri": "luna://com.webos.service.systemservice/osInfo/query",
+   "params": {
+    "parameters": [
+     "webos_release"
+    ]
+   }
+  },
+  {
+   "uri": "luna://com.palm.connectionmanager/getStatus",
+   "params": {}
+  }
+ ],
+ "ws": [],
+ "palm": []
+}

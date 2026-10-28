@@ -1,0 +1,363 @@
+html.- body.-
+div#stage
+  div#sky.layer
+    div.grad.day
+    div.grad.night
+    canvas#bgA.on
+    canvas#bgB
+    div.veil
+    div.lift
+  div#home.layer
+    div#top.layer
+      h1#title
+        "For You"
+      div#tabs
+        button.tab.on
+          "Explore"
+        button.tab
+          "Movies"
+        button.tab
+          "Shows"
+      div#quotes
+        span.q
+          svg
+            path
+          span
+            "61.2k"
+        span.q
+          svg
+            path
+          span
+            "145"
+      div#buttons
+        button.round
+          span.sym
+          div.tip
+            "Live TV"
+        button.round
+          span.sym
+          div.tip
+            "HDMI Inputs"
+        button.round.last
+          span.sym
+          div.tip
+            "Settings"
+      div#cards
+        div.card.wide
+          div.img
+            div.layer bg="url(\"https://image.tmdb.org/t/p/w342/mp101.jpg\")"
+            div.layer.back bg="url(\"https://image.tmdb.org/t/p/w1280/m101b.jpg\")"
+          div.name
+            "Movie 101 (English)"
+          div.meta
+            "Action · 1h 36m · Disney+"
+        div.card
+          div.img
+            div.layer bg="url(\"https://image.tmdb.org/t/p/w342/tp202.jpg\")"
+            div.layer.back
+          div.name
+            "Show 202 (English)"
+          div.meta
+            "Series · Sci-Fi & Fantasy · 3 seasons · Prime Video"
+        div.card
+          div.img
+            div.layer bg="url(\"https://image.tmdb.org/t/p/w342/mp103.jpg\")"
+            div.layer.back
+          div.name
+            "Movie 103 (English)"
+          div.meta
+            "Action · 1h 38m · Prime Video"
+        div.card.edge
+          div.img
+            div.layer bg="url(\"https://image.tmdb.org/t/p/w342/tp203.jpg\")"
+            div.layer.back
+          div.name
+            "Show 203 (English)"
+          div.meta
+            "Series · Sci-Fi & Fantasy · 4 seasons · Disney+"
+      div#clock
+        span.time
+          "10:04"
+        span.date
+          "Tuesday, October 20"
+    div#platter
+      span.sym.more.back
+      span.sym.more
+    div#tiles
+      div.tile bg="linear-gradient(rgb(10, 10, 10), rgb(0, 0, 0))"
+        div.word
+          "Netflix"
+      div.tile bg="linear-gradient(rgb(28, 28, 30), rgb(9, 9, 10))"
+        div.word
+          "YouTube"
+      div.tile bg="linear-gradient(rgb(42, 168, 255), rgb(10, 104, 212))"
+        div.word
+          "Prime Video"
+      div.tile bg="linear-gradient(rgb(23, 53, 132), rgb(8, 20, 63))"
+        div.word
+          "Disney+"
+      div.tile bg="linear-gradient(rgb(92, 48, 232), rgb(34, 22, 132))"
+        div.word
+          "Max"
+      div.tile bg="linear-gradient(rgb(28, 28, 30), rgb(0, 0, 0))"
+        div.word
+          "Apple TV"
+      div.tile bg="linear-gradient(rgb(255, 138, 31), rgb(255, 45, 90))"
+        div.word
+          "Globoplay"
+      div.tile bg="linear-gradient(rgb(29, 185, 84), rgb(15, 122, 54))"
+        div.word
+          "Spotify"
+  div#drawer.layer
+    div.row-title
+      "Inputs"
+    div.key.glass
+      span.sym
+      div.label
+        "Live TV"
+    div.key.glass
+      span.sym
+      div.label
+        "HDMI 1"
+    div.key.glass.off
+      span.sym
+      div.label
+        "HDMI 2"
+    div.key.glass.off
+      span.sym
+      div.label
+        "HDMI 3"
+    div.key.glass.off
+      span.sym
+      div.label
+        "HDMI 4"
+    div.row-title
+      "Shortcuts"
+    div.key.glass
+      span.sym
+      div.label
+        "All Apps"
+    div.key.glass
+      span.sym
+      div.label
+        "Home Settings"
+    div.key.glass
+      span.sym
+      div.label
+        "TV Settings"
+    div#weather.panel.glass
+      div.head
+        "Berlin"
+      div.now
+        span.sym
+        span.temp
+          "12°"
+      div.cond
+        "Partly Cloudy"
+      div.range
+        "H:14° L:6°"
+      div.split
+      div.hours
+        div.hour
+          div.t
+            "Wed"
+          span.sym
+          div.d
+            "15°"
+            span.low
+              "7°"
+        div.hour
+          div.t
+            "Thu"
+          span.sym
+          div.d
+            "12°"
+            span.low
+              "6°"
+        div.hour
+          div.t
+            "Fri"
+          span.sym
+          div.d
+            "10°"
+            span.low
+              "4°"
+        div.hour
+          div.t
+            "Sat"
+          span.sym
+          div.d
+            "12°"
+            span.low
+              "5°"
+        div.hour
+          div.t
+            "Sun"
+          span.sym
+          div.d
+            "13°"
+            span.low
+              "6°"
+      div.sun
+        span
+          span.sym
+          "Sunrise 7:35 AM"
+        span
+          span.sym
+          "Sunset 6:12 PM"
+    div#prices.panel.glass
+      div.head
+        "Crypto"
+      div.side
+        "24h change"
+      div.coin
+        svg
+          path
+        span.n
+          "Bitcoin"
+        span.p
+          "€61,235"
+        span.c.up
+          "+2.0%"
+      div.coin
+        svg
+          path
+        span.n
+          "Solana"
+        span.p
+          "€145.20"
+        span.c.up
+          "+3.8%"
+  div#apps.layer.sheet
+    h2
+    div.grid
+  div#settings.layer.sheet.open
+    div.box
+      div.title
+        span.sym
+        "Home Settings"
+      div.list
+        div.rows
+          div.row
+            "Language"
+            span.value
+              "Automatic"
+              span.chev
+                "›"
+          div.row
+            "Temperature"
+            span.value
+              span.chev
+                "‹"
+              "°C"
+              span.chev
+                "›"
+          div.row
+            "Theme"
+            span.value
+              span.chev
+                "‹"
+              "Light"
+              span.chev
+                "›"
+          div.row
+            "Picks per tab"
+            span.value
+              span.chev
+                "‹"
+              "4"
+              span.chev
+                "›"
+          div.row.focus
+            "Watch from the screensaver"
+            div.toggle.on
+          div.row
+            "Weather widget"
+            div.toggle.on
+          div.row
+            "City"
+            span.value
+              "Berlin"
+              span.chev
+                "›"
+          div.row
+            "Forecast"
+            span.value
+              span.chev
+                "‹"
+              "Next days"
+              span.chev
+                "›"
+          div.row
+            "Quotes widget"
+            div.toggle.on
+          div.row
+            "Bitcoin"
+            div.toggle.on
+          div.row
+            "Ethereum"
+            div.toggle
+          div.row
+            "Solana"
+            div.toggle.on
+          div.row
+            "TMDB key"
+            span.value
+              "•••• cdef"
+              span.chev
+                "›"
+          div.row
+            "Picks from"
+            span.value
+              span.chev
+                "‹"
+              "Some"
+              span.chev
+                "›"
+          div.row
+            "Netflix"
+            div.toggle
+          div.row
+            "Prime Video"
+            div.toggle.on
+          div.row
+            "Disney+"
+            div.toggle.on
+          div.row
+            "Globoplay"
+            div.toggle.on
+          div.row
+            "Max"
+            div.toggle.on
+          div.row
+            "Apple TV"
+            div.toggle.on
+          div.row
+            "Crunchyroll"
+            div.toggle.on
+          div.row
+            "Shelf"
+            span.value
+              "›"
+          div.row
+            "About this TV"
+            span.value
+              "›"
+          div.row
+            "TV Settings"
+            span.value
+              "›"
+      div.hint
+        "OK or the arrows change the value."
+  div#shelfedit.layer.sheet
+    div.box
+  div#langpick.layer.sheet
+    div.box
+  div#citypick.layer.sheet
+    div.box
+  div#keypick.layer.sheet
+    div.box
+  div#about.layer.sheet
+    div.box
+  div#saver.layer
+  div#toast

@@ -3,7 +3,7 @@
 #
 #   tools/check.sh           # everything
 #   tools/check.sh android   # only the Google TV build (needs what build.sh needs)
-#   tools/check.sh web       # translations, the LG and Samsung packages, and ES5 (needs Python 3 and Node)
+#   tools/check.sh web       # translations, the LG and Samsung packages, ES5 and tests/ (needs Python 3 and Node)
 #
 # One difference: here ./build.sh uses the newest SDK and JDK you have, while CI uses build-tools 34, android-34 and
 # JDK 17, as the README says. A call newer than Android 34 can pass here and fail on the pull request.
@@ -43,6 +43,9 @@ if [ "$what" = all ] || [ "$what" = web ]; then
     echo "web/ uses CSS older TVs don't have (above)." >&2
     exit 1
   fi
+
+  # The LG package and screen against their baseline (tests/run.sh).
+  tests/run.sh
 fi
 
 echo "All checks passed."

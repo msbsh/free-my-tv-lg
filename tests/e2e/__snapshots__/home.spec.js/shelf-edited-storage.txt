@@ -1,0 +1,4 @@
+{
+ "fmtv.night": "false",
+ "fmtv.prefs": "{\"shelf\":[\"youtube.leanback.v4\",\"amazon\",\"com.disney.disneyplus-prod\",\"com.hbo.hbomax\",\"com.apple.appletv\",\"globoplaywebos\",\"spotify-beehive\",\"com.webos.app.browser\"]}"
+}

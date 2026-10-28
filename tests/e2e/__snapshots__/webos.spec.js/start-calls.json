@@ -1,0 +1,21 @@
+{
+ "luna": [
+  {
+   "uri": "luna://com.webos.service.tvpower/power/registerScreenSaverRequest",
+   "params": {
+    "subscribe": true,
+    "clientName": "test.app"
+   }
+  },
+  {
+   "uri": "luna://com.webos.applicationManager/listLaunchPoints",
+   "params": {}
+  },
+  {
+   "uri": "luna://com.webos.service.eim/getAllInputStatus",
+   "params": {}
+  }
+ ],
+ "ws": [],
+ "palm": []
+}

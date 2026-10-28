@@ -1,0 +1,4 @@
+{
+ "fmtv.night": "false",
+ "fmtv.prefs": "{\"city\":\"Hamburg\",\"latitude\":\"40.5556\",\"longitude\":\"-75.9819\"}"
+}

@@ -1,0 +1,53 @@
+{
+ "luna": [
+  {
+   "uri": "luna://com.webos.service.tvpower/power/registerScreenSaverRequest",
+   "params": {
+    "subscribe": true,
+    "clientName": "test.app"
+   }
+  },
+  {
+   "uri": "luna://com.webos.applicationManager/listLaunchPoints",
+   "params": {}
+  },
+  {
+   "uri": "luna://test.app.service/ssap",
+   "params": {
+    "uri": "com.webos.applicationManager/listLaunchPoints",
+    "clientKey": "old-key"
+   }
+  },
+  {
+   "uri": "luna://com.webos.service.eim/getAllInputStatus",
+   "params": {}
+  }
+ ],
+ "ws": [
+  {
+   "open": "ws://127.0.0.1:3000"
+  },
+  {
+   "send": {
+    "type": "register",
+    "id": "register",
+    "payload": {
+     "forcePairing": false,
+     "pairingType": "PROMPT",
+     "manifest": {
+      "manifestVersion": 1,
+      "appVersion": "1.0",
+      "permissions": [
+       "READ_INSTALLED_APPS"
+      ]
+     },
+     "client-key": "old-key"
+    }
+   }
+  },
+  {
+   "close": true
+  }
+ ],
+ "palm": []
+}

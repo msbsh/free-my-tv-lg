@@ -1,0 +1,154 @@
+{
+ "luna": [
+  {
+   "uri": "luna://com.webos.service.tvpower/power/registerScreenSaverRequest",
+   "params": {
+    "subscribe": true,
+    "clientName": "test.app"
+   }
+  },
+  {
+   "uri": "luna://com.webos.applicationManager/listLaunchPoints",
+   "params": {}
+  },
+  {
+   "uri": "luna://com.webos.applicationManager/getAppLoadStatus",
+   "params": {
+    "appId": "netflix"
+   }
+  },
+  {
+   "uri": "luna://com.webos.applicationManager/getAppLoadStatus",
+   "params": {
+    "appId": "youtube.leanback.v4"
+   }
+  },
+  {
+   "uri": "luna://com.webos.applicationManager/getAppLoadStatus",
+   "params": {
+    "appId": "amazon"
+   }
+  },
+  {
+   "uri": "luna://com.webos.applicationManager/getAppLoadStatus",
+   "params": {
+    "appId": "com.disney.disneyplus-prod"
+   }
+  },
+  {
+   "uri": "luna://com.webos.applicationManager/getAppLoadStatus",
+   "params": {
+    "appId": "com.wbd.stream"
+   }
+  },
+  {
+   "uri": "luna://com.webos.applicationManager/getAppLoadStatus",
+   "params": {
+    "appId": "com.hbo.hbomax"
+   }
+  },
+  {
+   "uri": "luna://com.webos.applicationManager/getAppLoadStatus",
+   "params": {
+    "appId": "com.apple.appletv"
+   }
+  },
+  {
+   "uri": "luna://com.webos.applicationManager/getAppLoadStatus",
+   "params": {
+    "appId": "hulu"
+   }
+  },
+  {
+   "uri": "luna://com.webos.applicationManager/getAppLoadStatus",
+   "params": {
+    "appId": "com.peacock.tv"
+   }
+  },
+  {
+   "uri": "luna://com.webos.applicationManager/getAppLoadStatus",
+   "params": {
+    "appId": "com.nfl.app"
+   }
+  },
+  {
+   "uri": "luna://com.webos.applicationManager/getAppLoadStatus",
+   "params": {
+    "appId": "globoplaywebos"
+   }
+  },
+  {
+   "uri": "luna://com.webos.applicationManager/getAppLoadStatus",
+   "params": {
+    "appId": "spotify-beehive"
+   }
+  },
+  {
+   "uri": "luna://com.webos.applicationManager/getAppLoadStatus",
+   "params": {
+    "appId": "tv.twitch.tv.starshot.lg"
+   }
+  },
+  {
+   "uri": "luna://com.webos.applicationManager/getAppLoadStatus",
+   "params": {
+    "appId": "cdp-30"
+   }
+  },
+  {
+   "uri": "luna://com.webos.applicationManager/getAppLoadStatus",
+   "params": {
+    "appId": "org.jellyfin.webos"
+   }
+  },
+  {
+   "uri": "luna://com.webos.applicationManager/getAppLoadStatus",
+   "params": {
+    "appId": "com.crunchyroll.webapp"
+   }
+  },
+  {
+   "uri": "luna://com.webos.applicationManager/getAppLoadStatus",
+   "params": {
+    "appId": "com.webos.app.browser"
+   }
+  },
+  {
+   "uri": "luna://com.webos.service.eim/getAllInputStatus",
+   "params": {}
+  }
+ ],
+ "ws": [
+  {
+   "open": "ws://127.0.0.1:3000"
+  },
+  {
+   "send": {
+    "type": "register",
+    "id": "register",
+    "payload": {
+     "forcePairing": false,
+     "pairingType": "PROMPT",
+     "manifest": {
+      "manifestVersion": 1,
+      "appVersion": "1.0",
+      "permissions": [
+       "READ_INSTALLED_APPS"
+      ]
+     }
+    }
+   }
+  },
+  {
+   "send": {
+    "type": "request",
+    "id": "call",
+    "uri": "ssap://com.webos.applicationManager/listLaunchPoints"
+   }
+  },
+  {
+   "close": true
+  }
+ ],
+ "palm": []
+}
