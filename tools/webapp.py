@@ -83,8 +83,11 @@ def catalogues():
 
 
 def files(config, made_by):
-    """The web app's files, {path inside the app: bytes}: web/, the settings, the catalogues, the app's symbols and font."""
+    """The web app's files, {path inside the app: bytes}: web/, the settings, the catalogues, the symbols, the font and
+    the license (MIT asks its notice to travel with every copy)."""
     out = {}
+    with open(os.path.join(ROOT, 'LICENSE'), 'rb') as f:
+        out['LICENSE'] = f.read()
     web = os.path.join(ROOT, 'web')
     for name in sorted(os.listdir(web)):
         if os.path.isdir(os.path.join(web, name)):

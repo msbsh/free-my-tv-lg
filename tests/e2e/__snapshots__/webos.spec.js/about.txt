@@ -371,9 +371,9 @@ div#stage
               "Europe/Berlin"
           div.row
             span
-              "Free My TV"
+              "Free My TV (LG)"
             span.value
-              "1.2.0"
+              "2.0.0"
       div.hint
         "Back closes."
   div#saver.layer

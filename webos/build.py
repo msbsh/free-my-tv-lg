@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Builds Free My TV for LG webOS: FreeMyTV-webos.ipk, the app package the TV's Developer Mode installs.
+"""Builds Free My TV (LG) for LG webOS: FreeMyTV-webos.ipk, the app package the TV's Developer Mode installs.
 
     python3 webos/build.py            # → FreeMyTV-webos.ipk
     python3 webos/build.py --preview  # also leaves the files in out/webos/ to open index.html in a browser
@@ -81,8 +81,8 @@ def build(preview, config):
         service = {'service.js': f.read(),
                    'package.json': json.dumps({'name': service_id, 'version': version, 'main': 'service.js'},
                                               indent=2).encode('utf-8'),
-                   'services.json': json.dumps({'id': service_id, 'description': 'Free My TV',
-                                                'services': [{'name': service_id, 'description': 'Free My TV'}]},
+                   'services.json': json.dumps({'id': service_id, 'description': 'Free My TV (LG)',
+                                                'services': [{'name': service_id, 'description': 'Free My TV (LG)'}]},
                                                indent=2).encode('utf-8')}
     service_base = 'usr/palm/services/' + service_id
     entries += [('usr/palm/services', None), (service_base, None)]
@@ -95,7 +95,7 @@ def build(preview, config):
 
     size = sum(len(d) for d in app.values()) + sum(len(d) for d in service.values()) + len(package)
     control = ('Package: %s\nVersion: %s\nSection: misc\nPriority: optional\nArchitecture: all\nInstalled-Size: %d\n'
-               'Maintainer: Free My TV <https://freemytv.io>\nDescription: A fast, ad-free home screen.\n'
+               'Maintainer: msbsh <https://github.com/msbsh/free-my-tv>\nDescription: A fast, ad-free home screen.\n'
                'webOS-Package-Format-Version: 2\nwebOS-Packager-Version: 1.0.0\n' % (app_id, version, size))
     data = ar([('debian-binary', b'2.0\n'), ('control.tar.gz', tar_gz([('control', control.encode('utf-8'))])),
                ('data.tar.gz', tar_gz(entries))])

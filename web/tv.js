@@ -157,7 +157,7 @@ var TV = (function () {
     });
   }
 
-  var self = 'io.freemytv';
+  var self = 'de.msbsh.freemytvlg';
   if (webos && window.PalmSystem && window.PalmSystem.identifier) self = window.PalmSystem.identifier.split(' ')[0];
 
   // MARK: - About this TV

@@ -392,7 +392,7 @@ div#stage
               "Europe/Berlin"
           div.row
             span
-              "Free My TV"
+              "Free My TV (LG)"
             span.value
               "preview"
       div.hint

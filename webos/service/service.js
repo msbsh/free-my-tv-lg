@@ -1,6 +1,6 @@
 /*
- * Free My TV's service on LG webOS: one call to the TV's remote control API (127.0.0.1:3000) for the web app.
- * Newer webOS gives each app's page its own origin (file://io.freemytv-webos), and the API closes any connection
+ * Free My TV (LG)'s service on webOS: one call to the TV's remote control API (127.0.0.1:3000) for the web app.
+ * Newer webOS gives each app's page its own origin (file://de.msbsh.freemytvlg-webos), and the API closes any connection
  * that isn't from file:// ("invalid origin"); from here the handshake says file://.
  * Node's net only: no packages to ship.
  */

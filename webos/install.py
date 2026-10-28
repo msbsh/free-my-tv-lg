@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Installs Free My TV on an LG TV in Developer Mode, over your Wi-Fi.
+"""Installs Free My TV (LG) on an LG TV in Developer Mode, over your Wi-Fi.
 
     python3 webos/install.py 192.168.1.50              # install or update, then open it
     python3 webos/install.py 192.168.1.50 --uninstall  # remove it
@@ -125,7 +125,7 @@ def main():
     ssh(ip, key, 'rm -f ' + TEMP)
     luna(ip, key, 'luna://com.webos.applicationManager/launch', {'id': APP_ID})
     print('Installed and open on the TV.')
-    print('Tip: while Free My TV is open, hold a number key on the remote to open it with that key from anywhere.')
+    print('Tip: while Free My TV (LG) is open, hold a number key on the remote to open it with that key from anywhere.')
     print('Developer Mode lasts about 40 days: open the Developer Mode app now and then and press EXTEND.')
 
 
