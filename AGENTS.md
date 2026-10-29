@@ -105,3 +105,5 @@ them remove the old one (LG's app list, edit mode) before the first install.
   strings), and keep placeholders as they are. No right-to-left languages yet.
 - Comments in English, short, only where the why isn't obvious.
 - Preview: `python3 webos/build.py --preview`, then open `out/webos/index.html` in a browser.
+- The README's animated preview (`.github/preview.webp`): record it again with the `readme-preview` skill
+  (`.claude/skills/readme-preview/`) whenever the home screen's look changes.

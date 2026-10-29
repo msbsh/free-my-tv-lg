@@ -20,9 +20,9 @@ This fork keeps only the LG app; Google TV, Android TV and Samsung live upstream
 - **No ads.** No sponsored rows, banners or autoplaying promos.
 - **Your apps, front and center.** The streaming apps you use, on a glass shelf. Pick them and their order on the TV.
 - **Trending, not sponsored.** Three fresh picks every hour (up to six, in Home Settings) from what's trending this week and the latest releases, only from apps you already have. Movies and Shows get their own tabs.
-- **Weather and inputs, one press away.** ↓ opens a drawer with the hour-by-hour forecast (or the next 5 days), sunrise and sunset, and below it the antenna and HDMI inputs.
+- **Weather and inputs, one press away.** ↓ opens a drawer with the hour-by-hour forecast (or the next 5 days), sunrise and sunset, and below it the antenna and HDMI inputs and shortcuts to All Apps and the settings.
 - **Light by day, dark by night.** It follows your city's sunset.
-- **A screensaver to match.** Full-screen photos of the picks with a big clock. Optionally (*Watch from the screensaver*), OK opens the title on screen in its app.
+- **A screensaver to match.** Full-screen photos of the picks with a big clock that moves to another corner with every photo, so nothing stays in place on an OLED panel. Optionally (*Watch from the screensaver*), OK opens the title on screen in its app.
 - **Set up on the TV.** Language, city, temperature, theme, how many picks and which streaming services they come from, the weather card, the TMDB key and the apps on the shelf, in *Home Settings*.
 - **Nothing changed on the TV.** It installs through LG's Developer Mode. LG's home screen stays; Free My TV (LG) is one press of a number key away.
 
@@ -104,7 +104,7 @@ Each language is one file, [`assets/i18n/<lang>.json`](assets/i18n), keyed by th
 - **Add a language:** `python3 tools/translate.py --new ca`, then fill `assets/i18n/ca.json` by hand, or with `ANTHROPIC_API_KEY` set, `python3 tools/translate.py --fill --lang ca` (only the strings go to the API).
 - **After changing text in the code:** `python3 tools/translate.py` lists what each language lacks; `--fill` translates only that, `--prune` drops strings the code no longer uses, `--check` validates without writing.
 - Text built at runtime has placeholders (`"{n} min ago"`); a key like `"unit|Automatic"` is the same English where a language may need another word; counts have plural forms (`"plural|one:{n} season|other:{n} seasons"`).
-- Right-to-left languages aren't there yet (the layout isn't mirrored). Chinese, Japanese, Korean and Hindi use the TV's system font.
+- Right-to-left languages aren't there yet (the layout isn't mirrored). Chinese, Japanese, Korean, Hindi and Thai use the TV's system font (the bundled Inter has no glyphs for them).
 
 ## Privacy
 
