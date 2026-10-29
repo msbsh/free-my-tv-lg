@@ -248,3 +248,21 @@ test('opened again: back to the shelf, the first tab', async ({page}) => {
   await snap(page, 'relaunched');
   s.check();
 });
+
+test('another app in front: no requests until the home screen shows again', async ({page}) => {
+  const s = await m.open(page);
+  const visible = (shown) => page.evaluate((v) => {
+    Object.defineProperty(document, 'hidden', {configurable: true, get: () => !v});
+    Object.defineProperty(document, 'visibilityState', {configurable: true, get: () => (v ? 'visible' : 'hidden')});
+    document.dispatchEvent(new Event('visibilitychange'));
+  }, shown);
+  await visible(false);
+  s.net.requests.length = 0;
+  await page.clock.runFor(2 * 3600000);   // past the weather's 30 minutes and the picks' noon
+  await m.settle(page, s.net);
+  expect(s.net.requests).toEqual([]);
+  await visible(true);
+  await m.settle(page, s.net);
+  expect(s.net.requests.some((r) => r.indexOf('https://api.open-meteo.com/v1/forecast') >= 0)).toBe(true);
+  s.check();
+});

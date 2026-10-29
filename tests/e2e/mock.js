@@ -340,7 +340,7 @@ async function storage(page) {
     const out = {};
     for (let i = 0; i < localStorage.length; i++) {
       const k = localStorage.key(i);
-      if (/^fmtv\.(prefs|ssapKey|ssapRefused|night|dollarsFor)$/.test(k)) out[k] = localStorage.getItem(k);
+      if (/^fmtv\.(prefs|ssapKey|ssapRefused|night)$/.test(k)) out[k] = localStorage.getItem(k);
     }
     return JSON.stringify(out, Object.keys(out).sort(), 1) + '\n';
   });

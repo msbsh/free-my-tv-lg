@@ -37,6 +37,8 @@ var Prefs = (function () {
   var v = {};
   try { v = JSON.parse(localStorage.getItem(KEY)) || {}; } catch (e) {}
   function save() { try { localStorage.setItem(KEY, JSON.stringify(v)); } catch (e) {} }
+  // The crypto prices' settings, from before they were removed.
+  if (v.quotes !== undefined || v.coins !== undefined) { delete v.quotes; delete v.coins; save(); }
   function pick(name, fallback) { return v[name] === undefined ? fallback : v[name]; }
   return {
     version: 0,
@@ -78,6 +80,8 @@ var Data = (function () {
 
   function store(key, value) { try { localStorage.setItem('fmtv.' + key, JSON.stringify(value)); } catch (e) {} }
   function stored(key) { try { return JSON.parse(localStorage.getItem('fmtv.' + key)); } catch (e) { return null; } }
+  // The crypto prices' cache, from before they were removed.
+  try { localStorage.removeItem('fmtv.prices'); localStorage.removeItem('fmtv.dollarsFor'); } catch (e) {}
 
   /** GET a JSON document; done(error, json). */
   function get(url, headers, done) {

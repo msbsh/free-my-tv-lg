@@ -1511,6 +1511,7 @@
   document.addEventListener('visibilitychange', function () {
     if (document.hidden) { hideSaver(); return; }
     idleAt = Date.now();
+    checkNight();
     loadApps(function () { renderShelf(); renderDrawer(); updateFocus(); Data.refresh(); });
   });
 
@@ -1527,6 +1528,7 @@
     Data.refresh();
   });
   setInterval(function () {
+    if (document.hidden) return;   // another app is in front: no requests until we're back (visibilitychange)
     checkNight();
     Data.refresh();
     if (!saverOn && !sheetOpen() && Date.now() - idleAt > SAVER_AFTER) showSaver();
