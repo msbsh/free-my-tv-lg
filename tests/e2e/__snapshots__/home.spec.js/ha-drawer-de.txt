@@ -9,8 +9,11 @@ div#stage
     div.lift
   div#home.layer
     div#top.layer
-      h1#title
-        "Für dich"
+      div#quote
+        p.text
+          "Selbst der bescheidenste Mensch hält mehr von sich, als sein bester Freund von ihm hält."
+        p.author
+          "Marie von Ebner-Eschenbach"
       div#tabs
         button.tab.on
           "Entdecken"

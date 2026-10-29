@@ -11,7 +11,7 @@ Trending picks from your own apps, the weather at a glance, and a look that foll
 Based on [simbasjungles/free-my-tv](https://github.com/simbasjungles/free-my-tv) by Simba ([@simbasjungles](https://github.com/simbasjungles)) and its [contributors](https://github.com/simbasjungles/free-my-tv/graphs/contributors).
 This fork keeps only the LG app; Google TV, Android TV and Samsung live upstream.
 
-<img src=".github/preview.webp" width="880" alt="The home screen: a glass shelf of apps, trending picks, and a drawer with the weather and the inputs">
+<img src=".github/preview.webp" width="880" alt="The home screen: a quote at the top, trending picks, a glass shelf of apps, and a drawer with the weather and the inputs">
 
 </div>
 
@@ -22,6 +22,7 @@ This fork keeps only the LG app; Google TV, Android TV and Samsung live upstream
 - **Trending, not sponsored.** Three fresh picks every hour (up to six, in Home Settings) from what's trending this week and the latest releases, only from apps you already have. Movies and Shows get their own tabs.
 - **Weather and inputs, one press away.** ↓ opens a drawer with the hour-by-hour forecast (or the next 5 days), sunrise and sunset, and below it the antenna and HDMI inputs and shortcuts to All Apps and the settings.
 - **Your home at a glance (optional).** Up to three [Home Assistant](#home-assistant) values at the top right (OK shows their last 24 hours) and a card of them in the drawer, next to the weather. Read only, live.
+- **A thought to start with.** A short quote at the top, another with every start: Goethe, Lichtenberg, Ebner-Eschenbach or Nietzsche on a German TV, Wilde, Twain, Shaw or Thoreau elsewhere, always in the words they wrote, with their name.
 - **Light by day, dark by night.** It follows your city's sunset.
 - **A screensaver to match.** Full-screen photos of the picks with a big clock that moves to another corner with every photo, so nothing stays in place on an OLED panel. Optionally (*Watch from the screensaver*), OK opens the title on screen in its app.
 - **Set up on the TV.** Language, city, temperature, theme, how many picks and which streaming services they come from, the weather card, the TMDB key, Home Assistant and the apps on the shelf, in *Home Settings*.
@@ -105,7 +106,7 @@ The app connects through Home Assistant's WebSocket API, so Home Assistant needs
 | [`web/ha.js`](web/ha.js) | Home Assistant, read only |
 | [`web/strings.js`](web/strings.js) | Translations, dates and plurals |
 | [`webos/build.py`](webos/build.py), [`webos/install.py`](webos/install.py) | The package and its install |
-| [`assets/`](assets) | Catalogues, symbols and font the package carries |
+| [`assets/`](assets) | Catalogues, quotes, symbols and font the package carries |
 | [`tests/`](tests) | The package and the screen against their baseline |
 
 ## Checks and tests
@@ -131,6 +132,7 @@ No accounts, no analytics, no tracking. The app talks to TMDB and Open-Meteo (wi
 - The LG version builds on what [@danielthejoker18](https://github.com/danielthejoker18) found in [FreeMyTvWebOS](https://github.com/danielthejoker18/FreeMyTvWebOS) (MIT): installing through Developer Mode and opening apps through the TV's service bus.
 - This product uses the TMDB API but is not endorsed or certified by [TMDB](https://www.themoviedb.org/).
 - Weather data by [Open-Meteo.com](https://open-meteo.com/) (CC BY 4.0).
+- Quotes: in the public domain, copied from [Project Gutenberg](https://www.gutenberg.org) and [Wikisource](https://de.wikisource.org) (German in today's spelling).
 - Icons: [Material Symbols](https://fonts.google.com/icons) (Apache 2.0). Font: [Inter](https://rsms.me/inter/) (SIL OFL 1.1). App logos: [Simple Icons](https://simpleicons.org) (CC0).
 - Not affiliated with LG or any streaming service. App names and logos belong to their owners.
 

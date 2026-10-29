@@ -182,10 +182,13 @@ test('the logos are kept: the next start draws them at once, without lifting the
   const s = await m.open(page, {tv: {launchPoints: true}});
   expect(await page.evaluate(() => window.__lifts)).toBeGreaterThan(0);
   expect(Object.keys((await logos(page)).apps).sort()).toEqual(['amazon', 'netflix', 'youtube.leanback.v4']);
-  const first = await m.dom(page);
+  const quote = () => page.locator('#quote .text').textContent();
+  const first = await m.dom(page), firstQuote = await quote();
   await restart(page, s.net);
   expect(await page.evaluate(() => window.__lifts)).toBe(0);
-  expect(await m.dom(page)).toBe(first);
+  // The same screen, but for the quote: each start brings another.
+  expect(await quote()).not.toBe(firstQuote);
+  expect(await m.dom(page)).toBe(first.replace(firstQuote, await quote()));
   s.check();
 });
 

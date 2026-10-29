@@ -9,8 +9,11 @@ div#stage
     div.lift
   div#home.layer
     div#top.layer
-      h1#title
-        "For You"
+      div#quote
+        p.text
+          "There are nowadays professors of philosophy, but not philosophers."
+        p.author
+          "Henry David Thoreau"
       div#tabs
         button.tab.on
           "Explore"

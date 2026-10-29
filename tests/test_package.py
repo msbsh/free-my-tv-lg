@@ -29,13 +29,15 @@ import webapp  # noqa: E402  (config.properties as the package has it)
 
 # Files whose content may change, and why. Everything else in the baseline must stay byte for byte.
 CHANGED = {
-    'index.html': 'the title names the fork; no crypto quotes; Home Assistant at the top',
+    'index.html': 'the title names the fork; no crypto quotes; Home Assistant at the top; a quote in place of "For You"',
     'tv.js': 'Samsung and webOS 3-5 code removed, the fallback app id',
     'home.js': 'Samsung code removed, the About row names the fork; no crypto, the weather above the inputs; '
-               'Home Assistant in place of the round buttons at the top (all three are in the drawer)',
+               'Home Assistant in place of the round buttons at the top (all three are in the drawer); '
+               'a quote in place of "For You"',
     'data.js': 'the Intl fallback for Tizen 2 removed; no crypto prices; the Home Assistant settings',
     'strings.js': 'polyfills for Chromium before 79 removed',
-    'home.css': 'the lite mode for slow TVs removed; no crypto, the weather above the inputs; Home Assistant',
+    'home.css': 'the lite mode for slow TVs removed; no crypto, the weather above the inputs; Home Assistant; '
+                'a quote in place of "For You"',
     'config.js': 'no show_crypto and currency; Home Assistant (ha_url, ha_token, ha_top, ha_panel)',
     'appinfo.json': 'id, version, title and vendor of the fork (compared field by field below)',
     'service/service.js': 'the Buffer fallback for old Node removed',
@@ -52,6 +54,7 @@ REMOVED = {
 ADDED = {
     'LICENSE': 'the MIT notice travels with the package',
     'ha.js': 'Home Assistant, read only',
+    'quotes.js': 'the quotes at the top (assets/quotes)',
 }
 for _name in ('blinds', 'bolt', 'door', 'lightbulb', 'lock', 'motion', 'thermostat', 'toggle', 'water_drop', 'window'):
     ADDED['symbols/%s.png' % _name] = "Home Assistant's values"

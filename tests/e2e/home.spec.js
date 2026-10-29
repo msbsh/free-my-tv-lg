@@ -54,10 +54,11 @@ test('the remote moves through the shelf, the picks and the tabs', async ({page}
   s.check();
 });
 
-test('without a TMDB key nothing above the shelf takes the focus', async ({page}) => {
+test('without a TMDB key nothing above the shelf takes the focus; the quote stays', async ({page}) => {
   const s = await m.open(page, {prefs: {tmdbKey: ''}});
   await m.press(page, s.net, 'Up');
   await expect(page.locator('#tiles .focus')).toHaveCount(1);
+  await snap(page, 'no-key');
   s.check();
 });
 

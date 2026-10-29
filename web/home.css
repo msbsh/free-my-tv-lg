@@ -1,5 +1,5 @@
 /*
- * The home screen on a 1920 × 1080 stage: the title and tabs at the top
+ * The home screen on a 1920 × 1080 stage: the quote and tabs at the top
  * left, icon-only glass buttons at the top right, three picks, and the glass shelf at the bottom; ↓ on the shelf opens
  * the drawer (weather, then inputs and shortcuts). Light by day, dark from sunset to sunrise.
  * No backdrop-filter: blur is too heavy for the TVs' GPUs. Only transform and opacity animate.
@@ -88,22 +88,35 @@ button { font: inherit; color: inherit; background: none; border: 0; padding: 0;
 #drawer { pointer-events: none; }
 .drawer-open #drawer .key { pointer-events: auto; }
 
-/* MARK: - Title and tabs */
+/* MARK: - Quote and tabs */
 
-#title {
-  position: absolute;
-  left: 76px;
-  top: 52px;
+/* Up to two lines and its author, the author's line just above the tabs. */
+#quote { position: absolute; left: 76px; bottom: 930px; width: 1000px; }
+#quote .text {
   margin: 0;
-  font-size: 76px;
-  font-weight: 600;
-  letter-spacing: 0.004em;
-  line-height: 1;
-  white-space: nowrap;
+  font-size: 34px;
+  font-weight: 500;
+  line-height: 1.24;
   color: #1D1D1F;
   -webkit-transition: color 2s;
   transition: color 2s;
 }
+#quote .text { position: relative; }
+#quote .text:before { content: open-quote; position: absolute; right: 100%; }   /* hangs, so the words line up */
+#quote .text:after { content: close-quote; }
+#quote:lang(de) .text { quotes: '\201E' '\201C'; }
+#quote:lang(en) .text { quotes: '\201C' '\201D'; }
+#quote .author {
+  margin: 8px 0 0;
+  font-size: 22px;
+  font-weight: 600;
+  line-height: 28px;
+  white-space: nowrap;
+  color: #6E6E73;
+  -webkit-transition: color 2s;
+  transition: color 2s;
+}
+#quote .author:before { content: '\2014\00A0'; }
 
 #tabs { position: absolute; left: 54px; top: 158px; height: 68px; white-space: nowrap; }
 .tab {
@@ -128,7 +141,8 @@ button { font: inherit; color: inherit; background: none; border: 0; padding: 0;
   transform: scale(1.05);
   box-shadow: 0 8px 26px rgba(0, 0, 0, 0.22);
 }
-.night #title, .night .tab.on { color: #F5F5F7; }
+.night #quote .text, .night .tab.on { color: #F5F5F7; }
+.night #quote .author { color: rgba(245, 245, 247, 0.62); }
 .night .tab { color: rgba(245, 245, 247, 0.62); }
 .night .tab.focus { color: #1D1D1F; box-shadow: 0 8px 26px rgba(0, 0, 0, 0.4); }
 
@@ -301,7 +315,7 @@ button { font: inherit; color: inherit; background: none; border: 0; padding: 0;
 }
 #clock .date { display: block; font-size: 40px; font-weight: 500; letter-spacing: 0; margin-top: 18px; color: #6E6E73; }
 .no-picks #clock { display: block; }
-.no-key #title, .no-key #tabs { visibility: hidden; }
+.no-key #tabs { visibility: hidden; }
 .night #clock { color: #F5F5F7; }
 .night #clock .date { color: rgba(245, 245, 247, 0.62); }
 

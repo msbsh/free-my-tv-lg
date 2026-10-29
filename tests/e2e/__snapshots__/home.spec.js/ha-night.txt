@@ -9,8 +9,11 @@ div#stage
     div.lift
   div#home.layer
     div#top.layer
-      h1#title
-        "For You"
+      div#quote
+        p.text
+          "Nothing is more hopeless than a scheme of merriment."
+        p.author
+          "Samuel Johnson"
       div#tabs
         button.tab
           "Explore"

@@ -9,8 +9,11 @@ div#stage
     div.lift
   div#home.layer
     div#top.layer
-      h1#title
-        "Para você"
+      div#quote
+        p.text
+          "I never found the companion that was so companionable as solitude."
+        p.author
+          "Henry David Thoreau"
       div#tabs
         button.tab.on
           "Explorar"

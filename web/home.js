@@ -1,6 +1,6 @@
 /*
  * The home screen for LG webOS TVs:
- *  - top: the "For You" title and the tabs (Explore, Movies, Shows); at the right, up to three Home Assistant values;
+ *  - top: a quote and the tabs (Explore, Movies, Shows); at the right, up to three Home Assistant values;
  *  - three picks for this hour in the selected tab; the background is the first one's photo, blurred and almost white;
  *  - the glass shelf with the apps; ↓ opens the drawer (weather, then inputs and shortcuts); ↑ or Back closes it;
  *  - a night look from sunset to sunrise; a screensaver after a few idle minutes.
@@ -406,7 +406,7 @@
     return (r.left + r.right) / 2;
   }
 
-  // MARK: - Top: title, tabs, Home Assistant values
+  // MARK: - Top: quote, tabs, Home Assistant values
 
   /** The top row's focus: the tabs are 0-2 (only with the picks), the values at the right 3 and on. */
   function topFirst() { return Data.hasKey() ? 0 : 3; }
@@ -415,8 +415,20 @@
 
   var TAB_KIND = [null, 'movie', 'tv'];
 
+  // One per start, in the language it was written in: German on a German TV, English everywhere else. Date.now picks
+  // it rather than Math.random, which the screensaver's corners draw from.
+  var quoteSeed = Date.now();
+
+  function renderQuote() {
+    var all = window.QUOTES || {}, lang = all[I18N.base] ? I18N.base : 'en', list = all[lang] || [];
+    var q = list[quoteSeed % list.length], node = $('quote');
+    node.setAttribute('lang', lang);
+    node.firstChild.textContent = q ? q.text : '';
+    node.lastChild.textContent = q ? q.author : '';
+  }
+
   function renderTop() {
-    $('title').textContent = tr('For You');
+    renderQuote();
     var tabs = $('tabs');
     tabs.innerHTML = '';
     var names = [tr('Explore'), tr('Movies'), tr('Shows')];
@@ -451,7 +463,7 @@
     var list = Data.picks(TAB_KIND[st.tab]);
     var holder = $('cards');
     setClass(body, 'no-picks', !list.length);
-    setClass(body, 'no-key', !Data.hasKey());   // no title or tabs that could never show anything
+    setClass(body, 'no-key', !Data.hasKey());   // no tabs that could never show anything
     if (st.zone === Z.TOP && st.top < topFirst()) {
       if (topEmpty()) st.zone = Z.SHELF;
       else st.top = 3;
