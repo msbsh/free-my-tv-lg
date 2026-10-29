@@ -630,7 +630,8 @@
     var xPos = 80;
     for (var k = 0; k < n; k++) {
       if (k === drawerInputs && k > 0) {
-        xPos += groupGap - gap;
+        // The shortcuts at the right edge, under the card's: the gap between the groups in the middle.
+        xPos = Math.max(xPos + groupGap - gap, 1840 - (n - k) * (tw + gap) + gap);
         el('div', 'row-title', d, tr('Shortcuts')).style.left = (xPos + 4) + 'px';
       }
       if (k === 0 && drawerInputs) el('div', 'row-title', d, tr('Inputs')).style.left = '84px';
