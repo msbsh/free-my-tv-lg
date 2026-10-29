@@ -86,9 +86,38 @@
 
   // The TV's icons are small squares with their own background (white behind Netflix, black behind Max). The logo is
   // lifted off it once: the background goes transparent and the rest is cropped to the logo, which then fills the tile
-  // on the brand's color.
-  var lifted = {};   // icon url -> {src, bg: [r, g, b], ink: luminance histogram} or false (keep the icon as it is)
-  var LIFT_SIZE = 240;
+  // on the brand's color. The logos are kept across starts (lifting is slow on the TV, and an icon the TV doesn't
+  // serve this time still has its logo), each until its app is gone.
+  var LIFT_SIZE = 240, LOGOS = 'fmtv.logos', LOGOS_VERSION = 1;   // a new version when lift() changes
+  // app id -> {url, src, bg: [r, g, b], ink: luminance histogram}, or {url, keep: true} (the icon as it is)
+  var lifted = {}, savingLogos = null;
+  try {
+    var savedLogos = JSON.parse(localStorage.getItem(LOGOS) || 'null');
+    if (savedLogos && savedLogos.v === LOGOS_VERSION) lifted = savedLogos.apps || {};
+  } catch (e) {}
+
+  /** A logo lifted (or not) from the icon at url; saved once the others of this draw are done too. */
+  function rememberLogo(id, url, logo) {
+    lifted[id] = logo ? {url: url, src: logo.src, bg: logo.bg, ink: logo.ink} : {url: url, keep: true};
+    if (!savingLogos) savingLogos = setTimeout(saveLogos, 1000);
+  }
+
+  function saveLogos() {
+    savingLogos = null;
+    try {
+      localStorage.setItem(LOGOS, JSON.stringify({v: LOGOS_VERSION, apps: lifted}));
+    } catch (e) {
+      try { localStorage.removeItem(LOGOS); } catch (e2) {}   // full: lifted again on the next start
+    }
+  }
+
+  /** Only the logos of these apps (the TV's full list) stay. */
+  function pruneLogos(list) {
+    var ids = {}, gone = false;
+    for (var i = 0; i < list.length; i++) ids[list[i].id] = true;
+    for (var id in lifted) if (!ids[id]) { delete lifted[id]; gone = true; }
+    if (gone && !savingLogos) savingLogos = setTimeout(saveLogos, 1000);
+  }
 
   // sRGB (0-255) to linear light, computed once: lift() needs it for every pixel, and old TVs are slow at Math.pow.
   var LINEAR = [];
@@ -222,9 +251,10 @@
   /** own: the tile has the TV's color for the app, not one of SHELF's. */
   function showLogo(img, box, top, bottom, logo, own) {
     img.className = 'logo';
-    img.onload = function () { img.onload = null; fitLogo(img); };
+    // Shown once it's drawn in its own size: until then the img would still show the icon it was lifted from.
+    img.onload = function () { img.onload = null; fitLogo(img); img.style.visibility = ''; };
     img.src = logo.src;
-    if (img.complete) fitLogo(img);
+    if (img.complete) { fitLogo(img); img.style.visibility = ''; }
     var a = rgbOf(top), z = rgbOf(bottom);
     var tileLum = (luminance(a[0], a[1], a[2]) + luminance(z[0], z[1], z[2])) / 2;
     // The tile takes the icon's background when the logo only reads on it, and when that background is the brand's
@@ -244,20 +274,30 @@
     paint(box, top, bottom);
     var word = el('div', 'word', box, app.title);
     if (wordSize) word.style.fontSize = wordSize + 'px';
-    if (app.icon) {
-      var img = el('img', '', box), url = app.icon;
-      word.style.visibility = 'hidden';
-      img.onerror = function () { if (img.parentNode) img.parentNode.removeChild(img); word.style.visibility = ''; };
-      if (lifted[url]) { showLogo(img, box, top, bottom, lifted[url], !k); return; }
-      if (lifted[url] !== false) {
-        img.onload = function () {
-          img.onload = null;
-          if (lifted[url] === undefined) lifted[url] = lift(img);
-          if (lifted[url]) showLogo(img, box, top, bottom, lifted[url], !k);
-        };
-      }
-      img.src = url;
+    if (!app.icon) return;
+    var img = el('img', '', box), url = app.icon, kept = lifted[app.id];
+    word.style.visibility = 'hidden';
+    img.style.visibility = 'hidden';   // one change only: the logo, or the icon as it is, once it's known which
+    img.onerror = function () { if (img.parentNode) img.parentNode.removeChild(img); word.style.visibility = ''; };
+    if (kept && kept.src) {
+      showLogo(img, box, top, bottom, kept, !k);
+      if (kept.url !== url) relift(app.id, url);   // a new icon (the app was updated): its logo from the next draw on
+      return;
     }
+    img.onload = function () {
+      img.onload = null;
+      var logo = kept && kept.url === url ? null : lift(img);
+      if (!kept || kept.url !== url) rememberLogo(app.id, url, logo);
+      if (logo) showLogo(img, box, top, bottom, logo, !k); else img.style.visibility = '';
+    };
+    img.src = url;
+  }
+
+  /** Lifts the logo off an app's new icon in the background; an icon that doesn't load keeps the logo there is. */
+  function relift(id, url) {
+    var img = new Image();
+    img.onload = function () { rememberLogo(id, url, lift(img)); };
+    img.src = url;
   }
 
   var apps = [], shelf = [], others = [], inputs = [];
@@ -265,6 +305,9 @@
   /** shelf_apps in config.properties: the shelf in that order, by id or name (part of it). */
   var WANTED = (CONFIG.shelfApps || []).map(function (s) { return s.toLowerCase(); });
 
+  var shown = null;   // the shelf and All Apps as last picked, to draw them again only when they change
+
+  /** Picks the shelf from the apps; true when the shelf or All Apps change. */
   function pickShelf() {
     if (WANTED.length && Prefs.shelfConfig() !== WANTED.join(',')) {
       Prefs.set('shelf', null);
@@ -293,6 +336,9 @@
     }
     shelf = out;
     others = apps.filter(function (x) { return shelf.indexOf(x) < 0; });
+    var now = JSON.stringify([shelf, others]), changed = now !== shown;
+    shown = now;
+    return changed;
   }
 
   // MARK: - Focus
@@ -1479,14 +1525,39 @@
     return false;
   }
 
+  // The TV's last full list of apps: the home screen starts with it, and keeps it when the TV can only tell the known
+  // apps (the remote control API didn't answer this time).
+  var APPS = 'fmtv.apps', lastApps = null;
+  try { lastApps = JSON.parse(localStorage.getItem(APPS) || 'null'); } catch (e) {}
+
+  /** Takes the TV's list of apps; true when the shelf or All Apps change. */
+  function useApps(list) {
+    apps = list.filter(function (a) { return !hidden(a); });
+    Data.setApps(apps);
+    return pickShelf();
+  }
+
+  var loading = null;   // what waits for the list the TV is asked for now
+
+  /** done(changed) once the TV listed its apps and inputs; changed: the shelf has to be drawn again. */
   function loadApps(done) {
-    TV.apps(function (list) {
-      apps = list.filter(function (a) { return !hidden(a); });
-      Data.setApps(apps);
-      pickShelf();
+    if (loading) { loading.push(done); return; }   // opened again: webOSRelaunch and visibilitychange both ask
+    loading = [done];
+    TV.apps(function (list, full) {
+      if (full) {
+        lastApps = list;
+        try { localStorage.setItem(APPS, JSON.stringify(list)); } catch (e) {}
+        pruneLogos(list);
+      } else if (lastApps) {
+        list = lastApps;
+      }
+      var changed = useApps(list);
       TV.inputs(function (list2) {
         inputs = list2;
-        if (done) done();
+        var waiting = loading;
+        loading = null;
+        // The shelf is drawn again once: the first one to ask draws it, the others find it drawn.
+        for (var i = 0; i < waiting.length; i++) if (waiting[i]) waiting[i](changed && i === 0);
       });
     });
   }
@@ -1520,7 +1591,12 @@
     // LG: with handlesRelaunch the app has to come to the front itself, or opening it again while it runs shows nothing.
     if (window.PalmSystem && window.PalmSystem.activate) window.PalmSystem.activate();
     reset();
-    loadApps(function () { renderShelf(); renderDrawer(); restInDrawer(); Data.refresh(); });
+    loadApps(function (changed) {
+      if (changed) renderShelf();
+      renderDrawer();
+      restInDrawer();
+      Data.refresh();
+    });
   }
 
   window.addEventListener('resize', fit);
@@ -1529,7 +1605,12 @@
     if (document.hidden) { hideSaver(); return; }
     idleAt = Date.now();
     checkNight();
-    loadApps(function () { renderShelf(); renderDrawer(); updateFocus(); Data.refresh(); });
+    loadApps(function (changed) {
+      if (changed) renderShelf();
+      renderDrawer();
+      updateFocus();
+      Data.refresh();
+    });
   });
 
   I18N.set(Prefs.language());
@@ -1539,8 +1620,16 @@
   fit();
   renderTop();
   tickClock();
-  loadApps(function () {
-    renderAll();
+  // The apps of the last start at once, and drawn again only if the TV lists others now.
+  var early = !!lastApps;
+  if (early) { useApps(lastApps); renderAll(); }
+  loadApps(function (changed) {
+    if (!early) renderAll();
+    else {
+      if (changed) renderShelf();
+      renderDrawer();
+      updateFocus();
+    }
     restInDrawer();
     Data.refresh();
   });

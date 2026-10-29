@@ -166,8 +166,10 @@ const LAUNCH_POINTS = [
  *  tv.launchPoints: true (listed) or false (denied, as on webOS 6 in Developer Mode)
  *  tv.ws: 'pending' (the TV asks and nobody answers yet), 'ok', 'refused', 'origin' (1008: through the service)
  *  tv.storage: localStorage to start with (the first load only)
+ * A test changes the TV for the next load with sessionStorage '__tv' ({points: [...]} and so on).
  */
 function fakeWebOS(tv) {
+  tv = Object.assign({}, tv, JSON.parse(sessionStorage.getItem('__tv') || '{}'));
   window.__luna = [];
   window.__ws = [];
   window.__palm = [];

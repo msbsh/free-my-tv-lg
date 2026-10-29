@@ -146,7 +146,7 @@ var TV = (function () {
     function finish() {
       if (sent) return;
       sent = true;
-      done(found.filter(function (x) { return x; }));
+      done(found.filter(function (x) { return x; }), false);
     }
     setTimeout(finish, 5000);   // an id that never answers doesn't hold the rest
     KNOWN.forEach(function (k, i) {
@@ -219,10 +219,13 @@ var TV = (function () {
   return {
     name: webos ? 'webos' : 'browser',
 
-    /** Installed apps, as the TV's launcher lists them: [{id, title, icon, color}]. */
+    /**
+     * Installed apps, as the TV's launcher lists them: done([{id, title, icon, color}], full), full false when it's only
+     * the known apps the TV says it has (knownApps).
+     */
     apps: function (done) {
       if (!webos) {
-        done(SAMPLE.map(function (s) { return {id: s[0], title: s[1], icon: '', color: s[2]}; }));
+        done(SAMPLE.map(function (s) { return {id: s[0], title: s[1], icon: '', color: s[2]}; }), true);
         return;
       }
       function list(res) {
@@ -236,7 +239,7 @@ var TV = (function () {
         return out;
       }
       luna('luna://com.webos.applicationManager/listLaunchPoints', {}, function (res) {
-        if (res) { done(list(res)); return; }
+        if (res) { done(list(res), true); return; }
         // Denied to Developer Mode apps (webOS 6 and newer): once the TV has allowed the remote control API, it lists
         // every app with its icon; until then, the known apps the TV says it has, while the TV asks once (an answer
         // only counts from the next load on, and a "no" isn't asked again).
@@ -244,7 +247,7 @@ var TV = (function () {
         try { paired = !!localStorage.getItem(SSAP_KEY); refused = !!localStorage.getItem(SSAP_REFUSED); } catch (e) {}
         if (paired) {
           ssap('com.webos.applicationManager/listLaunchPoints', function (res2) {
-            if (res2) done(list(res2)); else knownApps(done);
+            if (res2) done(list(res2), true); else knownApps(done);
           });
           return;
         }

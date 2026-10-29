@@ -160,3 +160,73 @@ test('listLaunchPoints denied, the person said no on the TV', async ({page}) => 
   await snap(page, 'refused');
   s.check();
 });
+
+// MARK: - The apps and their logos, kept across starts
+
+/** Counts the logos lifted off icons (each reads the icon's pixels once). */
+async function countLifts(page) {
+  await page.addInitScript(() => {
+    const read = CanvasRenderingContext2D.prototype.getImageData;
+    window.__lifts = 0;
+    CanvasRenderingContext2D.prototype.getImageData = function () { window.__lifts++; return read.apply(this, arguments); };
+  });
+}
+
+/** The TV for the next load (mock.js), then that load. */
+async function restart(page, net, tv) {
+  if (tv) await page.evaluate((t) => sessionStorage.setItem('__tv', JSON.stringify(t)), tv);
+  await page.reload();
+  await m.settle(page, net);
+}
+
+const shelfApps = (page) => page.evaluate(() => Array.prototype.map.call(document.querySelectorAll('#tiles .tile .word'), (w) => w.textContent));
+const logos = (page) => page.evaluate(() => JSON.parse(localStorage.getItem('fmtv.logos')));
+
+test('the logos are kept: the next start draws them at once, without lifting them again', async ({page}) => {
+  await countLifts(page);
+  const s = await m.open(page, {tv: {launchPoints: true}});
+  expect(await page.evaluate(() => window.__lifts)).toBeGreaterThan(0);
+  expect(Object.keys((await logos(page)).apps).sort()).toEqual(['amazon', 'netflix', 'youtube.leanback.v4']);
+  const first = await m.dom(page);
+  await restart(page, s.net);
+  expect(await page.evaluate(() => window.__lifts)).toBe(0);
+  expect(await m.dom(page)).toBe(first);
+  s.check();
+});
+
+test('back from another app, or opened again: the shelf is drawn again only when the apps change', async ({page}) => {
+  const s = await m.open(page, {tv: {launchPoints: true}});
+  await page.evaluate(() => { document.querySelector('#tiles .tile img').__kept = true; });
+  await clearTrace(page);
+  await page.evaluate(() => {
+    document.dispatchEvent(new Event('webOSRelaunch'));
+    document.dispatchEvent(new Event('visibilitychange'));
+  });
+  await m.settle(page, s.net);
+  expect(await page.evaluate(() => document.querySelector('#tiles .tile img').__kept)).toBe(true);
+  // Both ask for the apps at once: the TV is asked once.
+  expect(await page.evaluate(() => window.__luna.filter((c) => /listLaunchPoints$/.test(c.uri)).length)).toBe(1);
+  s.check();
+});
+
+test('the TV lists only the known apps this time: the last full list stays', async ({page}) => {
+  const s = await m.open(page, {tv: {launchPoints: false, ws: 'ok', storage: {'fmtv.ssapKey': 'old-key'}}});
+  const full = await shelfApps(page);
+  expect(full).toContain('Disney+');
+  await restart(page, s.net, {ws: 'refused'});   // the remote control API doesn't answer: known apps only
+  expect(await shelfApps(page)).toEqual(full);
+  s.check();
+});
+
+test('an app gone: its logo goes too; an icon that doesn\'t load keeps its logo', async ({page}) => {
+  const s = await m.open(page, {tv: {launchPoints: true}});
+  const netflix = (await logos(page)).apps.netflix;
+  const points = m.LAUNCH_POINTS.filter((p) => p.id !== 'amazon')
+    .map((p) => p.id === 'netflix' ? Object.assign({}, p, {icon: 'icons/missing.svg'}) : p);
+  await restart(page, s.net, {points});
+  const kept = (await logos(page)).apps;
+  expect(Object.keys(kept).sort()).toEqual(['netflix', 'youtube.leanback.v4']);
+  expect(kept.netflix).toEqual(netflix);
+  expect(await page.evaluate(() => document.querySelector('#tiles .tile img').className)).toBe('logo');
+  s.check();
+});
