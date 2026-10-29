@@ -11,8 +11,10 @@ before you do it, and let them do the taps on the TV.
 
 ## Always
 
-- Run `tools/check.sh` before you push: the catalogues (`translate.py --check`), the package, `web/` against what
-  webOS 6 can run, and `tests/run.sh`. Pull requests run it too (`.github/workflows/check.yml`), without screenshots.
+- Run `tools/check.sh` before you commit to `main`: the catalogues (`translate.py --check`), the package, `web/`
+  against what webOS 6 can run, and `tests/run.sh`. Pull requests run it too (`.github/workflows/check.yml`), without
+  screenshots.
+- Your work ends on the local `main`. Pushing to a remote is theirs alone: never push.
 - `tests/` holds the baseline the LG-only rework started from. A failing test is a regression until shown otherwise:
   update a baseline (`tests/run.sh -- --update-snapshots`, `python3 tests/test_package.py --update`) only for a change
   that is meant to show, and say which in the commit.
@@ -21,6 +23,26 @@ before you do it, and let them do the taps on the TV.
   the TV (*Home Settings* → *TMDB key*). Don't ask for it in the chat, never print it, never commit it. If they paste
   it in the chat anyway, put it only in `config.properties`. Without a key everything works except the picks.
 - Don't change the TV's picture, sound, network or account settings.
+
+## Changing the repo
+
+Each agent works in its own git worktree and lands its change on `main` itself, once it's tested. History stays
+linear: no merge commits. The main checkout may hold someone's uncommitted work; leave it as it is.
+
+1. **Start:** from the main checkout, `git worktree add .worktrees/<topic> -b <topic> main`, and work only there.
+   The tests bring their own settings (`tests/fixtures/config.properties`); `tests/run.sh` installs
+   `tests/node_modules` on its first run.
+2. **Test:** `tools/check.sh` passes in the worktree. Commit there.
+3. **Catch up:** if `main` moved while you worked (`git log --oneline HEAD..main` lists commits), `git rebase main`
+   and run `tools/check.sh` again. Anything that fails now is a regression and fixing it is part of your task, whether
+   it comes from your change or from the other one. Where it's unclear which behaviour is wanted (two changes that
+   contradict each other, a baseline that changes in a way neither commit explains), ask the person you're helping
+   (with your ask-user-questions tool, if you have one) before you choose.
+4. **Land:** from the main checkout, `git merge --ff-only <topic>`. If `main` moved again, go back to step 3; if
+   their uncommitted changes are in the way, ask them.
+5. **Clean up:** `git worktree remove .worktrees/<topic>` and `git branch -d <topic>`.
+
+Installing on the TV stays in the main checkout: that's where their `config.properties` lives.
 
 ## Installing it on an LG TV
 
