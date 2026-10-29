@@ -3,19 +3,19 @@
   {
    "uri": "luna://com.webos.applicationManager/launch",
    "params": {
+    "id": "netflix"
+   }
+  },
+  {
+   "uri": "luna://com.webos.applicationManager/launch",
+   "params": {
     "id": "com.disney.disneyplus-prod"
    }
   },
   {
    "uri": "luna://com.webos.applicationManager/launch",
    "params": {
-    "id": "netflix"
-   }
-  },
-  {
-   "uri": "luna://com.webos.applicationManager/launch",
-   "params": {
-    "id": "netflix"
+    "id": "com.disney.disneyplus-prod"
    }
   }
  ],

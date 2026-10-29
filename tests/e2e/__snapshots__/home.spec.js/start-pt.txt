@@ -18,28 +18,34 @@ div#stage
       div#cards
         div.card.wide
           div.img
+            div.layer bg="url(\"https://image.tmdb.org/t/p/w342/tp201.jpg\")"
+            div.layer.back bg="url(\"https://image.tmdb.org/t/p/w1280/t201b.jpg\")"
+          div.name
+            "Show 201"
+          div.meta
+            span.app
+              "Netflix"
+            "· Série · Ficção Científica e Fantasia · 2 temporadas"
+        div.card
+          div.img
+            div.layer bg="url(\"https://image.tmdb.org/t/p/w342/tp206.jpg\")"
+            div.layer.back
+          div.name
+            "Show 206"
+          div.meta
+            span.app
+              "Disney+"
+            "· Série · Ficção Científica e Fantasia · 3 temporadas"
+        div.card
+          div.img
             div.layer bg="url(\"https://image.tmdb.org/t/p/w342/mp104.jpg\")"
-            div.layer.back bg="url(\"https://image.tmdb.org/t/p/w1280/m104b.jpg\")"
+            div.layer.back
           div.name
             "Movie 104"
           div.meta
-            "Action · 1 h 39 min · Disney+"
-        div.card
-          div.img
-            div.layer bg="url(\"https://image.tmdb.org/t/p/w342/tp204.jpg\")"
-            div.layer.back
-          div.name
-            "Show 204"
-          div.meta
-            "Série · Ficção Científica e Fantasia · 1 temporada · Netflix"
-        div.card
-          div.img
-            div.layer bg="url(\"https://image.tmdb.org/t/p/w342/mp105.jpg\")"
-            div.layer.back
-          div.name
-            "Movie 105"
-          div.meta
-            "Action · 1 h 40 min · Netflix"
+            span.app
+              "Disney+"
+            "· Action · 1 h 39 min"
       div#clock
         span.time
           "10:00"

@@ -1,7 +1,8 @@
 /*
  * What the home screen shows, kept in localStorage so it opens with numbers:
  *  - the picks: what's trending this week and recent releases, only from the streaming apps on this TV (TMDB, with
- *    the person's own free key from config.properties), 3 per hour (up to 6 in Home Settings), the next 24 for the
+ *    the person's own free key from config.properties), and the top rows of ARD Mediathek, KiKA and ARTE when their
+ *    apps are on it (no key); mixed anew every hour, 3 at a time (up to 12 in Home Settings), the next 24 for the
  *    screensaver;
  *  - weather, sunrise and sunset (Open-Meteo, every 30 min).
  * Settings changed on the TV (Prefs) win over config.properties. Built without a city (--generic), the
@@ -54,8 +55,10 @@ var Prefs = (function () {
     saverWatch: function () { return pick('saverWatch', false) === true; },
     /** The weather card's forecast: 'hours' (the next 6 hours) or 'days' (the next 5 days). */
     forecast: function () { return pick('forecast', 'hours') === 'days' ? 'days' : 'hours'; },
-    /** Picks on the screen at a time: 3 (as it was) up to 6. */
-    cards: function () { var n = pick('cards', 3); return n < 3 ? 3 : n > 6 ? 6 : n; },
+    /** Picks on the screen at a time: 3 (as it was) up to 12. */
+    cards: function () { var n = pick('cards', 3); return n < 3 ? 3 : n > 12 ? 12 : n; },
+    /** Das Erste's, KiKA's and arte's live streams among the picks (with their apps on the TV). */
+    liveStreams: function () { return pick('liveStreams', true) === true; },
     shelf: function () { return pick('shelf', null); },
     /** The shelf_apps of the build that last set the shelf, so a new one wins once over the TV's choice. */
     shelfConfig: function () { return pick('shelfConfig', ''); },
@@ -96,8 +99,8 @@ var Data = (function () {
   // The crypto prices' cache, from before they were removed.
   try { localStorage.removeItem('fmtv.prices'); localStorage.removeItem('fmtv.dollarsFor'); } catch (e) {}
 
-  /** GET a JSON document; done(error, json). */
-  function get(url, headers, done) {
+  /** GET a JSON document; done(error, json). fix, when given, mends the text first. */
+  function get(url, headers, done, fix) {
     var x = new XMLHttpRequest();
     var over = false;
     x.open('GET', url, true);
@@ -108,7 +111,7 @@ var Data = (function () {
       over = true;
       if (x.status !== 200) { done(new Error(x.status === 401 ? 'TMDB rejected the key' : 'HTTP ' + x.status)); return; }
       var json;
-      try { json = JSON.parse(x.responseText); } catch (e) { done(e); return; }
+      try { json = JSON.parse(fix ? fix(x.responseText) : x.responseText); } catch (e) { done(e); return; }
       done(null, json);
     };
     x.ontimeout = x.onerror = function () { if (!over) { over = true; done(new Error('no connection')); } };
@@ -220,7 +223,10 @@ var Data = (function () {
     ['apple tv', 'appletv', /appletv|apple\.tv/, /apple tv/i, 'Apple TV'],
     ['hotstar', 'hotstar', /hotstar/, /hotstar/i, 'JioHotstar'],
     ['crunchyroll', 'crunchyroll', /crunchyroll/, /crunchyroll/i, 'Crunchyroll'],
-    ['now tv', 'now', /nowtv|now\.tv/, /^now( tv)?$/i, 'NOW']
+    ['now tv', 'now', /nowtv|now\.tv/, /^now( tv)?$/i, 'NOW'],
+    ['ard mediathek', 'ard', /^ard\.mediathek$/, /^ard mediathek$/i, 'ARD Mediathek'],
+    ['kika', 'kika', /^de\.kika\./, /^kika$/i, 'KiKA'],
+    ['arte', 'arte', /^com\.3827031\.168353$/, /^arte$/i, 'ARTE']
   ];
 
   var installed = [];   // the TV's apps, from TV.apps()
@@ -299,19 +305,37 @@ var Data = (function () {
   /** The screensaver's photos: this hour's picks and the ones after them, about 5 minutes at 12 s each. */
   var SHOWCASE = 24;
 
-  /** count picks from this hour's on (the list turns Prefs.cards() further every hour), one per franchise. */
+  /** The list in an order of its own for each hour (the same all hour long, for the row and the screensaver). */
+  function shuffled(list, seed) {
+    var out = list.slice(), s = seed >>> 0;
+    for (var i = out.length - 1; i > 0; i--) {
+      s = (Math.imul(s, 1103515245) + 12345) >>> 0;
+      var j = (s >>> 8) % (i + 1), t = out[i];
+      out[i] = out[j];
+      out[j] = t;
+    }
+    return out;
+  }
+
+  /** count picks for this hour, TMDB's and the Mediatheken's mixed, one per franchise. */
   function upcoming(count) {
-    var list = [];
-    if (!KEY) return list;
-    for (var i = 0; i < picks.length; i++) {
+    var list = [], now = Date.now();
+    for (var i = 0; KEY && i < picks.length; i++) {
       var p = picks[i];
       if (!p.detailed || (p.app && usable(p.app))) list.push(p);
     }
+    for (var k = 0; k < media.length; k++) {
+      var x = media[k];
+      if (!usable(x.app) || (x.live && !Prefs.liveStreams()) || (x.until && Date.parse(x.until) <= now)) continue;
+      x.meta = mediaMeta(x, now);
+      list.push(x);
+    }
     if (!list.length) return list;
-    var hour = Math.floor(Date.now() / 3600000), out = [], seen = {}, n = Prefs.cards();
+    list = shuffled(list, Math.floor(now / 3600000));
+    var out = [], seen = {};
     for (var j = 0; j < list.length && out.length < count; j++) {
-      var q = list[(hour * n + j) % list.length], f = franchise(q.title);
-      if (!seen[f]) { seen[f] = true; out.push(q); }
+      var f = franchise(list[j].title);
+      if (!seen[f]) { seen[f] = true; out.push(list[j]); }
     }
     return out;
   }
@@ -380,7 +404,6 @@ var Data = (function () {
         var s = service(flat[i].provider_name, flat[i].provider_id);
         if (s && usable(s[1])) { p.app = s[1]; p.service = s[4]; }
       }
-      if (p.service && p.app) parts.push(p.service);
       p.meta = parts.join(' · ');
       title(p, o, function () {
         p.detailed = true;
@@ -512,6 +535,161 @@ var Data = (function () {
     }
   }
 
+  // MARK: - Picks from the Mediatheken (ARD Mediathek, KiKA, ARTE)
+
+  /*
+   * The top row of ARD's and KiKA's home pages (ARD's page gateway), ARTE's top teaser and its first row, and the live
+   * streams of Das Erste, KiKA and arte (the ARD home page's live row). No key, and both answer the page's file://
+   * origin. They aren't public APIs: a source that fails keeps its last list. OK opens the app (none of the three
+   * opens a title it's given at launch).
+   */
+  var ARD = 'https://api.ardmediathek.de/page-gateway/pages/';
+  var ARTE = 'https://api.arte.tv/api/emac/v4/';
+  var LIVE = {'das erste': 'ard', 'kika': 'kika', 'arte': 'arte'};
+  var FEEDS = ['ard', 'kika', 'arte'];
+
+  var mediaCache = stored('media') || {};
+  var media = mediaCache.items || [], mediaAt = mediaCache.at || 0, mediaStamp = mediaCache.stamp || '', fetchingMedia = false;
+
+  function mediaPick(feed, app, id, title, image, show, seconds, until, live) {
+    return {id: app + ':' + id, kind: 'media', feed: feed, app: app, service: serviceName(app), title: title || '',
+      backdrop: image, poster: '', show: show || '', seconds: seconds || 0, until: until || '', live: !!live, meta: '',
+      detailed: true};
+  }
+
+  function serviceName(key) {
+    for (var i = 0; i < SERVICES.length; i++) if (SERVICES[i][1] === key) return SERVICES[i][4];
+    return '';
+  }
+
+  /** "Show · 45m · 5 days left", or "Live". */
+  function mediaMeta(p, now) {
+    if (p.live) return tr('Live');
+    var parts = [];
+    if (p.show) parts.push(p.show);
+    var mins = Math.round(p.seconds / 60), h = Math.floor(mins / 60);
+    if (mins > 0) parts.push(h ? trf('{h}h {m}m', {h: h, m: mins % 60}) : trf('{m}m', {m: mins}));
+    var end = p.until ? Date.parse(p.until) : NaN;
+    if (!isNaN(end)) {
+      var days = Math.ceil((end - now) / 86400000);
+      parts.push(days <= 30 ? plural('plural|one:{n} day left|other:{n} days left', days)
+        : trf('Until {date}', {date: formatDate('format|MMM y', end)}));
+    }
+    return parts.join(' · ');
+  }
+
+  /** A page's first row with something to watch (titles and series; not its pages, collections or links). */
+  function ardRow(page, app, out) {
+    var widgets = page.widgets || [];
+    for (var w = 0; w < widgets.length; w++) {
+      var teasers = widgets[w].teasers || [], before = out.length;
+      for (var i = 0; i < teasers.length; i++) {
+        var t = teasers[i], img = t.images && t.images.aspect16x9 && t.images.aspect16x9.src;
+        if ((t.type !== 'ondemand' && t.type !== 'show') || !img) continue;
+        var title = t.longTitle || t.mediumTitle || t.shortTitle, show = t.show && t.show.title;
+        out.push(mediaPick(app, app, t.id, title, img, t.type === 'show' ? tr('Series') : show !== title ? show : '',
+          t.duration, t.availableTo, false));
+      }
+      if (out.length > before) return;
+    }
+  }
+
+  function ardLive(page, out) {
+    var widgets = page.widgets || [];
+    for (var w = 0; w < widgets.length; w++) {
+      var teasers = widgets[w].teasers || [];
+      for (var i = 0; i < teasers.length; i++) {
+        var t = teasers[i], name = t.longTitle || t.mediumTitle || '', app = LIVE[name.toLowerCase()];
+        var img = t.images && t.images.aspect16x9 && t.images.aspect16x9.src;
+        if (t.type === 'live' && app && img) out.push(mediaPick('live', app, t.id, name, img, '', 0, '', true));
+      }
+    }
+  }
+
+  function arteItems(list, out) {
+    for (var i = 0; list && i < list.length; i++) {
+      var t = list[i], img = t.mainImage && t.mainImage.url;
+      if (!t.programId || !img) continue;
+      out.push(mediaPick('arte', 'arte', t.programId, t.title, img, t.kind && t.kind.isCollection ? tr('Series') : t.subtitle,
+        t.duration, t.availability && t.availability.end, false));
+    }
+  }
+
+  /** ARTE's cache sometimes holds a row's error in place of its content ("content":\n429 - Too Many Requests\n). */
+  function mendArte(text) { return text.replace(/"content":\s*\d{3} - [^\n]*\n/g, '"content":null'); }
+
+  /** ARTE's languages; anything else reads ARTE in German. */
+  function arteLang() { return /^(de|fr|en|es|pl|it)$/.test(I18N.base) ? I18N.base : 'de'; }
+
+  /** ARTE's top teaser, then its first row (the page leaves out the rows' content). */
+  function fetchArte(done) {
+    var base = ARTE + arteLang() + '/web/';
+    get(base + 'pages/HOME/', {}, function (err, page) {
+      if (err) { done(err); return; }
+      var zones = page.zones || [], out = [], row = null;
+      for (var i = 0; i < zones.length; i++) {
+        var z = zones[i], template = (z.displayOptions && z.displayOptions.template) || '';
+        if (/^slider/.test(template)) arteItems(z.content && z.content.data, out);
+        else if (!row && /^horizontal/.test(template) && !/^(favorites|resume-watching)$/.test(z.code)) row = z;
+      }
+      if (!row) { done(null, out); return; }
+      if (row.content && row.content.data && row.content.data.length) { arteItems(row.content.data, out); done(null, out); return; }
+      get(base + 'zones/' + encodeURIComponent(row.id) + '/content?page=1&limit=12', {}, function (e, res) {
+        if (!e) arteItems(res.data, out);
+        done(out.length ? null : e, out);
+      }, mendArte);
+    }, mendArte);
+  }
+
+  function mediaSourceStamp() {
+    var s = I18N.lang + ':' + (Prefs.liveStreams() ? 'live:' : '');
+    for (var i = 0; i < FEEDS.length; i++) s += usable(FEEDS[i]) ? '1' : '0';
+    return s;
+  }
+
+  /** Fetches the Mediatheken's rows every hour, and when a source is switched on or the language changes. */
+  function refreshMedia() {
+    if (fetchingMedia || !installed.length) return;
+    var t = Date.now(), st = mediaSourceStamp();
+    if (st === mediaStamp && t - mediaAt < 3600000 && t >= mediaAt) return;
+    var live = Prefs.liveStreams() && (usable('ard') || usable('kika') || usable('arte'));
+    var jobs = [], got = {}, failed = false;
+    if (usable('ard') || live) jobs.push('ard');
+    if (usable('kika')) jobs.push('kika');
+    if (usable('arte')) jobs.push('arte');
+    fetchingMedia = true;
+    each(jobs, function (feed, next) {
+      function take(err, items) {
+        if (err) failed = true;
+        else got[feed] = items;
+        next();
+      }
+      if (feed === 'arte') { fetchArte(take); return; }
+      get(ARD + feed + '/home?embedded=true', {}, function (err, page) {
+        if (err) { take(err); return; }
+        var items = [];
+        if (feed === 'kika' || usable('ard')) ardRow(page, feed, items);
+        if (feed === 'ard') {
+          var lives = [];
+          ardLive(page, lives);
+          got.live = lives;
+        }
+        take(null, items);
+      });
+    }, function () {
+      fetchingMedia = false;
+      // A feed that failed keeps what it had; one not asked for any more goes.
+      var keep = media.filter(function (x) { return !got[x.feed] && jobs.indexOf(x.feed === 'live' ? 'ard' : x.feed) >= 0; });
+      var fresh = [];
+      for (var f in got) if (got.hasOwnProperty(f)) fresh = fresh.concat(got[f]);
+      media = fresh.concat(keep);
+      mediaStamp = st;
+      mediaAt = failed ? t - 50 * 60000 : t;   // a failed one is asked again in 10 minutes
+      store('media', {items: media, at: mediaAt, stamp: mediaStamp});
+      changed();
+    });
+  }
+
   return {
     get city() { return Prefs.city(); },
     onChange: function (fn) { listeners.push(fn); },
@@ -519,7 +697,7 @@ var Data = (function () {
     appFor: appFor,
     usable: usable,
     services: services,
-    refresh: function () { refreshWeather(); refreshRecs(); },
+    refresh: function () { refreshWeather(); refreshRecs(); refreshMedia(); },
     settingsChanged: changed,
     findCity: findCity,
     /** Another city picked: its weather now (none shown until it comes). */
@@ -531,10 +709,17 @@ var Data = (function () {
     /** A key typed (or removed) on the TV: the picks come again with it, or go. */
     keyChanged: function () { KEY = Prefs.tmdbKey(); recsError = ''; failedAt = 0; refreshRecs(); changed(); },
     recsError: function () { return recsError; },
-    /** This hour's picks (Prefs.cards()), movies and shows. */
+    /** This hour's picks (Prefs.cards()): movies, shows and the Mediatheken's titles. */
     picks: function () { return upcoming(Prefs.cards()); },
     showcase: function () { return upcoming(SHOWCASE); },
-    image: function (path, size) { return path ? 'https://image.tmdb.org/t/p/' + (size || 'w1280') + path : ''; },
+    /** A pick's image at about a TMDB size's width: TMDB's paths, or ARD's ({width}) and ARTE's (__SIZE__) addresses. */
+    image: function (path, size) {
+      if (!path) return '';
+      size = size || 'w1280';
+      if (path.charAt(0) === '/') return 'https://image.tmdb.org/t/p/' + size + path;
+      var w = size === 'original' ? 1920 : parseInt(size.slice(1), 10) || 1280;
+      return path.replace('{width}', w).replace('__SIZE__', w <= 400 ? '400x225' : w <= 1280 ? '1280x720' : '1920x1080');
+    },
 
     /** Night at the location: from sunset to sunrise (the last forecast; without one, 6:00 and 18:00). */
     isNight: function (at) {

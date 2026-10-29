@@ -1,4 +1,4 @@
-// What the tests put around the home screen: the internet (TMDB, Open-Meteo), a fixed clock, a Home Assistant (its
+// What the tests put around the home screen: the internet (TMDB, Open-Meteo, ARD's and ARTE's Mediatheken), a fixed clock, a Home Assistant (its
 // WebSocket API), and for the webOS runs a fake TV (Luna's PalmServiceBridge, PalmSystem, the remote control API's
 // WebSocket).
 const path = require('path');
@@ -94,6 +94,57 @@ function forecast(lat, lon) {
   };
 }
 
+// The Mediatheken: ARD's page gateway (ARD and KiKA) and ARTE's API, as they answer on 2026-10-20.
+function ardTeaser(type, id, title, extra) {
+  return Object.assign({type, id, longTitle: title,
+    images: {aspect16x9: {src: 'https://api.ardmediathek.de/image-service/images/urn:ard:image:' + id + '?w={width}'}}}, extra);
+}
+
+/** Each home page's top row (with a page, a title gone yesterday), a row below it, and ARD's live row. */
+const ARD_PAGES = {
+  ard: {widgets: [
+    {type: 'stage', teasers: [
+      ardTeaser('ondemand', 'ard1', 'Tatort: Im Moor', {duration: 5340, availableTo: '2026-10-25T21:00:00Z', show: {title: 'Tatort'}}),
+      ardTeaser('show', 'ard2', 'Babylon Berlin'),
+      ardTeaser('editorialPage', 'ard3', 'Halloween'),
+      ardTeaser('ondemand', 'ard4', 'Gone yesterday', {duration: 600, availableTo: '2026-10-19T21:00:00Z'}),
+      ardTeaser('ondemand', 'ard5', 'Weltspiegel', {duration: 2700, availableTo: '2031-10-28T04:00:00Z', show: {title: 'Weltspiegel'}}),
+    ]},
+    {type: 'gridlist', teasers: [ardTeaser('ondemand', 'ard9', 'Not in the top row', {duration: 60})]},
+    {type: 'gridlist', teasers: [ardTeaser('live', 'live1', 'Das Erste'), ardTeaser('live', 'live2', 'BR Fernsehen'),
+      ardTeaser('live', 'live3', 'KiKA'), ardTeaser('live', 'live4', 'arte')]},
+  ]},
+  kika: {widgets: [
+    {type: 'gridlist', teasers: [ardTeaser('editorialPage', 'kika0', 'Rubriken')]},
+    {type: 'stage', teasers: [
+      ardTeaser('ondemand', 'kika1', 'Happy Halloween', {duration: 1469, availableTo: null, show: {title: '1, 2 oder 3'}}),
+      ardTeaser('show', 'kika2', 'Shaun das Schaf'),
+    ]},
+  ]},
+};
+
+function arteItem(id, title, extra) {
+  return Object.assign({programId: id, title, kind: {code: 'SHOW', isCollection: false},
+    mainImage: {url: 'https://api-cdn.arte.tv/img/v2/image/' + id + '/__SIZE__'}}, extra);
+}
+
+/** ARTE's home page as its cache sometimes has it: a row's error in place of its content, the rows' content left out. */
+function artePage() {
+  const zones = [
+    {id: 'z-top', code: 'top_teaser', displayOptions: {template: 'slider-square'}, content: {data: [
+      arteItem('100001-000-A', 'Der Sternwanderer', {duration: 7620, availability: {end: '2026-11-10T22:00:00Z'}})]}},
+    {id: 'z-genres', code: 'genres_HOME', displayOptions: {template: 'text-linear'}, content: '@ERROR@'},
+    {id: 'z-fav', code: 'favorites', displayOptions: {template: 'horizontal-landscape'}, content: null},
+    {id: 'z-most', code: 'incontournables', displayOptions: {template: 'horizontal-portrait'}, content: null},
+  ];
+  return JSON.stringify({code: 'HOME', zones}).replace('"@ERROR@"', '\n429 - Too Many Requests\n');
+}
+
+const ARTE_ROW = {data: [
+  arteItem('100002-000-A', 'Twin Peaks', {kind: {code: 'TV_SERIES', isCollection: true}}),
+  arteItem('100003-001-A', 'Mord im Mittsommer', {subtitle: 'Tod am See', duration: 5400, availability: {end: '2027-04-01T00:00:00Z'}}),
+]};
+
 /** Answers every request the page makes from the fixtures; anything else fails the test. Returns the log. */
 async function internet(page) {
   const log = {requests: [], unexpected: [], pending: 0};
@@ -101,6 +152,7 @@ async function internet(page) {
     headers: {'Access-Control-Allow-Origin': '*'}, body: JSON.stringify(body)});
   await page.route(/^https?:\/\//, async (route) => {
     const req = route.request(), url = new URL(req.url());
+    let m;
     log.requests.push(req.method() + ' ' + req.url());
     log.pending++;
     try {
@@ -120,6 +172,15 @@ async function internet(page) {
           {name: 'Hamburg', latitude: 53.55073, longitude: 9.99302, admin1: 'Hamburg', country: 'Germany'}]} : {});
       } else if (url.host === 'api.tmdb.org') {
         await tmdb(route, url, json);
+      } else if ((url.host === 'api.ardmediathek.de' && /^\/image-service\//.test(url.pathname)) || url.host === 'api-cdn.arte.tv') {
+        await route.fulfill({status: 200, contentType: 'image/png', headers: {'Access-Control-Allow-Origin': '*'},
+          body: png(url.pathname + url.search)});
+      } else if (url.host === 'api.ardmediathek.de' && (m = /^\/page-gateway\/pages\/(ard|kika)\/home$/.exec(url.pathname))) {
+        await json(route, ARD_PAGES[m[1]]);
+      } else if (url.host === 'api.arte.tv' && /^\/api\/emac\/v4\/[a-z]{2}\/web\/pages\/HOME\/$/.test(url.pathname)) {
+        await route.fulfill({status: 200, contentType: 'application/json', headers: {'Access-Control-Allow-Origin': '*'}, body: artePage()});
+      } else if (url.host === 'api.arte.tv' && /^\/api\/emac\/v4\/[a-z]{2}\/web\/zones\/z-most\/content$/.test(url.pathname)) {
+        await json(route, ARTE_ROW);
       } else {
         log.unexpected.push(req.url());
         await route.abort();

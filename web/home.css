@@ -273,6 +273,7 @@ button { font: inherit; color: inherit; background: none; border: 0; padding: 0;
   transition: opacity 0.3s;
 }
 .card.wide .meta { opacity: 1; }
+.card .meta .app { font-weight: 600; }
 .card.edge .name, .card.edge .meta { visibility: hidden; }
 .night .card .img { background-color: #2C2C2E; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.32); }
 .night .card .name { color: #F5F5F7; }
@@ -576,6 +577,7 @@ button { font: inherit; color: inherit; background: none; border: 0; padding: 0;
 #saver .clock .time { font-size: 150px; font-weight: 300; line-height: 1; letter-spacing: -0.02em; -webkit-font-feature-settings: 'tnum'; font-feature-settings: 'tnum'; }
 #saver .clock .date { margin-top: 10px; font-size: 34px; font-weight: 500; color: rgba(255, 255, 255, 0.82); }
 #saver .clock .title { margin-top: 18px; font-size: 26px; font-weight: 500; color: rgba(255, 255, 255, 0.65); }
+#saver .clock .app { margin-top: 6px; font-size: 22px; font-weight: 600; letter-spacing: 0.02em; color: rgba(255, 255, 255, 0.5); }
 
 /* MARK: - Toast */
 

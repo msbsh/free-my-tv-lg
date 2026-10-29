@@ -114,6 +114,24 @@
    }
   },
   {
+   "uri": "luna://com.webos.applicationManager/getAppLoadStatus",
+   "params": {
+    "appId": "ard.mediathek"
+   }
+  },
+  {
+   "uri": "luna://com.webos.applicationManager/getAppLoadStatus",
+   "params": {
+    "appId": "de.kika.tvplayer.lge"
+   }
+  },
+  {
+   "uri": "luna://com.webos.applicationManager/getAppLoadStatus",
+   "params": {
+    "appId": "com.3827031.168353"
+   }
+  },
+  {
    "uri": "luna://com.webos.service.eim/getAllInputStatus",
    "params": {}
   }

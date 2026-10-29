@@ -1,0 +1,4 @@
+{
+ "fmtv.night": "false",
+ "fmtv.prefs": "{\"cards\":12,\"servicesOff\":[\"ard\",\"arte\"],\"liveStreams\":false}"
+}

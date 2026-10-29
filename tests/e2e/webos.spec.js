@@ -236,3 +236,68 @@ test('Home Assistant beside the remote control API: two WebSockets', async ({pag
   expect(await page.evaluate(() => window.__ha.some((x) => x.open === 'ws://ha.test:8123/api/websocket'))).toBe(true);
   s.check();
 });
+
+// MARK: - ARD Mediathek, KiKA and ARTE
+
+const MEDIATHEKEN = m.LAUNCH_POINTS.concat([{id: 'ard.mediathek', title: 'ARD Mediathek'},
+  {id: 'de.kika.tvplayer.lge', title: 'KiKA'}, {id: 'com.3827031.168353', title: 'ARTE'}]);
+
+/** The picks as "Title | App · meta", in the row's order. */
+async function picks(page) {
+  return page.$$eval('#cards .card', (cards) => cards.map((c) => c.querySelector('.name').textContent + ' | '
+    + (c.querySelector('.meta') ? c.querySelector('.meta').textContent : '')));
+}
+
+const MEDIA_PICKS = [
+  'Babylon Berlin | ARD Mediathek · Series',
+  'Das Erste | ARD Mediathek · Live',
+  'Der Sternwanderer | ARTE · 2h 7m · 22 days left',
+  'Happy Halloween | KiKA · 1, 2 oder 3 · 24m',
+  'KiKA | KiKA · Live',
+  'Mord im Mittsommer | ARTE · Tod am See · 1h 30m · Until Apr 2027',
+  'Shaun das Schaf | KiKA · Series',
+  'Tatort: Im Moor | ARD Mediathek · Tatort · 1h 29m · 6 days left',
+  'Twin Peaks | ARTE · Series',
+  'Weltspiegel | ARD Mediathek · 45m · Until Oct 2031',
+  'arte | ARTE · Live',
+];
+
+test('ARD Mediathek, KiKA and ARTE without a TMDB key: their top rows and live streams; OK opens the app', async ({page}) => {
+  const s = await m.open(page, {tv: {launchPoints: true, points: MEDIATHEKEN}, prefs: {tmdbKey: '', cards: 12}});
+  expect((await picks(page)).sort()).toEqual(MEDIA_PICKS);
+  expect(m.requests(s.net)).toMatchSnapshot('mediatheken-requests.txt');
+  expect(s.net.requests.filter((r) => r.indexOf('api.tmdb.org') >= 0)).toEqual([]);
+  // ARD's images at the card's width, ARTE's at its nearest size.
+  const art = await page.$$eval('#cards .card .layer:first-child', (l) => l.map((x) => x.style.backgroundImage));
+  expect(art.filter((u) => /ardmediathek/.test(u)).every((u) => /w=780/.test(u))).toBe(true);
+  expect(art.filter((u) => /arte\.tv/.test(u)).every((u) => /\/1280x720/.test(u))).toBe(true);
+
+  const first = (await picks(page))[0], app = first.split(' | ')[1].split(' · ')[0];
+  await clearTrace(page);
+  await m.press(page, s.net, 'Up', 'Enter');
+  const launched = await page.evaluate(() => window.__luna.filter((c) => /launch$/.test(c.uri)).map((c) => c.params.id));
+  expect(launched).toEqual([{'ARD Mediathek': 'ard.mediathek', 'KiKA': 'de.kika.tvplayer.lge', 'ARTE': 'com.3827031.168353'}[app]]);
+  s.check();
+});
+
+test('Mediatheken: mixed with TMDB\'s picks; Picks from and Live streams switch them off', async ({page}) => {
+  const s = await m.open(page, {tv: {launchPoints: true, points: MEDIATHEKEN}, prefs: {cards: 12}});
+  let list = await picks(page);
+  expect(list.length).toBe(12);
+  expect(list.some((p) => /^(Movie|Show) /.test(p))).toBe(true);
+  expect(list.some((p) => MEDIA_PICKS.indexOf(p) >= 0)).toBe(true);
+
+  await m.press(page, s.net, 'Down');
+  await m.moveTo(page, s.net, '#drawer .key', 'Home Settings', true);
+  await m.press(page, s.net, 'Enter');
+  for (const row of ['ARD Mediathek', 'KiKA', 'ARTE', 'Live streams']) {
+    await m.moveTo(page, s.net, '#settings .row', row);
+    if (row !== 'KiKA') await m.press(page, s.net, 'Enter');
+  }
+  expect(await m.storage(page)).toMatchSnapshot('mediatheken-off-storage.txt');
+  await m.press(page, s.net, 'Back', 'Back');
+  list = await picks(page);
+  expect(list.length).toBe(12);
+  expect(list.filter((p) => / \| (ARD Mediathek|ARTE) /.test(p) || / · Live$/.test(p))).toEqual([]);
+  s.check();
+});

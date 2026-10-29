@@ -138,7 +138,8 @@ var TV = (function () {
     ['globoplaywebos', 'Globoplay'], ['spotify-beehive', 'Spotify', 'icons/spotify.svg'],
     ['tv.twitch.tv.starshot.lg', 'Twitch', '', '#9146FF'], ['cdp-30', 'Plex', '', '#E5A00D'],
     ['org.jellyfin.webos', 'Jellyfin', 'icons/jellyfin.svg'], ['com.crunchyroll.webapp', 'Crunchyroll', '', '#F47521'],
-    ['com.webos.app.browser', 'Web Browser', '', '#3A7BD5']
+    ['com.webos.app.browser', 'Web Browser', '', '#3A7BD5'], ['ard.mediathek', 'ARD Mediathek', '', '#003480'],
+    ['de.kika.tvplayer.lge', 'KiKA', '', '#7AB929'], ['com.3827031.168353', 'ARTE', '', '#FD4600']
   ];
 
   function knownApps(done) {

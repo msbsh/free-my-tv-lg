@@ -451,7 +451,10 @@
     var holder = $('cards');
     setClass(body, 'no-picks', !list.length);
     var same = list.length === cards.length;
-    for (var i = 0; same && i < list.length; i++) same = list[i].id === cards[i].id && list[i].backdrop === cards[i].backdrop && list[i].meta === cards[i].meta;
+    for (var i = 0; same && i < list.length; i++) {
+      same = list[i].id === cards[i].id && list[i].backdrop === cards[i].backdrop && list[i].meta === cards[i].meta
+        && list[i].service === cards[i].service;
+    }
     if (same && holder.children.length === list.length) return;
     cards = list;
     holder.innerHTML = '';
@@ -463,7 +466,12 @@
       poster.style.backgroundImage = 'url(' + (p.poster ? Data.image(p.poster, 'w342') : Data.image(p.backdrop, 'w780')) + ')';
       el('div', 'layer back', img);
       el('div', 'name', card, p.title);
-      if (p.meta) el('div', 'meta', card, p.meta);
+      // The app it plays in first, a little stronger than the rest.
+      if (p.meta || p.service) {
+        var meta = el('div', 'meta', card);
+        if (p.service) el('span', 'app', meta, p.service);
+        if (p.meta) meta.appendChild(document.createTextNode((p.service ? ' · ' : '') + p.meta));
+      }
       hover(card, Z.CARDS, c);
     }
     st.card = Math.min(st.card, Math.max(0, list.length - 1));
@@ -787,7 +795,7 @@
       {label: tr('Theme'), value: theme === 'light' ? tr('Light') : theme === 'dark' ? tr('Dark') : auto,
         step: function (d) { cycle('theme', ['auto', 'light', 'dark'], theme, d); checkNight(); }},
       {label: tr('Picks per hour'), value: String(Prefs.cards()),
-        step: function (d) { Prefs.set('cards', 3 + (Prefs.cards() - 3 + (d || 1) + 4) % 4); renderCards(); }},
+        step: function (d) { Prefs.set('cards', 3 + (Prefs.cards() - 3 + (d || 1) + 10) % 10); renderCards(); }},
       {label: tr('Watch from the screensaver'), toggle: Prefs.saverWatch(),
         step: function () { Prefs.set('saverWatch', !Prefs.saverWatch()); }},
       {label: tr('Weather widget'), toggle: Prefs.weather(),
@@ -805,12 +813,18 @@
       var someOff = false;   // only the services this TV has count
       for (var q = 0; q < sv.length; q++) someOff = someOff || Prefs.serviceOff(sv[q].key);
       rows.push({label: tr('Picks from'), value: someOff ? tr('services|Some') : tr('services|All'),
-        step: function () { Prefs.set('servicesOff', []); Data.settingsChanged(); }});
+        step: function () { Prefs.set('servicesOff', []); Data.refresh(); Data.settingsChanged(); }});
       for (var j = 0; j < sv.length; j++) {
         (function (key, name) {
           rows.push({label: name, toggle: !Prefs.serviceOff(key),
             step: function () { Prefs.setServiceOff(key, !Prefs.serviceOff(key)); Data.refresh(); Data.settingsChanged(); }});
         })(sv[j].key, sv[j].name);
+      }
+      var live = false;   // Das Erste's, KiKA's and arte's: only with one of their apps
+      for (var l = 0; l < sv.length; l++) live = live || /^(ard|kika|arte)$/.test(sv[l].key);
+      if (live) {
+        rows.push({label: tr('Live streams'), toggle: Prefs.liveStreams(),
+          step: function () { Prefs.set('liveStreams', !Prefs.liveStreams()); Data.refresh(); Data.settingsChanged(); }});
       }
     }
     rows.push({label: tr('Shelf'), value: '›', shelf: true, step: function (d) { if (d >= 0) openShelfEdit(); }});
@@ -1746,6 +1760,7 @@
     el('div', 'time', clock);
     el('div', 'date', clock);
     el('div', 'title', clock);
+    el('div', 'app', clock);
     var front = a, corner = '';
     // With every photo the clock goes to another corner, in no fixed order: on an OLED panel nothing stays in place.
     function place(to) {
@@ -1773,6 +1788,7 @@
         back.style.backgroundImage = 'url(' + Data.image(p.backdrop, 'original') + ')';
         back.style.webkitTransform = back.style.transform = 'scale(1.0)';
         clock.children[2].textContent = p.title;
+        clock.children[3].textContent = p.service || '';
         saverPick = p;
         setTimeout(function () {
           setClass(back, 'on', true);
