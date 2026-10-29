@@ -16,21 +16,9 @@ div#stage
           "Explore"
         button.tab
           "Movies"
-        button.tab.on
+        button.tab.on.focus
           "Shows"
-      div#buttons
-        button.round
-          span.sym
-          div.tip
-            "Live TV"
-        button.round
-          span.sym
-          div.tip
-            "HDMI Inputs"
-        button.round.last.focus
-          span.sym
-          div.tip
-            "Settings"
+      div#hatop
       div#cards
         div.card
           div.img

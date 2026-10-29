@@ -18,19 +18,7 @@ div#stage
           "映画"
         button.tab
           "ドラマ"
-      div#buttons
-        button.round
-          span.sym
-          div.tip
-            "テレビ放送"
-        button.round
-          span.sym
-          div.tip
-            "HDMI入力"
-        button.round.last
-          span.sym
-          div.tip
-            "設定"
+      div#hatop
       div#cards
         div.card.wide
           div.img

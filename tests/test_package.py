@@ -27,12 +27,13 @@ import translate  # noqa: E402  (the keys web/ calls)
 
 # Files whose content may change, and why. Everything else in the baseline must stay byte for byte.
 CHANGED = {
-    'index.html': 'the title names the fork; no crypto quotes',
+    'index.html': 'the title names the fork; no crypto quotes; no round buttons at the top',
     'tv.js': 'Samsung and webOS 3-5 code removed, the fallback app id',
-    'home.js': 'Samsung code removed, the About row names the fork; no crypto, the weather above the inputs',
+    'home.js': 'Samsung code removed, the About row names the fork; no crypto, the weather above the inputs; '
+               'no round buttons at the top (all three are in the drawer)',
     'data.js': 'the Intl fallback for Tizen 2 removed; no crypto prices',
     'strings.js': 'polyfills for Chromium before 79 removed',
-    'home.css': 'the lite mode for slow TVs removed; no crypto, the weather above the inputs',
+    'home.css': 'the lite mode for slow TVs removed; no crypto, the weather above the inputs; no round buttons at the top',
     'config.js': 'no show_crypto and currency',
     'appinfo.json': 'id, version, title and vendor of the fork (compared field by field below)',
     'service/service.js': 'the Buffer fallback for old Node removed',

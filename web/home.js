@@ -1,7 +1,6 @@
 /*
  * The home screen for LG webOS TVs:
- *  - top: the "For You" title and the tabs (Explore, Movies, Shows); icon-only glass buttons at the right (Live TV,
- *    HDMI Inputs, Settings);
+ *  - top: the "For You" title and the tabs (Explore, Movies, Shows); at the right, up to three Home Assistant values;
  *  - three picks for this hour in the selected tab; the background is the first one's photo, blurred and almost white;
  *  - the glass shelf with the apps; ↓ opens the drawer (weather, then inputs and shortcuts); ↑ or Back closes it;
  *  - a night look from sunset to sunrise; a screensaver after a few idle minutes.
@@ -356,7 +355,7 @@
       setClass(list[i], 'on', i === st.tab);
       setClass(list[i], 'focus', st.zone === Z.TOP && st.top === i);
     }
-    list = $('buttons').children;
+    list = $('hatop').children;
     for (i = 0; i < list.length; i++) setClass(list[i], 'focus', st.zone === Z.TOP && st.top === 3 + i);
     layoutCards();
     list = $('cards').children;
@@ -403,7 +402,12 @@
     return (r.left + r.right) / 2;
   }
 
-  // MARK: - Top: title, tabs, buttons
+  // MARK: - Top: title, tabs, Home Assistant values
+
+  /** The top row's focus: the tabs are 0-2 (only with the picks), the values at the right 3 and on. */
+  function topFirst() { return Data.hasKey() ? 0 : 3; }
+  function topLast() { return 2 + $('hatop').children.length; }
+  function topEmpty() { return topFirst() > topLast(); }
 
   var TAB_KIND = [null, 'movie', 'tv'];
 
@@ -416,16 +420,6 @@
       var t = el('button', 'tab', tabs, names[i]);
       hover(t, Z.TOP, i);
     }
-    var buttons = $('buttons');
-    buttons.innerHTML = '';
-    var defs = [['live_tv', tr('light|Live TV')], ['hdmi', tr('HDMI Inputs')], ['settings', tr('light|Settings')]];
-    for (var b = 0; b < 3; b++) {
-      var r = el('button', 'round' + (b === 2 ? ' last' : ''), buttons);
-      r.style.left = (1596 + 88 * b) + 'px';
-      sym(defs[b][0], r);
-      el('div', 'tip', r, defs[b][1]);
-      hover(r, Z.TOP, 3 + b);
-    }
   }
 
   // MARK: - Picks and background
@@ -435,7 +429,10 @@
     var holder = $('cards');
     setClass(body, 'no-picks', !list.length);
     setClass(body, 'no-key', !Data.hasKey());   // no title or tabs that could never show anything
-    if (!Data.hasKey() && st.zone === Z.TOP && st.top < 3) st.top = 3;
+    if (st.zone === Z.TOP && st.top < topFirst()) {
+      if (topEmpty()) st.zone = Z.SHELF;
+      else st.top = 3;
+    }
     var same = list.length === cards.length;
     for (var i = 0; same && i < list.length; i++) same = list[i].id === cards[i].id && list[i].backdrop === cards[i].backdrop && list[i].meta === cards[i].meta;
     if (same && holder.children.length === list.length) return;
@@ -1212,18 +1209,9 @@
     });
   }
 
-  function liveTV() {
-    for (var i = 0; i < inputs.length; i++) if (inputs[i].key === 'live') return inputs[i];
-    return null;
-  }
-
   function activate() {
     switch (st.zone) {
       case Z.TOP:
-        if (st.top < 3) return;
-        if (st.top === 3) { var live = liveTV(); if (live) launcher(live.id, tr('Live TV'))(); }
-        else if (st.top === 4) { st.zone = Z.SHELF; openDrawer(); st.drawer = 1 < drawerInputs ? 1 : 0; updateFocus(); }
-        else openSettings();
         return;
       case Z.CARDS:
         var p = cards[st.card], app = p && Data.appFor(p.app);
@@ -1273,7 +1261,7 @@
         else if (dy > 0) { openDrawer(); return; }
         else if (dy < 0) {
           if (cards.length) { st.zone = Z.CARDS; st.card = nearest(cardNodes, centerX(tiles[st.shelf])); }
-          else { st.zone = Z.TOP; st.top = Data.hasKey() ? st.tab : 3; }
+          else if (!topEmpty()) { st.zone = Z.TOP; st.top = Data.hasKey() ? st.tab : 3; }
         }
         break;
       case Z.CARDS:
@@ -1283,7 +1271,7 @@
         break;
       case Z.TOP:
         if (dx) {
-          st.top = Math.max(Data.hasKey() ? 0 : 3, Math.min(5, st.top + dx));   // without the picks the tabs can't hold focus
+          st.top = Math.max(topFirst(), Math.min(topLast(), st.top + dx));   // without the picks the tabs can't hold focus
           if (st.top < 3) selectTab(st.top);   // as on Apple TV: focusing a tab selects it
         } else if (dy > 0) {
           if (cards.length) { st.zone = Z.CARDS; st.card = Math.min(cards.length - 1, st.top < 3 ? 0 : cards.length - 1); }

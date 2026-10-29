@@ -18,19 +18,7 @@ div#stage
           "Filmes"
         button.tab
           "Séries"
-      div#buttons
-        button.round
-          span.sym
-          div.tip
-            "TV aberta"
-        button.round
-          span.sym
-          div.tip
-            "Entradas HDMI"
-        button.round.last
-          span.sym
-          div.tip
-            "Configurações"
+      div#hatop
       div#cards
         div.card.wide
           div.img

@@ -62,11 +62,6 @@ test('inputs, Live TV and the TV\'s settings', async ({page}) => {
     await m.moveTo(page, s.net, '#drawer .key', 'TV Settings', true);
     await m.press(page, s.net, 'Enter');
   });
-  await calls(page, 'top-buttons', async () => {
-    await m.press(page, s.net, 'Up', 'Up', 'Up', 'Right', 'Right', 'Right', 'Enter');
-    await snap(page, 'hdmi-button');
-    await m.press(page, s.net, 'Up', 'Up', 'Up', 'Right', 'Right', 'Right', 'Left', 'Enter');
-  });
   s.check();
 });
 

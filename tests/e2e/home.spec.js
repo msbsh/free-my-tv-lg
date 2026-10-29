@@ -47,10 +47,17 @@ test('the remote moves through the shelf, the picks and the tabs', async ({page}
   await snap(page, 'tab-movies');
   await m.press(page, s.net, 'Right');
   await snap(page, 'tab-shows');
-  await m.press(page, s.net, 'Right', 'Right', 'Right');
-  await snap(page, 'top-buttons');
+  await m.press(page, s.net, 'Right');
+  await snap(page, 'tab-last');
   await m.press(page, s.net, 'Down', 'Down');
   await snap(page, 'back-down');
+  s.check();
+});
+
+test('without a TMDB key nothing above the shelf takes the focus', async ({page}) => {
+  const s = await m.open(page, {prefs: {tmdbKey: ''}});
+  await m.press(page, s.net, 'Up');
+  await expect(page.locator('#tiles .focus')).toHaveCount(1);
   s.check();
 });
 

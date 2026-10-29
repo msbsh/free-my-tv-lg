@@ -18,24 +18,12 @@ div#stage
           "Movies"
         button.tab.on
           "Shows"
-      div#buttons
-        button.round
-          span.sym
-          div.tip
-            "Live TV"
-        button.round
-          span.sym
-          div.tip
-            "HDMI Inputs"
-        button.round.last
-          span.sym
-          div.tip
-            "Settings"
+      div#hatop
       div#cards
-        div.card
+        div.card.wide
           div.img
             div.layer bg="url(\"https://image.tmdb.org/t/p/w342/tp401.jpg\")"
-            div.layer.back
+            div.layer.back bg="url(\"https://image.tmdb.org/t/p/w1280/t401b.jpg\")"
           div.name
             "Show 401 (English)"
           div.meta
@@ -48,10 +36,10 @@ div#stage
             "Show 402 (English)"
           div.meta
             "Series · Sci-Fi & Fantasy · 3 seasons · Netflix"
-        div.card.wide
+        div.card
           div.img
             div.layer bg="url(\"https://image.tmdb.org/t/p/w342/tp403.jpg\")"
-            div.layer.back bg="url(\"https://image.tmdb.org/t/p/w1280/t403b.jpg\")"
+            div.layer.back
           div.name
             "Show 403 (English)"
           div.meta
@@ -71,7 +59,7 @@ div#stage
       div.tile bg="linear-gradient(rgb(28, 28, 30), rgb(9, 9, 10))"
         div.word
           "YouTube"
-      div.tile bg="linear-gradient(rgb(42, 168, 255), rgb(10, 104, 212))"
+      div.tile.focus bg="linear-gradient(rgb(42, 168, 255), rgb(10, 104, 212))"
         div.word
           "Prime Video"
       div.tile bg="linear-gradient(rgb(23, 53, 132), rgb(8, 20, 63))"
@@ -80,7 +68,7 @@ div#stage
       div.tile bg="linear-gradient(rgb(92, 48, 232), rgb(34, 22, 132))"
         div.word
           "Max"
-      div.tile.focus bg="linear-gradient(rgb(28, 28, 30), rgb(0, 0, 0))"
+      div.tile bg="linear-gradient(rgb(28, 28, 30), rgb(0, 0, 0))"
         div.word
           "Apple TV"
       div.tile bg="linear-gradient(rgb(255, 138, 31), rgb(255, 45, 90))"

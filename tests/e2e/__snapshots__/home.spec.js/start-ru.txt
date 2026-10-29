@@ -18,19 +18,7 @@ div#stage
           "Фильмы"
         button.tab
           "Сериалы"
-      div#buttons
-        button.round
-          span.sym
-          div.tip
-            "Телеканалы"
-        button.round
-          span.sym
-          div.tip
-            "Входы HDMI"
-        button.round.last
-          span.sym
-          div.tip
-            "Настройки"
+      div#hatop
       div#cards
         div.card.wide
           div.img
