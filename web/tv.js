@@ -1,5 +1,5 @@
 /*
- * The TV's side of the web home screen: its apps, opening one, its inputs, its settings, the Back key, its time zone.
+ * The TV's side of the web home screen: its apps, opening one, its inputs, the Back key, its time zone.
  *  - LG webOS: the TV's service bus (Luna), the same calls LG's launcher makes.
  *  - A desktop browser: a stand-in with sample apps, so the screen can be previewed and tested on a computer.
  * For webOS 6 and newer (Chromium 79).
@@ -115,6 +115,23 @@ var TV = (function () {
     {id: 'com.webos.app.hdmi3', key: 'hdmi3', label: 'HDMI 3', symbol: 'hdmi'},
     {id: 'com.webos.app.hdmi4', key: 'hdmi4', label: 'HDMI 4', symbol: 'hdmi'}
   ];
+
+  /** INPUTS as the TV's eim service describes them (devices: its list, or null when it doesn't tell). */
+  function inputList(devices) {
+    var list = INPUTS.map(function (x) { return {id: x.id, key: x.key, label: x.label, symbol: x.symbol, connected: true}; });
+    for (var i = 1; i < list.length && devices; i++) {
+      for (var j = 0; j < devices.length; j++) {
+        var d = devices[j];
+        if (d.appId !== list[i].id) continue;
+        list[i].connected = d.connected !== false;
+        // A name the person gave the input on the TV ("PS5"), if any.
+        if (d.label && !/^hdmi\s*\d$/i.test(d.label)) list[i].label = d.label;
+      }
+    }
+    return list;
+  }
+
+  var inputBridge = null;   // the subscription to the inputs' state, held so it isn't collected
 
   // Not shown among LG's apps: the inputs above, LG's own home and launchers.
   var HIDDEN = /^(com\.webos\.app\.(livetv|hdmi\d|home|homeconnect|discovery|launcher)|com\.webos\.app\.inputpicker)$/;
@@ -270,34 +287,25 @@ var TV = (function () {
 
     /** The antenna and HDMI inputs; `connected` when the TV says a device is on (when it tells). */
     inputs: function (done) {
-      var list = INPUTS.map(function (x) { return {id: x.id, key: x.key, label: x.label, symbol: x.symbol, connected: true}; });
       if (!webos) {
-        list[2].connected = false;
-        list[3].connected = false;
-        list[4].connected = false;
-        done(list);
+        done(inputList([2, 3, 4].map(function (i) { return {appId: INPUTS[i].id, connected: false}; })));
         return;
       }
       luna('luna://com.webos.service.eim/getAllInputStatus', {}, function (res) {
-        var devices = res && res.devices ? res.devices : null;
-        if (devices) {
-          for (var i = 1; i < list.length; i++) {
-            for (var j = 0; j < devices.length; j++) {
-              var d = devices[j];
-              if (d.appId !== list[i].id) continue;
-              list[i].connected = d.connected !== false;
-              // A name the person gave the input on the TV ("PS5"), if any.
-              if (d.label && !/^hdmi\s*\d$/i.test(d.label)) list[i].label = d.label;
-            }
-          }
-        }
-        done(list);
+        done(inputList(res && res.devices));
       });
     },
 
-    /** The TV's own settings; done(ok). */
-    settings: function (done) {
-      this.launch('com.palm.app.settings', null, done);
+    /** changed(list) each time a device is plugged into an input or out of it, while the app runs. */
+    watchInputs: function (changed) {
+      if (!webos || inputBridge) return;
+      inputBridge = new window.PalmServiceBridge();
+      inputBridge.onservicecallback = function (message) {
+        var m = null;
+        try { m = JSON.parse(message); } catch (e) {}
+        if (m && m.returnValue !== false && m.devices) changed(inputList(m.devices));
+      };
+      inputBridge.call('luna://com.webos.service.eim/getAllInputStatus', JSON.stringify({subscribe: true}));
     },
 
     /** The TV's model, firmware, system, IP address and this app's version, for About this TV. */

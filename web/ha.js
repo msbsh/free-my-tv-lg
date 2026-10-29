@@ -1,5 +1,5 @@
 /*
- * Home Assistant, read only: the states of the entities in Home Settings (Prefs.haTop, Prefs.haPanel), live over its
+ * Home Assistant, read only: the states of the entities in Settings (Prefs.haTop, Prefs.haPanel), live over its
  * WebSocket API (subscribe_entities), the last ones kept for the next start and for when it can't be reached.
  * A WebSocket, not REST: Home Assistant answers the page's file:// origin only there (REST needs a CORS setting).
  * The token comes only from config.properties (CONFIG.haToken). Never log it.
@@ -392,14 +392,14 @@ var HA = (function () {
     start: function () { paused = false; connect(); },
     /** Another app is in front: no connection until the home screen shows again. */
     pause: function () { paused = true; close(); },
-    /** The lists changed in Home Settings: the same connection, another subscription. */
+    /** The lists changed in Settings: the same connection, another subscription. */
     listsChanged: function () {
       if (status !== 'live') { changed(); return; }
       if (subscription) send({type: 'unsubscribe_events', subscription: subscription});
       subscribe();
       changed();
     },
-    /** The address or the switch changed in Home Settings: start over. */
+    /** The address or the switch changed in Settings: start over. */
     restart: function () {
       close();
       if (Prefs.haUrl() !== url) { url = Prefs.haUrl(); states = {}; at = 0; }

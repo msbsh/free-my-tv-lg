@@ -245,6 +245,11 @@ function fakeWebOS(tv) {
     activate: function () { window.__palm.push('activate'); },
   };
   var later = function (fn) { Promise.resolve().then(fn); };
+  var devices = [
+    {appId: 'com.webos.app.hdmi1', connected: true, label: 'PS5'},
+    {appId: 'com.webos.app.hdmi2', connected: false, label: 'HDMI2'},
+    {appId: 'com.webos.app.hdmi3', connected: true, label: 'HDMI 3'},
+    {appId: 'com.webos.app.hdmi4', connected: false, label: 'Apple TV'}];
   var ok = function (o) { o.returnValue = true; return o; };
   function answer(uri, params) {
     switch (uri) {
@@ -255,11 +260,7 @@ function fakeWebOS(tv) {
       case 'luna://com.webos.applicationManager/launch':
         return params.id === 'broken.app' ? {returnValue: false, errorText: 'no app'} : ok({});
       case 'luna://com.webos.service.eim/getAllInputStatus':
-        return ok({devices: [
-          {appId: 'com.webos.app.hdmi1', connected: true, label: 'PS5'},
-          {appId: 'com.webos.app.hdmi2', connected: false, label: 'HDMI2'},
-          {appId: 'com.webos.app.hdmi3', connected: true, label: 'HDMI 3'},
-          {appId: 'com.webos.app.hdmi4', connected: false, label: 'Apple TV'}]});
+        return ok({devices: devices});
       case 'luna://com.webos.service.tv.systemproperty/getSystemInfo':
         return ok({modelName: 'OLED48C11LB', firmwareVersion: '03.53.47', sdkVersion: '6.5.3'});
       case 'luna://com.webos.service.systemservice/osInfo/query':
@@ -280,8 +281,14 @@ function fakeWebOS(tv) {
     var params = JSON.parse(json), bridge = this;
     window.__luna.push({uri: uri, params: params});
     if (/registerScreenSaverRequest$/.test(uri)) window.__saver = bridge;
+    if (/getAllInputStatus$/.test(uri) && params.subscribe) window.__inputs = bridge;
     var res = answer(uri, params);
     later(function () { if (bridge.onservicecallback) bridge.onservicecallback(JSON.stringify(res)); });
+  };
+  /** A device is plugged into the input `appId` (or out of it): the TV tells the subscribers. */
+  window.__plug = function (appId, connected) {
+    devices = devices.map(function (d) { return d.appId === appId ? Object.assign({}, d, {connected: connected}) : d; });
+    window.__inputs.onservicecallback(JSON.stringify(ok({devices: devices})));
   };
   /** The TV's screensaver asks whether it may start. */
   window.__askSaver = function (timestamp) {
@@ -403,7 +410,7 @@ function fakeHA(ha) {
 // MARK: - Opening the home screen
 
 /**
- * Opens the home screen at `at` (DAY or NIGHT) with these settings (Home Settings' fmtv.prefs), on a webOS TV when
+ * Opens the home screen at `at` (DAY or NIGHT) with these settings (Settings' fmtv.prefs), on a webOS TV when
  * `tv` is given, else in the browser stand-in. Fails the test on a script error or a request the fixtures don't know.
  */
 async function open(page, {at = DAY, prefs = null, tv = null, storage = {}, config = null, ha = null} = {}) {
@@ -505,7 +512,7 @@ async function dom(page) {
   });
 }
 
-/** Home Settings, the TV's own keys and choices it keeps (not the cached forecast and picks). */
+/** Settings, the TV's own keys and choices it keeps (not the cached forecast and picks). */
 async function storage(page) {
   return page.evaluate(() => {
     const out = {};

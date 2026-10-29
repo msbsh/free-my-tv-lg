@@ -48,20 +48,31 @@ test('picks open their app', async ({page}) => {
   s.check();
 });
 
-test('inputs, Live TV and the TV\'s settings', async ({page}) => {
+test('inputs and Live TV', async ({page}) => {
   const s = await m.open(page, {tv: {launchPoints: true}});
   await m.press(page, s.net, 'Down');
-  await snap(page, 'drawer');
+  await snap(page, 'drawer');   // HDMI 2 and 4, with nothing plugged in, aren't there
   await calls(page, 'launch-inputs', async () => {
     await m.moveTo(page, s.net, '#drawer .key', 'PS5', true);
     await m.press(page, s.net, 'Enter');
-    await m.moveTo(page, s.net, '#drawer .key', 'HDMI 2', true);
+    await m.moveTo(page, s.net, '#drawer .key', 'HDMI 3', true);
     await m.press(page, s.net, 'Enter');
     await m.moveTo(page, s.net, '#drawer .key', 'Live TV', true);
     await m.press(page, s.net, 'Enter');
-    await m.moveTo(page, s.net, '#drawer .key', 'TV Settings', true);
-    await m.press(page, s.net, 'Enter');
   });
+  s.check();
+});
+
+test('an input shows once a device is plugged in, and goes when it\'s out', async ({page}) => {
+  const s = await m.open(page, {tv: {launchPoints: true}});
+  await m.press(page, s.net, 'Down');
+  await m.moveTo(page, s.net, '#drawer .key', 'All Apps', true);
+  await page.evaluate(() => window.__plug('com.webos.app.hdmi4', true));
+  await m.settle(page, s.net);
+  await snap(page, 'input-plugged');   // Apple TV among the inputs, the focus still on All Apps
+  await page.evaluate(() => window.__plug('com.webos.app.hdmi1', false));
+  await m.settle(page, s.net);
+  await snap(page, 'input-unplugged');   // PS5 gone, the focus still on All Apps
   s.check();
 });
 
@@ -74,17 +85,12 @@ test('Back on the shelf goes back to the TV', async ({page}) => {
 test('About this TV', async ({page}) => {
   const s = await m.open(page, {tv: {launchPoints: true}});
   await m.press(page, s.net, 'Down');
-  await m.moveTo(page, s.net, '#drawer .key', 'Home Settings', true);
+  await m.moveTo(page, s.net, '#drawer .key', 'Settings', true);
   await m.press(page, s.net, 'Enter');
   await snap(page, 'settings');
   await m.moveTo(page, s.net, '#settings .row', 'About this TV');
   await calls(page, 'about', () => m.press(page, s.net, 'Enter'));
   await snap(page, 'about');
-  await calls(page, 'tv-settings-row', async () => {
-    await m.press(page, s.net, 'Back');
-    await m.moveTo(page, s.net, '#settings .row', 'TV Settings');
-    await m.press(page, s.net, 'Enter');
-  });
   s.check();
 });
 
@@ -94,7 +100,7 @@ test('LG\'s screensaver waits for ours', async ({page}) => {
     await page.evaluate(() => window.__askSaver(1001));   // the shelf: ours will show, the TV's waits
     await m.settle(page, s.net);
     await m.press(page, s.net, 'Down');
-    await m.moveTo(page, s.net, '#drawer .key', 'Home Settings', true);
+    await m.moveTo(page, s.net, '#drawer .key', 'Settings', true);
     await m.press(page, s.net, 'Enter');
     await page.evaluate(() => window.__askSaver(1002));   // a sheet open: the TV's may run
     await m.settle(page, s.net);
@@ -289,7 +295,7 @@ test('Mediatheken: mixed with TMDB\'s picks; Picks from and Live streams switch 
   expect(list.some((p) => MEDIA_PICKS.indexOf(p) >= 0)).toBe(true);
 
   await m.press(page, s.net, 'Down');
-  await m.moveTo(page, s.net, '#drawer .key', 'Home Settings', true);
+  await m.moveTo(page, s.net, '#drawer .key', 'Settings', true);
   await m.press(page, s.net, 'Enter');
   for (const row of ['ARD Mediathek', 'KiKA', 'ARTE', 'Live streams']) {
     await m.moveTo(page, s.net, '#settings .row', row);

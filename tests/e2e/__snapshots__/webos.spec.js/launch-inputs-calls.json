@@ -9,19 +9,13 @@
   {
    "uri": "luna://com.webos.applicationManager/launch",
    "params": {
-    "id": "com.webos.app.hdmi2"
+    "id": "com.webos.app.hdmi3"
    }
   },
   {
    "uri": "luna://com.webos.applicationManager/launch",
    "params": {
     "id": "com.webos.app.livetv"
-   }
-  },
-  {
-   "uri": "luna://com.webos.applicationManager/launch",
-   "params": {
-    "id": "com.palm.app.settings"
    }
   }
  ],

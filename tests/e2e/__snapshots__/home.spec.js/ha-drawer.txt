@@ -108,18 +108,6 @@ div#stage
       span.sym
       div.label
         "HDMI 1"
-    div.key.glass.off
-      span.sym
-      div.label
-        "HDMI 2"
-    div.key.glass.off
-      span.sym
-      div.label
-        "HDMI 3"
-    div.key.glass.off
-      span.sym
-      div.label
-        "HDMI 4"
     div.row-title
       "Shortcuts"
     div.key.glass
@@ -129,11 +117,7 @@ div#stage
     div.key.glass
       span.sym
       div.label
-        "Home Settings"
-    div.key.glass
-      span.sym
-      div.label
-        "TV Settings"
+        "Settings"
     div#ha.panel.glass
       div.head
         "Home Assistant"

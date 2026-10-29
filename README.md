@@ -19,13 +19,13 @@ This fork keeps only the LG app; Google TV, Android TV and Samsung live upstream
 
 - **No ads.** No sponsored rows, banners or autoplaying promos.
 - **Your apps, front and center.** The streaming apps you use, on a glass shelf. Pick them and their order on the TV.
-- **Trending, not sponsored.** Three fresh picks every hour (up to twelve, in Home Settings) from what's trending this week and the latest releases, only from apps you already have, movies and shows in one row. With ARD Mediathek, KiKA or ARTE on the TV, their top rows and live streams join in, mixed anew every hour (no TMDB key needed for those). Each pick names the app it plays in.
-- **Weather and inputs, one press away.** ↓ opens a drawer with the hour-by-hour forecast (or the next 5 days), sunrise and sunset, and below it the antenna and HDMI inputs and shortcuts to All Apps and the settings.
+- **Trending, not sponsored.** Three fresh picks every hour (up to twelve, in Settings) from what's trending this week and the latest releases, only from apps you already have, movies and shows in one row. With ARD Mediathek, KiKA or ARTE on the TV, their top rows and live streams join in, mixed anew every hour (no TMDB key needed for those). Each pick names the app it plays in.
+- **Weather and inputs, one press away.** ↓ opens a drawer with the hour-by-hour forecast (or the next 5 days), sunrise and sunset, and below it the antenna, the HDMI inputs with a device plugged in, and shortcuts to All Apps and the settings.
 - **Your home at a glance (optional).** Up to three [Home Assistant](#home-assistant) values at the top right (OK shows their last 24 hours) and a card of them in the drawer, next to the weather. Read only, live.
 - **A thought to start with.** A short quote at the top, another with every start: Wilde, Twain, Shaw or Thoreau, and on a German TV also Goethe, Lichtenberg, Ebner-Eschenbach or Nietzsche, always in the words they wrote, with their name.
 - **Light by day, dark by night.** It follows your city's sunset.
 - **A screensaver to match.** Full-screen photos of the next two dozen picks, with the app each plays in, and a big clock that moves to another corner with every photo, so nothing stays in place on an OLED panel. Optionally (*Watch from the screensaver*), OK opens the title on screen in its app.
-- **Set up on the TV.** Language, city, temperature, theme, how many picks, which streaming services they come from and whether live streams are among them, the weather card, the TMDB key, Home Assistant and the apps on the shelf, in *Home Settings*.
+- **Set up on the TV.** Language, city, temperature, theme, how many picks, which streaming services they come from and whether live streams are among them, the weather card, the TMDB key, Home Assistant and the apps on the shelf, in *Settings*.
 - **Nothing changed on the TV.** It installs through LG's Developer Mode. LG's home screen stays; Free My TV (LG) is one press of a number key away.
 
 ## Install
@@ -53,7 +53,7 @@ Coming from upstream's Free My TV (`io.freemytv`)? This fork has its own app id 
 
 ## Settings
 
-The first values come from `config.properties`. Most can also be changed on the TV, in *Home Settings*, and the TV's choice wins.
+The first values come from `config.properties`. Most can also be changed on the TV, in *Settings*, and the TV's choice wins.
 
 | Key | What it does | Default |
 |---|---|---|
@@ -78,7 +78,7 @@ Changed something? Run `python3 webos/install.py <IP>` again: it builds before i
 
 Free, and it takes two minutes: create an account at [themoviedb.org](https://www.themoviedb.org/signup), then open [Settings → API](https://www.themoviedb.org/settings/api) and request a developer key. Paste the *API Read Access Token* (or the *API Key*) after `tmdb_key=`. It's your key: `config.properties` stays out of git.
 
-You can also type it on the TV, in *Home Settings* → *TMDB key*: the short *API Key* (32 characters) is the easier one to type with the remote. TMDB checks it before it's saved, it stays on the TV, and it wins over the one in `config.properties` (*Remove the key* goes back to that one).
+You can also type it on the TV, in *Settings* → *TMDB key*: the short *API Key* (32 characters) is the easier one to type with the remote. TMDB checks it before it's saved, it stays on the TV, and it wins over the one in `config.properties` (*Remove the key* goes back to that one).
 
 ### Home Assistant
 
@@ -86,7 +86,7 @@ Read only: the app shows states, it never switches anything.
 
 1. In Home Assistant, best as a user of its own without admin rights (a token can do everything its user can; Home Assistant has no read-only tokens): open your profile → *Security* → *Long-lived access tokens* → *Create token*.
 2. Put it after `ha_token=` in `config.properties`, the address after `ha_url=`, and the entities you want after `ha_top=` and `ha_panel=`. Install again.
-3. On the TV, *Home Settings* → *Home Assistant* changes the address, turns it off, and picks the values and their order from what Home Assistant has.
+3. On the TV, *Settings* → *Home Assistant* changes the address, turns it off, and picks the values and their order from what Home Assistant has.
 
 The app connects through Home Assistant's WebSocket API, so Home Assistant needs no change. Use `http://` in your network, or `https://` only with a certificate the TV trusts (a self-signed one fails). Next to the weather the card holds 6 values, alone 14. When Home Assistant can't be reached, the last values stay, dimmed, with the time they're from.
 
@@ -101,7 +101,7 @@ The app connects through Home Assistant's WebSocket API, so Home Assistant needs
 | File | What it is |
 |---|---|
 | [`web/home.js`](web/home.js) | The home screen |
-| [`web/tv.js`](web/tv.js) | The TV's apps, inputs and settings (Luna) |
+| [`web/tv.js`](web/tv.js) | The TV's apps and inputs (Luna) |
 | [`web/data.js`](web/data.js) | Picks (TMDB, ARD Mediathek, KiKA, ARTE) and weather |
 | [`web/ha.js`](web/ha.js) | Home Assistant, read only |
 | [`web/strings.js`](web/strings.js) | Translations, dates and plurals |
@@ -111,11 +111,11 @@ The app connects through Home Assistant's WebSocket API, so Home Assistant needs
 
 ## Checks and tests
 
-`tools/check.sh` validates the catalogues, builds the package, checks `web/` against what webOS 6 can run, and runs `tests/run.sh`: the package against its baseline, then the screen in Chromium with a fixed clock, the internet, a Home Assistant and a webOS TV faked (Playwright: the page, screenshots, the calls to the TV and the network, and Home Settings). It needs Python 3 and Node; the first run installs Playwright in `tests/`. Pull requests run it too, without the screenshots.
+`tools/check.sh` validates the catalogues, builds the package, checks `web/` against what webOS 6 can run, and runs `tests/run.sh`: the package against its baseline, then the screen in Chromium with a fixed clock, the internet, a Home Assistant and a webOS TV faked (Playwright: the page, screenshots, the calls to the TV and the network, and Settings). It needs Python 3 and Node; the first run installs Playwright in `tests/`. Pull requests run it too, without the screenshots.
 
 ## Translations
 
-Each language is one file, [`assets/i18n/<lang>.json`](assets/i18n), keyed by the English text in the code. *Automatic* follows the TV's language and uses any language that has a file (English otherwise); *Home Settings* → *Language* lists them all. Portuguese, Spanish, German, Russian, Thai and Turkish were translated by hand and are the reference; the others were machine-made.
+Each language is one file, [`assets/i18n/<lang>.json`](assets/i18n), keyed by the English text in the code. *Automatic* follows the TV's language and uses any language that has a file (English otherwise); *Settings* → *Language* lists them all. Portuguese, Spanish, German, Russian, Thai and Turkish were translated by hand and are the reference; the others were machine-made.
 
 - **Add a language:** `python3 tools/translate.py --new ca`, then fill `assets/i18n/ca.json` by hand, or with `ANTHROPIC_API_KEY` set, `python3 tools/translate.py --fill --lang ca` (only the strings go to the API).
 - **After changing text in the code:** `python3 tools/translate.py` lists what each language lacks; `--fill` translates only that, `--prune` drops strings the code no longer uses, `--check` validates without writing.

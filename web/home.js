@@ -426,7 +426,7 @@
     renderHaTop();
   }
 
-  /** Home Assistant's values at the top right (Home Settings → Home Assistant → At the top); OK shows their day. */
+  /** Home Assistant's values at the top right (Settings → Home Assistant → At the top); OK shows their day. */
   function renderHaTop() {
     var holder = $('hatop'), ids = HA.status === 'off' ? [] : Prefs.haTop();
     holder.innerHTML = '';
@@ -612,15 +612,19 @@
   function renderDrawer() {
     var d = $('drawer');
     d.innerHTML = '';
+    var focused = drawerItems[st.drawer] && drawerItems[st.drawer].id;
     drawerItems = [];
     for (var i = 0; i < inputs.length; i++) {
       var x = inputs[i];
-      drawerItems.push({label: x.label || tr('Live TV'), symbol: x.symbol, off: !x.connected, run: launcher(x.id, x.label)});
+      // Only the inputs with a device on them (the TV tells when one is plugged in: watchInputs).
+      if (x.connected) drawerItems.push({id: x.id, label: x.label || tr('Live TV'), symbol: x.symbol, run: launcher(x.id, x.label)});
     }
     drawerInputs = drawerItems.length;
-    drawerItems.push({label: tr('All Apps'), symbol: 'apps', run: openApps});
-    drawerItems.push({label: tr('Home Settings'), symbol: 'settings', run: openSettings});
-    drawerItems.push({label: tr('TV Settings'), symbol: 'tv_settings', run: tvSettings});
+    drawerItems.push({id: 'apps', label: tr('All Apps'), symbol: 'apps', run: openApps});
+    drawerItems.push({id: 'settings', label: tr('Settings'), symbol: 'settings', run: openSettings});
+    // The focus stays on its key when an input comes or goes.
+    for (var f = 0; f < drawerItems.length; f++) if (drawerItems[f].id === focused) st.drawer = f;
+    st.drawer = Math.min(st.drawer, drawerItems.length - 1);
     var n = drawerItems.length, gap = 18, groupGap = 56, groups = drawerInputs > 0 && drawerInputs < n ? 2 : 1;
     var tw = Math.min(230, (1760 - Math.max(0, n - groups) * gap - (groups - 1) * groupGap) / Math.max(1, n));
     var xPos = 80;
@@ -630,7 +634,7 @@
         el('div', 'row-title', d, tr('Shortcuts')).style.left = (xPos + 4) + 'px';
       }
       if (k === 0 && drawerInputs) el('div', 'row-title', d, tr('Inputs')).style.left = '84px';
-      var item = drawerItems[k], key = el('div', 'key glass' + (item.off ? ' off' : ''), d);
+      var item = drawerItems[k], key = el('div', 'key glass', d);
       key.style.left = xPos + 'px';
       key.style.width = tw + 'px';
       sym(item.symbol, key);
@@ -646,7 +650,7 @@
 
   /**
    * The weather card and Home Assistant's, above the inputs and shortcuts: Home Assistant's as wide as its values need
-   * (two rows), the weather the rest. Without both (Home Settings), the keys take their place.
+   * (two rows), the weather the rest. Without both (Settings), the keys take their place.
    */
   function renderPanels() {
     var d = $('drawer'), old = d.querySelectorAll('.panel'), wx = Prefs.weather();
@@ -703,7 +707,7 @@
     el('div', 'cond', card, Data.condition(w.code, w.isDay));
     el('div', 'range', card, trf('H:{max}', {max: Data.degrees(w.max)}) + '   ' + trf('L:{min}', {min: Data.degrees(w.min)}));
     el('div', 'split', card);
-    // Home Settings → Forecast: the next 6 hours or the next 5 days (the hours until a forecast has days).
+    // Settings → Forecast: the next 6 hours or the next 5 days (the hours until a forecast has days).
     var days = Prefs.forecast() === 'days' && w.days && w.days.length > 0, list = days ? w.days : w.hours;
     var hours = el('div', 'hours', card), width = parseFloat(card.style.width) - 30 - 422;
     var n = Math.max(2, Math.min(days ? 5 : 6, Math.floor(width / 110))), hw = width / n;   // fewer next to Home Assistant
@@ -782,7 +786,7 @@
     updateFocus();
   }
 
-  // MARK: - Home Settings
+  // MARK: - Settings
 
   function settingRows() {
     var unit = Prefs.temperature(), theme = Prefs.theme();
@@ -829,7 +833,6 @@
     }
     rows.push({label: tr('Shelf'), value: '›', shelf: true, step: function (d) { if (d >= 0) openShelfEdit(); }});
     rows.push({label: tr('About this TV'), value: '›', about: true, step: function (d) { if (d >= 0) openAbout(); }});
-    rows.push({label: tr('TV Settings'), value: '›', step: function (d) { if (d >= 0) tvSettings(); }});
     return rows;
   }
 
@@ -845,7 +848,7 @@
     box.innerHTML = '';
     var title = el('div', 'title', box);
     sym('settings', title);
-    title.appendChild(document.createTextNode(tr('Home Settings')));
+    title.appendChild(document.createTextNode(tr('Settings')));
     var list = el('div', 'list', box), holder = el('div', 'rows', list);
     rowsNow = settingRows();
     list.style.height = Math.min(rowsNow.length, 7) * 78 + 'px';
@@ -909,7 +912,7 @@
     updateFocus();
   }
 
-  /** OK: the language under the focus; Back: none. Either way, back to Home Settings, on the Language row. */
+  /** OK: the language under the focus; Back: none. Either way, back to Settings, on the Language row. */
   function closeLanguages(pick) {
     setClass($('langpick'), 'open', false);
     langHint = null;
@@ -1138,7 +1141,7 @@
     Data.keyChanged();
   }
 
-  /** Back on the TMDB key row of Home Settings. */
+  /** Back on the TMDB key row of Settings. */
   function closeKey() {
     closeField('keypick');
     setClass($('keypick'), 'open', false);
@@ -1347,7 +1350,7 @@
     }
   }
 
-  // MARK: - Home Assistant in Home Settings: the address (the token is only in config.properties), on or off, the values
+  // MARK: - Home Assistant in Settings: the address (the token is only in config.properties), on or off, the values
 
   var haStatus = '', haWarn = false, haTimer = 0, haSeq = 0;
 
@@ -1549,12 +1552,6 @@
         if (!ok) toast(trf("Couldn't open {app}.", {app: name || id}));
       });
     };
-  }
-
-  function tvSettings() {
-    TV.settings(function (ok) {
-      if (!ok) toast(tr("Couldn't open TV Settings"));
-    });
   }
 
   function activate() {
@@ -1985,6 +1982,11 @@
   renderTop();
   tickClock();
   HA.start();
+  TV.watchInputs(function (list) {
+    var was = inputs.map(function (x) { return x.connected; }).join(), now = list.map(function (x) { return x.connected; }).join();
+    inputs = list;
+    if (was && was !== now) renderDrawer();   // not before the first loadApps: that draws it
+  });
   // The apps of the last start at once, and drawn again only if the TV lists others now.
   var early = !!lastApps;
   if (early) { useApps(lastApps); renderAll(); }

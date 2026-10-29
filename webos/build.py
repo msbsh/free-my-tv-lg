@@ -107,7 +107,7 @@ def build(preview, config):
         print('Preview: open out/webos/index.html (or serve out/webos) in a browser.')
     print('Built %s (%s %s, %d KB)' % (os.path.basename(IPK), app_id, version, len(data) // 1024))
     if not config['tmdbKey']:
-        print('No TMDB key built in: the picks come once one is typed on the TV (Home Settings > TMDB key).')
+        print('No TMDB key built in: the picks come once one is typed on the TV (Settings > TMDB key).')
 
 
 if __name__ == '__main__':

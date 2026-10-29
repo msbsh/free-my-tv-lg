@@ -90,18 +90,6 @@ div#stage
       span.sym
       div.label
         "HDMI 1"
-    div.key.glass.off
-      span.sym
-      div.label
-        "HDMI 2"
-    div.key.glass.off
-      span.sym
-      div.label
-        "HDMI 3"
-    div.key.glass.off
-      span.sym
-      div.label
-        "HDMI 4"
     div.row-title
       "Schnellzugriff"
     div.key.glass
@@ -111,11 +99,7 @@ div#stage
     div.key.glass
       span.sym
       div.label
-        "Startbildschirm"
-    div.key.glass
-      span.sym
-      div.label
-        "TV-Einstellungen"
+        "Einstellungen"
     div#weather.panel.glass
       div.head
         "Berlin"
@@ -179,7 +163,7 @@ div#stage
     div.box
       div.title
         span.sym
-        "Startbildschirm"
+        "Einstellungen"
       div.list
         div.rows
           div.row.focus
@@ -279,10 +263,6 @@ div#stage
               "›"
           div.row
             "Über diesen Fernseher"
-            span.value
-              "›"
-          div.row
-            "TV-Einstellungen"
             span.value
               "›"
       div.hint

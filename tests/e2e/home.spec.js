@@ -7,10 +7,10 @@ async function snap(page, name) {
   await m.screenshot(page, name + '.png');
 }
 
-/** From the shelf to Home Settings, through the drawer. */
+/** From the shelf to Settings, through the drawer. */
 async function openSettings(page, net) {
   await m.press(page, net, 'Down');
-  await m.moveTo(page, net, '#drawer .key', 'Home Settings', true);
+  await m.moveTo(page, net, '#drawer .key', 'Settings', true);
   await m.press(page, net, 'Enter');
 }
 
@@ -79,7 +79,7 @@ test('drawer, All Apps and Back', async ({page}) => {
   s.check();
 });
 
-test('Home Settings: every row and its values', async ({page}) => {
+test('Settings: every row and its values', async ({page}) => {
   const s = await m.open(page);
   await openSettings(page, s.net);
   await snap(page, 'settings');
@@ -106,7 +106,7 @@ test('Home Settings: every row and its values', async ({page}) => {
   s.check();
 });
 
-test('Home Settings: weather widget off', async ({page}) => {
+test('Settings: weather widget off', async ({page}) => {
   const s = await m.open(page);
   await openSettings(page, s.net);
   await m.moveTo(page, s.net, '#settings .row', 'Weather widget');
@@ -120,7 +120,7 @@ test('Home Settings: weather widget off', async ({page}) => {
   s.check();
 });
 
-test('Home Settings: language', async ({page}) => {
+test('Settings: language', async ({page}) => {
   const s = await m.open(page);
   await openSettings(page, s.net);
   await m.press(page, s.net, 'Enter');
@@ -147,7 +147,7 @@ for (const lang of ['de', 'pt', 'ru', 'ja', 'es']) {
   });
 }
 
-test('Home Settings: city', async ({page}) => {
+test('Settings: city', async ({page}) => {
   const s = await m.open(page);
   await openSettings(page, s.net);
   await m.moveTo(page, s.net, '#settings .row', 'City');
@@ -170,7 +170,7 @@ test('Home Settings: city', async ({page}) => {
   s.check();
 });
 
-test('Home Settings: TMDB key', async ({page}) => {
+test('Settings: TMDB key', async ({page}) => {
   const s = await m.open(page);
   await openSettings(page, s.net);
   await m.moveTo(page, s.net, '#settings .row', 'TMDB key');
@@ -199,7 +199,7 @@ test('Home Settings: TMDB key', async ({page}) => {
   s.check();
 });
 
-test('Home Settings: shelf editor', async ({page}) => {
+test('Settings: shelf editor', async ({page}) => {
   const s = await m.open(page);
   await openSettings(page, s.net);
   await m.moveTo(page, s.net, '#settings .row', 'Shelf');
@@ -273,7 +273,7 @@ test('screensaver: the clock goes to another corner with every photo, and the ph
   s.check();
 });
 
-test('screensaver: OK watches the title when Home Settings allows it', async ({page}) => {
+test('screensaver: OK watches the title when Settings allows it', async ({page}) => {
   const s = await m.open(page, {prefs: {saverWatch: true}});
   await page.clock.runFor(5.4 * 60000);   // the screensaver starts; the look is 6 s into its first photo
   await m.settle(page, s.net);
@@ -381,7 +381,7 @@ test('Home Assistant: the token refused', async ({page}) => {
   s.check();
 });
 
-test('Home Assistant: off in Home Settings, and back on', async ({page}) => {
+test('Home Assistant: off in Settings, and back on', async ({page}) => {
   const s = await m.open(page, HA);
   await openSettings(page, s.net);
   await m.moveTo(page, s.net, '#settings .row', 'Home Assistant');
@@ -505,7 +505,7 @@ test('Home Assistant: in German', async ({page}) => {
   await snap(page, 'ha-de');
   await m.press(page, s.net, 'Down');
   await snap(page, 'ha-drawer-de');
-  await m.moveTo(page, s.net, '#drawer .key', 'Startbildschirm', true);
+  await m.moveTo(page, s.net, '#drawer .key', 'Einstellungen', true);
   await m.press(page, s.net, 'Enter');
   await m.moveTo(page, s.net, '#settings .row', 'Home Assistant');
   await m.press(page, s.net, 'Enter');

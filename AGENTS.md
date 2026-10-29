@@ -22,7 +22,7 @@ ask-user-questions tool, if you have one, not as a list in the chat: it takes a 
   that is meant to show, and say which in the commit.
 - Never commit `config.properties`, `*.keystore` or any key.
 - The TMDB key is theirs and secret: they paste it after `tmdb_key=` in `config.properties` themselves, or type it on
-  the TV (*Home Settings* → *TMDB key*). Don't ask for it in the chat, never print it, never commit it. If they paste
+  the TV (*Settings* → *TMDB key*). Don't ask for it in the chat, never print it, never commit it. If they paste
   it in the chat anyway, put it only in `config.properties`. Without a key everything works except TMDB's picks (ARD
   Mediathek's, KiKA's and ARTE's still come).
 - The Home Assistant token (`ha_token`) is secret like the TMDB key, and stronger: Home Assistant has no read-only
@@ -74,7 +74,7 @@ skill (`.claude/skills/readme-preview/`) in your worktree and commit the new pre
    the same command.
 6. **Tell them:** while the app is open, holding a number key pins it to that key (it's also in LG's app list).
    Developer Mode lasts about 40 days; *EXTEND* in that app renews it (if it runs out, the TV removes developer apps,
-   and installing again brings it back). `--uninstall` removes the app. With Home Assistant set up, *Home Settings* →
+   and installing again brings it back). `--uninstall` removes the app. With Home Assistant set up, *Settings* →
    *Home Assistant* picks its values and their order on the TV.
 7. **App list:** webOS 6 denies `listLaunchPoints` to Developer Mode apps. Until the TV allows the remote control API
    (it asks once, on the TV), the shelf shows the known apps `getAppLoadStatus` finds. Tell them to allow it; the full
@@ -92,16 +92,16 @@ them remove the old one (LG's app list, edit mode) before the first install.
 - `web/tv.js` is the TV's side, through Luna (`PalmServiceBridge`): the apps (`listLaunchPoints`; where it's denied,
   the remote control API on `ws://127.0.0.1:3000` once the TV allowed it, else `getAppLoadStatus` over the known ids
   in `KNOWN`, with the logo bundled in `web/icons/` where there is one, otherwise the name on the brand's color),
-  opening apps and inputs (`applicationManager/launch`), the inputs' state (`eim/getAllInputStatus`), About this TV,
-  and the TV's screensaver (`tvpower`: it waits while ours will show). Firmware that gives the page its own origin
-  (`file://<app id>-webos`) gets 1008 "invalid origin" from the remote control API: then `webos/service`, a JS service
-  in the package whose handshake says `file://`, makes the call. In a desktop browser, `tv.js` is a stand-in with
-  sample apps.
+  opening apps and inputs (`applicationManager/launch`), the inputs' state (`eim/getAllInputStatus`, subscribed: the
+  drawer shows only inputs with a device on them), About this TV, and the TV's screensaver (`tvpower`: it waits while
+  ours will show). Firmware that gives the page its own origin (`file://<app id>-webos`) gets 1008 "invalid origin"
+  from the remote control API: then `webos/service`, a JS service in the package whose handshake says `file://`, makes
+  the call. In a desktop browser, `tv.js` is a stand-in with sample apps.
 - `web/home.js` draws the screen and handles the remote (arrows, OK, Back 461, the Magic Remote's pointer);
   `web/data.js` has the picks (TMDB, and the top rows and live streams of ARD Mediathek, KiKA and ARTE from ARD's page
   gateway and ARTE's API: not public APIs, so a source that fails keeps its last list; ARTE's cache sometimes holds a
   row's error inside the JSON, `mendArte` takes it out), mixed in an order of their own every hour, weather
-  (Open-Meteo) and `Prefs` (Home Settings, in localStorage, winning over `config.properties`). A pick's OK opens its
+  (Open-Meteo) and `Prefs` (Settings, in localStorage, winning over `config.properties`). A pick's OK opens its
   app only: tried on a webOS 6 TV, none of the three opened a title given at launch (ARTE's declared `contentTarget`
   neither, as id, URL or `arte://program/…`).
 - `web/ha.js` is Home Assistant, read only: its WebSocket API (`subscribe_entities`, `history/history_during_period`,

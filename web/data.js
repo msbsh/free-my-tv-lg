@@ -2,7 +2,7 @@
  * What the home screen shows, kept in localStorage so it opens with numbers:
  *  - the picks: what's trending this week and recent releases, only from the streaming apps on this TV (TMDB, with
  *    the person's own free key from config.properties), and the top rows of ARD Mediathek, KiKA and ARTE when their
- *    apps are on it (no key); mixed anew every hour, 3 at a time (up to 12 in Home Settings), the next 24 for the
+ *    apps are on it (no key); mixed anew every hour, 3 at a time (up to 12 in Settings), the next 24 for the
  *    screensaver;
  *  - weather, sunrise and sunset (Open-Meteo, every 30 min).
  * Settings changed on the TV (Prefs) win over config.properties. Built without a city (--generic), the
@@ -62,11 +62,11 @@ var Prefs = (function () {
     shelf: function () { return pick('shelf', null); },
     /** The shelf_apps of the build that last set the shelf, so a new one wins once over the TV's choice. */
     shelfConfig: function () { return pick('shelfConfig', ''); },
-    /** The weather's city, picked on the TV (Home Settings → City), or config.properties' (or the time zone's). */
+    /** The weather's city, picked on the TV (Settings → City), or config.properties' (or the time zone's). */
     city: function () { return pick('city', Place.city); },
     latitude: function () { return pick('latitude', Place.lat); },
     longitude: function () { return pick('longitude', Place.lon); },
-    /** The TMDB key typed on the TV (Home Settings → TMDB key), or config.properties' ('' for none). */
+    /** The TMDB key typed on the TV (Settings → TMDB key), or config.properties' ('' for none). */
     tmdbKey: function () { return String(pick('tmdbKey', CONFIG.tmdbKey || '')).trim(); },
     /** True when the key in use was typed on the TV (Remove takes it back to config.properties'). */
     tmdbKeyOnTV: function () { return v.tmdbKey !== undefined; },
@@ -81,7 +81,7 @@ var Prefs = (function () {
     /** Home Assistant's address: typed on the TV, or config.properties' ('' for none). The token is only there. */
     haUrl: function () { return String(pick('haUrl', CONFIG.haUrl || '')).trim().replace(/\/+$/, ''); },
     haUrlOnTV: function () { return v.haUrl !== undefined; },
-    /** Home Assistant's values on the screen (Home Settings); off without an address or a token. */
+    /** Home Assistant's values on the screen (Settings); off without an address or a token. */
     haOn: function () { return pick('homeAssistant', true) === true; },
     homeAssistant: function () { return this.haOn() && !!this.haUrl() && !!CONFIG.haToken; },
     /** The entity ids at the top (up to 3) and in the drawer's card, in order. */
@@ -124,7 +124,7 @@ var Data = (function () {
   // MARK: - Weather
 
   function place() { return Prefs.latitude() + ',' + Prefs.longitude(); }
-  // Both forecasts in one answer, the next 48 hours and today plus 5 days: Home Settings → Forecast switches without
+  // Both forecasts in one answer, the next 48 hours and today plus 5 days: Settings → Forecast switches without
   // asking again, and offline too.
   var QUERY = '&current=temperature_2m,weather_code,is_day&daily=temperature_2m_max,temperature_2m_min,sunrise,sunset,weather_code'
       + '&hourly=temperature_2m,weather_code,is_day&timezone=auto&forecast_days=6&forecast_hours=48';
@@ -231,10 +231,10 @@ var Data = (function () {
 
   var installed = [];   // the TV's apps, from TV.apps()
 
-  /** A service whose app is on the TV and that the person hasn't switched off in Home Settings (Picks from). */
+  /** A service whose app is on the TV and that the person hasn't switched off in Settings (Picks from). */
   function usable(key) { return !!appFor(key) && !Prefs.serviceOff(key); }
 
-  /** The streaming services whose app is on this TV, as {key, name}, for Home Settings. */
+  /** The streaming services whose app is on this TV, as {key, name}, for Settings. */
   function services() {
     var out = [];
     for (var s = 0; s < SERVICES.length; s++) if (appFor(SERVICES[s][1])) out.push({key: SERVICES[s][1], name: SERVICES[s][4]});

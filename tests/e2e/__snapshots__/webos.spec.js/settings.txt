@@ -81,18 +81,10 @@ div#stage
       span.sym
       div.label
         "PS5"
-    div.key.glass.off
-      span.sym
-      div.label
-        "HDMI 2"
     div.key.glass
       span.sym
       div.label
         "HDMI 3"
-    div.key.glass.off
-      span.sym
-      div.label
-        "Apple TV"
     div.row-title
       "Shortcuts"
     div.key.glass
@@ -102,11 +94,7 @@ div#stage
     div.key.glass
       span.sym
       div.label
-        "Home Settings"
-    div.key.glass
-      span.sym
-      div.label
-        "TV Settings"
+        "Settings"
     div#weather.panel.glass
       div.head
         "Berlin"
@@ -170,7 +158,7 @@ div#stage
     div.box
       div.title
         span.sym
-        "Home Settings"
+        "Settings"
       div.list
         div.rows
           div.row.focus
@@ -258,10 +246,6 @@ div#stage
               "›"
           div.row
             "About this TV"
-            span.value
-              "›"
-          div.row
-            "TV Settings"
             span.value
               "›"
       div.hint

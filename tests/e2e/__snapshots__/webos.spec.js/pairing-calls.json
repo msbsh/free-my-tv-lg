@@ -8,6 +8,12 @@
    }
   },
   {
+   "uri": "luna://com.webos.service.eim/getAllInputStatus",
+   "params": {
+    "subscribe": true
+   }
+  },
+  {
    "uri": "luna://com.webos.applicationManager/listLaunchPoints",
    "params": {}
   },

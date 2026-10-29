@@ -212,7 +212,7 @@ var I18N = (function () {
   }
 
   return {
-    /** After the language changes in Home Settings (and once at startup). */
+    /** After the language changes in Settings (and once at startup). */
     set: function (setting) {
       lang = resolve(setting);
       catalogue = lang === 'en' ? {} : CATALOGUES[lang] || {};
