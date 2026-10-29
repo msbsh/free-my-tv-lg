@@ -33,7 +33,7 @@ You need an LG TV with webOS 6 or newer (tested: OLED48C11LB, webOS 6.5) and a c
 1. **On the TV**, open the LG Content Store and install **Developer Mode**. Sign in with a free [LG developer account](https://webostv.developer.lge.com), turn on **Dev Mode Status** (the TV restarts), then turn on **Key Server**. Note the IP address and the passphrase it shows.
 2. **On your computer**, get the code and build:
    ```bash
-   git clone https://github.com/msbsh/free-my-tv && cd free-my-tv
+   git clone https://github.com/msbsh/free-my-tv-lg && cd free-my-tv-lg
    python3 webos/build.py
    ```
    The first build creates `config.properties`: put your city and your [TMDB key](#the-tmdb-key) there, then build again.
