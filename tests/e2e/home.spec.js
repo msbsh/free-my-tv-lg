@@ -219,10 +219,10 @@ test('About this TV (stand-in)', async ({page}) => {
 
 test('screensaver after 5 idle minutes, and waking up', async ({page}) => {
   const s = await m.open(page);
-  await page.clock.runFor(5.5 * 60000);
+  await page.clock.runFor(5.4 * 60000);   // the screensaver starts; the look is 6 s into its first photo
   await m.settle(page, s.net);
   await snap(page, 'saver');
-  await page.clock.runFor(12000);
+  await page.clock.runFor(6000);   // with settle's 6 s: the next photo, 6 s in
   await m.settle(page, s.net);
   await snap(page, 'saver-next');
   await m.press(page, s.net, 'Left');
@@ -230,9 +230,32 @@ test('screensaver after 5 idle minutes, and waking up', async ({page}) => {
   s.check();
 });
 
+test('screensaver: the clock goes to another corner with every photo', async ({page}) => {
+  const s = await m.open(page);
+  await page.clock.runFor(5.4 * 60000);   // the screensaver starts; the look is 6 s into its first photo
+  await m.settle(page, s.net);
+  const corner = () => page.evaluate(() => {
+    const c = document.querySelector('#saver .clock');
+    return {at: ['bl', 'tl', 'br', 'tr'].filter((k) => c.classList.contains(k)), up: document.getElementById('saver').classList.contains('up')};
+  });
+  const seen = [await corner()];
+  for (let i = 0; i < 12; i++) {
+    await page.clock.runFor(6000);   // with settle's 6 s: one photo (12 s) per look
+    await m.settle(page, s.net);
+    seen.push(await corner());
+  }
+  for (let i = 0; i < seen.length; i++) {
+    expect(seen[i].at.length, 'one corner at a time').toBe(1);
+    expect(seen[i].up, 'the shade on the clock\'s side').toBe(seen[i].at[0][0] === 't');
+    if (i) expect(seen[i].at[0], 'never the same corner twice in a row').not.toBe(seen[i - 1].at[0]);
+  }
+  expect(new Set(seen.map((x) => x.at[0])).size, 'every corner in turn').toBe(4);
+  s.check();
+});
+
 test('screensaver: OK watches the title when Home Settings allows it', async ({page}) => {
   const s = await m.open(page, {prefs: {saverWatch: true}});
-  await page.clock.runFor(5.5 * 60000);
+  await page.clock.runFor(5.4 * 60000);   // the screensaver starts; the look is 6 s into its first photo
   await m.settle(page, s.net);
   await snap(page, 'saver-watch');
   await m.press(page, s.net, 'Enter');

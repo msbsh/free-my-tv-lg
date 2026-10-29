@@ -256,6 +256,14 @@ async function open(page, {at = DAY, prefs = null, tv = null, storage = {}} = {}
   page.on('pageerror', (e) => errors.push(String(e)));
   page.on('console', (m) => { if (m.type() === 'error' && !/Failed to load resource/.test(m.text())) errors.push(m.text()); });
   await page.clock.install({time: new Date(at)});
+  // Time moves only with runFor, not while the page loads: the screensaver's 0.6 s clock fade then lands the same way
+  // every run.
+  await page.clock.pauseAt(new Date(new Date(at).getTime() + 1000));
+  // Math.random from a fixed seed, like the clock: the screensaver's corners come in the same order every run.
+  await page.addInitScript(() => {
+    let seed = 42;
+    Math.random = () => (seed = (Math.imul(seed, 1103515245) + 12345) >>> 0) / 4294967296;
+  });
   const start = Object.assign({}, storage);
   if (prefs) start['fmtv.prefs'] = JSON.stringify(prefs);
   if (tv) {

@@ -58,7 +58,7 @@ div#stage
             "Action · 1h 40m · Netflix"
       div#clock
         span.time
-          "10:06"
+          "10:05"
         span.date
           "Tuesday, October 20"
     div#platter
@@ -198,15 +198,16 @@ div#stage
   div#about.layer.sheet
     div.box
   div#saver.layer.on
-    div.photo.on bg="url(\"https://image.tmdb.org/t/p/original/m103b.jpg\")"
-    div.photo bg="url(\"https://image.tmdb.org/t/p/original/m102b.jpg\")"
-    div.shade
-    div.clock
+    div.photo.on bg="url(\"https://image.tmdb.org/t/p/original/t204b.jpg\")"
+    div.photo bg="url(\"https://image.tmdb.org/t/p/original/m104b.jpg\")"
+    div.shade.bottom
+    div.shade.top
+    div.clock.br
       div.time
-        "10:06"
+        "10:05"
       div.date
         "Tuesday, October 20"
       div.title
-        "Movie 103 (English)"
+        "Show 204 (English)"
       div.hint
   div#toast

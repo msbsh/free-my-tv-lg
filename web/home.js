@@ -1343,6 +1343,7 @@
   }
 
   var saverOn = false, idleAt = Date.now(), saverIndex = 0, saverTimer = 0, saverPick = null, SAVER_AFTER = 5 * 60000;
+  var SAVER_CORNERS = ['bl', 'tl', 'br', 'tr'];   // home.css: bottom left, top left, bottom right, top right
 
   /** The screensaver's photos: picks with an app on the TV. */
   function saverPhotos() {
@@ -1356,13 +1357,32 @@
     var s = $('saver');
     s.innerHTML = '';
     var a = el('div', 'photo', s), b = el('div', 'photo', s);
-    el('div', 'shade', s);
+    el('div', 'shade bottom', s);
+    el('div', 'shade top', s);
     var clock = el('div', 'clock', s);
     el('div', 'time', clock);
     el('div', 'date', clock);
     el('div', 'title', clock);
     var hint = el('div', 'hint', clock);
-    var front = a;
+    var front = a, corner = '';
+    // With every photo the clock goes to another corner, in no fixed order: on an OLED panel nothing stays in place.
+    function place(to) {
+      if (corner) setClass(clock, corner, false);
+      setClass(clock, to, true);
+      setClass(s, 'up', to.charAt(0) === 't');   // the shade follows the clock, for its contrast
+      corner = to;
+    }
+    function move() {
+      var others = SAVER_CORNERS.filter(function (c) { return c !== corner; });
+      var to = others[Math.floor(Math.random() * others.length)];
+      if (!corner) { place(to); return; }
+      setClass(clock, 'away', true);
+      setTimeout(function () {
+        if (!clock.parentNode) return;   // the screensaver closed (or opened again) meanwhile
+        place(to);
+        setClass(clock, 'away', false);
+      }, 600);
+    }
     function next() {
       if (!saverOn) return;
       var p = photos.length ? photos[saverIndex++ % photos.length] : null;
@@ -1382,6 +1402,7 @@
           front = back;
         }, 60);
       }
+      move();
       tickSaverClock(clock);
       saverTimer = setTimeout(next, 12000);
     }

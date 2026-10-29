@@ -197,17 +197,18 @@ div#stage
     div.box
   div#about.layer.sheet
     div.box
-  div#saver.layer.on
-    div.photo.on bg="url(\"https://image.tmdb.org/t/p/original/m101b.jpg\")"
-    div.photo bg="url(\"https://image.tmdb.org/t/p/original/m105b.jpg\")"
-    div.shade
-    div.clock
+  div#saver.layer.on.up
+    div.photo
+    div.photo.on bg="url(\"https://image.tmdb.org/t/p/original/m104b.jpg\")"
+    div.shade.bottom
+    div.shade.top
+    div.clock.tr
       div.time
         "10:05"
       div.date
         "Tuesday, October 20"
       div.title
-        "Movie 101 (English)"
+        "Movie 104 (English)"
       div.hint
         "Press OK to watch on Disney+ · any other button to close"
   div#toast
