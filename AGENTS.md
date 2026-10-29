@@ -44,6 +44,11 @@ linear: no merge commits. The main checkout may hold someone's uncommitted work;
 
 Installing on the TV stays in the main checkout: that's where their `config.properties` lives.
 
+The README's preview (`.github/preview.webp`) is an animated tour of the home screen: the header, the tabs and the
+picks, the shelf, and the drawer with the weather, the inputs and the shortcuts. When your change alters how any of
+these look, or adds or removes one, ask the person whether to record it again. On a yes, run the `readme-preview`
+skill (`.claude/skills/readme-preview/`) in your worktree and commit the new preview with your change.
+
 ## Installing it on an LG TV
 
 1. **Ask** for the TV's IP address and their city, if they didn't say. Tools: Python 3 and OpenSSH (`ssh`,
@@ -105,5 +110,3 @@ them remove the old one (LG's app list, edit mode) before the first install.
   strings), and keep placeholders as they are. No right-to-left languages yet.
 - Comments in English, short, only where the why isn't obvious.
 - Preview: `python3 webos/build.py --preview`, then open `out/webos/index.html` in a browser.
-- The README's animated preview (`.github/preview.webp`): record it again with the `readme-preview` skill
-  (`.claude/skills/readme-preview/`) whenever the home screen's look changes.

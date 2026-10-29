@@ -1,6 +1,6 @@
 ---
 name: readme-preview
-description: Re-records the README's animated preview (.github/preview.webp) from the current web/. Use when the home screen's look changes, or the preview shows something the app no longer has.
+description: Re-records the README's animated preview (.github/preview.webp) from the current web/. Use when the person asks for it, or agreed to it after a change to what the preview shows (AGENTS.md, "Changing the repo").
 ---
 
 # The README's preview
