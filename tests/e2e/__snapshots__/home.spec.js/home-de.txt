@@ -113,7 +113,7 @@ div#stage
       div.label
         "HDMI 4"
     div.row-title
-      "Verknüpfungen"
+      "Schnellzugriff"
     div.key.glass
       span.sym
       div.label
@@ -121,7 +121,7 @@ div#stage
     div.key.glass
       span.sym
       div.label
-        "Start-Einstellungen"
+        "Startbildschirm"
     div.key.glass
       span.sym
       div.label
@@ -178,7 +178,7 @@ div#stage
       div.sun
         span
           span.sym
-          "Sonnenaufgang 7:35"
+          "Sonnenaufgang 07:35"
         span
           span.sym
           "Sonnenuntergang 18:12"
@@ -189,7 +189,7 @@ div#stage
     div.box
       div.title
         span.sym
-        "Start-Einstellungen"
+        "Startbildschirm"
       div.list
         div.rows
           div.row
@@ -278,7 +278,7 @@ div#stage
             "Crunchyroll"
             div.toggle.on
           div.row
-            "Leiste"
+            "App-Leiste"
             span.value
               "›"
           div.row
