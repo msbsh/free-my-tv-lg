@@ -1,7 +1,8 @@
 /*
  * What the home screen shows, kept in localStorage so it opens with numbers:
  *  - the picks: what's trending this week and recent releases, only from the streaming apps on this TV (TMDB, with
- *    the person's own free key from config.properties), 3 per hour (up to 6 in Home Settings);
+ *    the person's own free key from config.properties), 3 per hour (up to 6 in Home Settings), the next 24 for the
+ *    screensaver;
  *  - weather, sunrise and sunset (Open-Meteo, every 30 min).
  * Settings changed on the TV (Prefs) win over config.properties. Built without a city (--generic), the
  * TV's time zone gives the city, and its country the region (zones.js).
@@ -53,7 +54,7 @@ var Prefs = (function () {
     saverWatch: function () { return pick('saverWatch', false) === true; },
     /** The weather card's forecast: 'hours' (the next 6 hours) or 'days' (the next 5 days). */
     forecast: function () { return pick('forecast', 'hours') === 'days' ? 'days' : 'hours'; },
-    /** Picks per tab: 3 (as it was) up to 6. */
+    /** Picks on the screen at a time: 3 (as it was) up to 6. */
     cards: function () { var n = pick('cards', 3); return n < 3 ? 3 : n > 6 ? 6 : n; },
     shelf: function () { return pick('shelf', null); },
     /** The shelf_apps of the build that last set the shelf, so a new one wins once over the TV's choice. */
@@ -295,17 +296,20 @@ var Data = (function () {
     return (cut > 0 ? t.slice(0, cut) : t).replace(/^\s+|\s+$/g, '');
   }
 
-  /** This hour's picks (Prefs.cards()): movies ("movie"), shows ("tv") or both (null). */
-  function now(kind) {
+  /** The screensaver's photos: this hour's picks and the ones after them, about 5 minutes at 12 s each. */
+  var SHOWCASE = 24;
+
+  /** count picks from this hour's on (the list turns Prefs.cards() further every hour), one per franchise. */
+  function upcoming(count) {
     var list = [];
     if (!KEY) return list;
     for (var i = 0; i < picks.length; i++) {
       var p = picks[i];
-      if ((kind === null || kind === p.kind) && (!p.detailed || (p.app && usable(p.app)))) list.push(p);
+      if (!p.detailed || (p.app && usable(p.app))) list.push(p);
     }
     if (!list.length) return list;
     var hour = Math.floor(Date.now() / 3600000), out = [], seen = {}, n = Prefs.cards();
-    for (var j = 0; j < list.length && out.length < n; j++) {
+    for (var j = 0; j < list.length && out.length < count; j++) {
       var q = list[(hour * n + j) % list.length], f = franchise(q.title);
       if (!seen[f]) { seen[f] = true; out.push(q); }
     }
@@ -416,6 +420,9 @@ var Data = (function () {
 
   function keyOf(p) { return p.kind + ':' + p.id; }
 
+  /** The most the list holds: trending first, then recent releases, movies and shows in turn. */
+  var POOL = 48;
+
   function alternate(out, seen, a, b, max) {
     for (var i = 0; i < Math.max(a.length, b.length) && out.length < max; i++) {
       if (i < a.length && !seen[keyOf(a[i])]) { seen[keyOf(a[i])] = true; out.push(a[i]); }
@@ -448,7 +455,7 @@ var Data = (function () {
       each(['movie', 'tv'], function (kind, next) {
         tmdb('/trending/' + kind + '/week?language=' + lang(), function (e, r) {
           var candidates = [];
-          for (var j = 0; !e && j < r.results.length && j < 16; j++) addPick(candidates, r.results[j], kind);
+          for (var j = 0; !e && j < r.results.length; j++) addPick(candidates, r.results[j], kind);
           // Trending is only kept when it's on one of the TV's apps: the details say where.
           each(candidates, function (p, n) {
             details(p, function (de) { if (!de && p.app) hot[kind].push(p); n(); });
@@ -460,8 +467,8 @@ var Data = (function () {
           tmdb('/discover/tv?vote_count.gte=20&air_date.gte=' + day(-90) + '&air_date.lte=' + day(0) + common, function (e2, r2) {
             for (var k = 0; !e2 && k < r2.results.length; k++) addPick(fresh.tv, r2.results[k], 'tv');
             var list = [], seen = {};
-            alternate(list, seen, hot.movie, hot.tv, 24);
-            alternate(list, seen, fresh.movie, fresh.tv, 24);
+            alternate(list, seen, hot.movie, hot.tv, POOL);
+            alternate(list, seen, fresh.movie, fresh.tv, POOL);
             if (!list.length) { done(new Error('TMDB returned no recommendations')); return; }
             picks = list;
             done(null);
@@ -477,7 +484,7 @@ var Data = (function () {
     var t = Date.now(), p = hourPeriod(new Date()), st = sourceStamp();
     if (st === stamp && failedAt && t - failedAt < 10 * 60000 && t >= failedAt) return;
     var stale = st !== stamp || p !== period || t - listAt > 6 * 3600000 || t < listAt || !picks.length || listLang !== I18N.lang;
-    var wanted = all(), missing = false;
+    var wanted = upcoming(SHOWCASE), missing = false;
     for (var i = 0; i < wanted.length; i++) missing = missing || !wanted[i].detailed;
     if (!stale && !missing) return;
     fetchingRecs = true;
@@ -489,7 +496,7 @@ var Data = (function () {
       changed();
     }
     function detailWanted() {
-      var todo = all().filter(function (x) { return !x.detailed; });
+      var todo = upcoming(SHOWCASE).filter(function (x) { return !x.detailed; });
       each(todo, function (x, next) { details(x, function () { next(); }); }, function () { finish(null); });
     }
     if (stale) {
@@ -503,16 +510,6 @@ var Data = (function () {
     } else {
       detailWanted();
     }
-  }
-
-  /** This hour's picks for the three tabs, without repeats (the screensaver shows them too). */
-  function all() {
-    var out = [], seen = {}, kinds = [null, 'movie', 'tv'];
-    for (var k = 0; k < kinds.length; k++) {
-      var list = now(kinds[k]);
-      for (var i = 0; i < list.length; i++) if (!seen[keyOf(list[i])]) { seen[keyOf(list[i])] = true; out.push(list[i]); }
-    }
-    return out;
   }
 
   return {
@@ -534,8 +531,9 @@ var Data = (function () {
     /** A key typed (or removed) on the TV: the picks come again with it, or go. */
     keyChanged: function () { KEY = Prefs.tmdbKey(); recsError = ''; failedAt = 0; refreshRecs(); changed(); },
     recsError: function () { return recsError; },
-    picks: now,
-    showcase: all,
+    /** This hour's picks (Prefs.cards()), movies and shows. */
+    picks: function () { return upcoming(Prefs.cards()); },
+    showcase: function () { return upcoming(SHOWCASE); },
     image: function (path, size) { return path ? 'https://image.tmdb.org/t/p/' + (size || 'w1280') + path : ''; },
 
     /** Night at the location: from sunset to sunrise (the last forecast; without one, 6:00 and 18:00). */

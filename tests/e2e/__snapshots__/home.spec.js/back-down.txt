@@ -14,39 +14,32 @@ div#stage
           "I never found the companion that was so companionable as solitude."
         p.author
           "Henry David Thoreau"
-      div#tabs
-        button.tab
-          "Explore"
-        button.tab
-          "Movies"
-        button.tab.on
-          "Shows"
       div#hatop
       div#cards
+        div.card
+          div.img
+            div.layer bg="url(\"https://image.tmdb.org/t/p/w342/mp104.jpg\")"
+            div.layer.back bg="url(\"https://image.tmdb.org/t/p/w1280/m104b.jpg\")"
+          div.name
+            "Movie 104 (English)"
+          div.meta
+            "Action · 1h 39m · Disney+"
+        div.card
+          div.img
+            div.layer bg="url(\"https://image.tmdb.org/t/p/w342/tp204.jpg\")"
+            div.layer.back bg="url(\"https://image.tmdb.org/t/p/w1280/t204b.jpg\")"
+          div.name
+            "Show 204 (English)"
+          div.meta
+            "Series · Sci-Fi & Fantasy · 1 season · Netflix"
         div.card.wide
           div.img
-            div.layer bg="url(\"https://image.tmdb.org/t/p/w342/tp401.jpg\")"
-            div.layer.back bg="url(\"https://image.tmdb.org/t/p/w1280/t401b.jpg\")"
+            div.layer bg="url(\"https://image.tmdb.org/t/p/w342/mp105.jpg\")"
+            div.layer.back bg="url(\"https://image.tmdb.org/t/p/w1280/m105b.jpg\")"
           div.name
-            "Show 401 (English)"
+            "Movie 105 (English)"
           div.meta
-            "Series · Sci-Fi & Fantasy · 2 seasons · Disney+"
-        div.card
-          div.img
-            div.layer bg="url(\"https://image.tmdb.org/t/p/w342/tp402.jpg\")"
-            div.layer.back bg="url(\"https://image.tmdb.org/t/p/w1280/t402b.jpg\")"
-          div.name
-            "Show 402 (English)"
-          div.meta
-            "Series · Sci-Fi & Fantasy · 3 seasons · Netflix"
-        div.card
-          div.img
-            div.layer bg="url(\"https://image.tmdb.org/t/p/w342/tp403.jpg\")"
-            div.layer.back
-          div.name
-            "Show 403 (English)"
-          div.meta
-            "Series · Sci-Fi & Fantasy · 4 seasons · Prime Video"
+            "Action · 1h 40m · Netflix"
       div#clock
         span.time
           "10:01"
@@ -62,7 +55,7 @@ div#stage
       div.tile bg="linear-gradient(rgb(28, 28, 30), rgb(9, 9, 10))"
         div.word
           "YouTube"
-      div.tile.focus bg="linear-gradient(rgb(42, 168, 255), rgb(10, 104, 212))"
+      div.tile bg="linear-gradient(rgb(42, 168, 255), rgb(10, 104, 212))"
         div.word
           "Prime Video"
       div.tile bg="linear-gradient(rgb(23, 53, 132), rgb(8, 20, 63))"
@@ -71,7 +64,7 @@ div#stage
       div.tile bg="linear-gradient(rgb(92, 48, 232), rgb(34, 22, 132))"
         div.word
           "Max"
-      div.tile bg="linear-gradient(rgb(28, 28, 30), rgb(0, 0, 0))"
+      div.tile.focus bg="linear-gradient(rgb(28, 28, 30), rgb(0, 0, 0))"
         div.word
           "Apple TV"
       div.tile bg="linear-gradient(rgb(255, 138, 31), rgb(255, 45, 90))"

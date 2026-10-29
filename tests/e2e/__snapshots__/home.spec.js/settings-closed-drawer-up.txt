@@ -3,8 +3,8 @@ div#stage
   div#sky.layer
     div.grad.day
     div.grad.night
-    canvas#bgA.on
-    canvas#bgB
+    canvas#bgA
+    canvas#bgB.on
     div.veil
     div.lift
   div#home.layer
@@ -14,47 +14,40 @@ div#stage
           "I never found the companion that was so companionable as solitude."
         p.author
           "Henry David Thoreau"
-      div#tabs
-        button.tab.on
-          "Explore"
-        button.tab
-          "Movies"
-        button.tab
-          "Shows"
       div#hatop
       div#cards
         div.card.wide.focus
           div.img
-            div.layer bg="url(\"https://image.tmdb.org/t/p/w342/mp101.jpg\")"
-            div.layer.back bg="url(\"https://image.tmdb.org/t/p/w1280/m101b.jpg\")"
+            div.layer bg="url(\"https://image.tmdb.org/t/p/w342/mp107.jpg\")"
+            div.layer.back bg="url(\"https://image.tmdb.org/t/p/w1280/m107b.jpg\")"
           div.name
-            "Movie 101 (English)"
+            "Movie 107 (English)"
           div.meta
-            "Action · 1h 36m · Disney+"
+            "Action · 1h 42m · Disney+"
         div.card
           div.img
-            div.layer bg="url(\"https://image.tmdb.org/t/p/w342/tp202.jpg\")"
+            div.layer bg="url(\"https://image.tmdb.org/t/p/w342/mp301.jpg\")"
             div.layer.back
           div.name
-            "Show 202 (English)"
+            "Movie 301 (English)"
           div.meta
-            "Series · Sci-Fi & Fantasy · 3 seasons · Prime Video"
+            "Action · 1h 36m · Prime Video"
         div.card
           div.img
-            div.layer bg="url(\"https://image.tmdb.org/t/p/w342/mp103.jpg\")"
+            div.layer bg="url(\"https://image.tmdb.org/t/p/w342/tp401.jpg\")"
             div.layer.back
           div.name
-            "Movie 103 (English)"
+            "Show 401 (English)"
           div.meta
-            "Action · 1h 38m · Prime Video"
+            "Series · Sci-Fi & Fantasy · 2 seasons · Disney+"
         div.card.edge
           div.img
-            div.layer bg="url(\"https://image.tmdb.org/t/p/w342/tp203.jpg\")"
+            div.layer bg="url(\"https://image.tmdb.org/t/p/w342/mp302.jpg\")"
             div.layer.back
           div.name
-            "Show 203 (English)"
+            "Movie 302 (English)"
           div.meta
-            "Series · Sci-Fi & Fantasy · 4 seasons · Disney+"
+            "Action · 1h 37m · Disney+"
       div#clock
         span.time
           "10:03"
@@ -218,7 +211,7 @@ div#stage
               span.chev
                 "›"
           div.row
-            "Picks per tab"
+            "Picks per hour"
             span.value
               span.chev
                 "‹"

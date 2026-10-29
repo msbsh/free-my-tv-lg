@@ -3,8 +3,8 @@ div#stage
   div#sky.layer
     div.grad.day
     div.grad.night
-    canvas#bgA.on
-    canvas#bgB
+    canvas#bgA
+    canvas#bgB.on
     div.veil
     div.lift
   div#home.layer
@@ -14,39 +14,32 @@ div#stage
           "I never found the companion that was so companionable as solitude."
         p.author
           "Henry David Thoreau"
-      div#tabs
-        button.tab
-          "Explore"
-        button.tab.on.focus
-          "Movies"
-        button.tab
-          "Shows"
       div#hatop
       div#cards
         div.card
           div.img
-            div.layer bg="url(\"https://image.tmdb.org/t/p/w342/mp101.jpg\")"
-            div.layer.back
+            div.layer bg="url(\"https://image.tmdb.org/t/p/w342/mp104.jpg\")"
+            div.layer.back bg="url(\"https://image.tmdb.org/t/p/w1280/m104b.jpg\")"
           div.name
-            "Movie 101 (English)"
+            "Movie 104 (English)"
           div.meta
-            "Action · 1h 36m · Disney+"
-        div.card.wide
+            "Action · 1h 39m · Disney+"
+        div.card.wide.focus
           div.img
-            div.layer bg="url(\"https://image.tmdb.org/t/p/w342/mp102.jpg\")"
-            div.layer.back bg="url(\"https://image.tmdb.org/t/p/w1280/m102b.jpg\")"
+            div.layer bg="url(\"https://image.tmdb.org/t/p/w342/tp204.jpg\")"
+            div.layer.back bg="url(\"https://image.tmdb.org/t/p/w1280/t204b.jpg\")"
           div.name
-            "Movie 102 (English)"
+            "Show 204 (English)"
           div.meta
-            "Action · 1h 37m · Netflix"
+            "Series · Sci-Fi & Fantasy · 1 season · Netflix"
         div.card
           div.img
-            div.layer bg="url(\"https://image.tmdb.org/t/p/w342/mp103.jpg\")"
+            div.layer bg="url(\"https://image.tmdb.org/t/p/w342/mp105.jpg\")"
             div.layer.back
           div.name
-            "Movie 103 (English)"
+            "Movie 105 (English)"
           div.meta
-            "Action · 1h 38m · Prime Video"
+            "Action · 1h 40m · Netflix"
       div#clock
         span.time
           "10:00"

@@ -14,16 +14,9 @@ div#stage
           "I never found the companion that was so companionable as solitude."
         p.author
           "Henry David Thoreau"
-      div#tabs
-        button.tab.on
-          "Explore"
-        button.tab
-          "Movies"
-        button.tab
-          "Shows"
       div#hatop
       div#cards
-        div.card.wide
+        div.card
           div.img
             div.layer bg="url(\"https://image.tmdb.org/t/p/w342/mp104.jpg\")"
             div.layer.back bg="url(\"https://image.tmdb.org/t/p/w1280/m104b.jpg\")"
@@ -31,10 +24,10 @@ div#stage
             "Movie 104 (English)"
           div.meta
             "Action · 1h 39m · Disney+"
-        div.card
+        div.card.wide
           div.img
             div.layer bg="url(\"https://image.tmdb.org/t/p/w342/tp204.jpg\")"
-            div.layer.back
+            div.layer.back bg="url(\"https://image.tmdb.org/t/p/w1280/t204b.jpg\")"
           div.name
             "Show 204 (English)"
           div.meta

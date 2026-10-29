@@ -1,7 +1,7 @@
 /*
  * The home screen for LG webOS TVs:
- *  - top: a quote and the tabs (Explore, Movies, Shows); at the right, up to three Home Assistant values;
- *  - three picks for this hour in the selected tab; the background is the first one's photo, blurred and almost white;
+ *  - top: a quote; at the right, up to three Home Assistant values;
+ *  - three picks for this hour, movies and shows; the background is the first one's photo, blurred and almost white;
  *  - the glass shelf with the apps; ↓ opens the drawer (weather, then inputs and shortcuts); ↑ or Back closes it;
  *  - a night look from sunset to sunrise; a screensaver after a few idle minutes.
  * The remote's arrows, OK and Back move the focus; a pointer (LG's Magic Remote) focuses what it points at.
@@ -345,20 +345,15 @@
   var Z = {TOP: 'top', CARDS: 'cards', SHELF: 'shelf', DRAWER: 'drawer', APPS: 'apps', SETTINGS: 'settings', EDIT: 'edit', LANG: 'lang', CITY: 'city', KEY: 'key', ABOUT: 'about',
     HIST: 'hist', HA: 'ha', HAEDIT: 'haedit'};
   var SHEETS = [Z.APPS, Z.SETTINGS, Z.EDIT, Z.LANG, Z.CITY, Z.KEY, Z.ABOUT, Z.HIST, Z.HA, Z.HAEDIT];
-  var st = {zone: Z.SHELF, top: 0, tab: 0, card: 0, shelf: 0, drawer: 0, grid: 0, row: 0, edit: 0, lang: 0, city: 0, key: 0, ha: 0, haedit: 0};
+  var st = {zone: Z.SHELF, top: 0, card: 0, shelf: 0, drawer: 0, grid: 0, row: 0, edit: 0, lang: 0, city: 0, key: 0, ha: 0, haedit: 0};
   var cards = [];
 
   function sheetOpen() { return SHEETS.indexOf(st.zone) >= 0; }
 
   function updateFocus() {
     var i, list;
-    list = $('tabs').children;
-    for (i = 0; i < list.length; i++) {
-      setClass(list[i], 'on', i === st.tab);
-      setClass(list[i], 'focus', st.zone === Z.TOP && st.top === i);
-    }
     list = $('hatop').children;
-    for (i = 0; i < list.length; i++) setClass(list[i], 'focus', st.zone === Z.TOP && st.top === 3 + i);
+    for (i = 0; i < list.length; i++) setClass(list[i], 'focus', st.zone === Z.TOP && st.top === i);
     layoutCards();
     list = $('cards').children;
     for (i = 0; i < list.length; i++) setClass(list[i], 'focus', st.zone === Z.CARDS && st.card === i);
@@ -406,14 +401,10 @@
     return (r.left + r.right) / 2;
   }
 
-  // MARK: - Top: quote, tabs, Home Assistant values
+  // MARK: - Top: quote, Home Assistant values
 
-  /** The top row's focus: the tabs are 0-2 (only with the picks), the values at the right 3 and on. */
-  function topFirst() { return Data.hasKey() ? 0 : 3; }
-  function topLast() { return 2 + $('hatop').children.length; }
-  function topEmpty() { return topFirst() > topLast(); }
-
-  var TAB_KIND = [null, 'movie', 'tv'];
+  /** The top row's focus: the values at the right. */
+  function topLast() { return $('hatop').children.length - 1; }
 
   // One per start, in the language it was written in: German or English on a German TV, English everywhere else.
   // Date.now picks it rather than Math.random, which the screensaver's corners draw from.
@@ -432,13 +423,6 @@
 
   function renderTop() {
     renderQuote();
-    var tabs = $('tabs');
-    tabs.innerHTML = '';
-    var names = [tr('Explore'), tr('Movies'), tr('Shows')];
-    for (var i = 0; i < 3; i++) {
-      var t = el('button', 'tab', tabs, names[i]);
-      hover(t, Z.TOP, i);
-    }
     renderHaTop();
   }
 
@@ -452,10 +436,10 @@
       sym(v.symbol, b);
       el('span', 'v', b, v.value);
       el('div', 'tip', b, v.name);
-      hover(b, Z.TOP, 3 + i);
+      hover(b, Z.TOP, i);
     }
     if (st.zone === Z.TOP && st.top > topLast()) {
-      if (topEmpty()) st.zone = Z.SHELF;
+      if (topLast() < 0) st.zone = Z.SHELF;
       else st.top = topLast();
     }
   }
@@ -463,14 +447,9 @@
   // MARK: - Picks and background
 
   function renderCards() {
-    var list = Data.picks(TAB_KIND[st.tab]);
+    var list = Data.picks();
     var holder = $('cards');
     setClass(body, 'no-picks', !list.length);
-    setClass(body, 'no-key', !Data.hasKey());   // no tabs that could never show anything
-    if (st.zone === Z.TOP && st.top < topFirst()) {
-      if (topEmpty()) st.zone = Z.SHELF;
-      else st.top = 3;
-    }
     var same = list.length === cards.length;
     for (var i = 0; same && i < list.length; i++) same = list[i].id === cards[i].id && list[i].backdrop === cards[i].backdrop && list[i].meta === cards[i].meta;
     if (same && holder.children.length === list.length) return;
@@ -805,7 +784,7 @@
         step: function (d) { cycle('temperature', ['auto', 'C', 'F'], unit, d); renderPanels(); }},
       {label: tr('Theme'), value: theme === 'light' ? tr('Light') : theme === 'dark' ? tr('Dark') : auto,
         step: function (d) { cycle('theme', ['auto', 'light', 'dark'], theme, d); checkNight(); }},
-      {label: tr('Picks per tab'), value: String(Prefs.cards()),
+      {label: tr('Picks per hour'), value: String(Prefs.cards()),
         step: function (d) { Prefs.set('cards', 3 + (Prefs.cards() - 3 + (d || 1) + 4) % 4); renderCards(); }},
       {label: tr('Watch from the screensaver'), toggle: Prefs.saverWatch(),
         step: function () { Prefs.set('saverWatch', !Prefs.saverWatch()); }},
@@ -1565,7 +1544,7 @@
   function activate() {
     switch (st.zone) {
       case Z.TOP:
-        if (st.top >= 3 && Prefs.haTop()[st.top - 3]) openHistory(Prefs.haTop()[st.top - 3]);
+        if (Prefs.haTop()[st.top]) openHistory(Prefs.haTop()[st.top]);
         return;
       case Z.CARDS:
         var p = cards[st.card], app = p && Data.appFor(p.app);
@@ -1610,12 +1589,6 @@
     }
   }
 
-  function selectTab(i) {
-    if (i === st.tab) return;
-    st.tab = i;
-    renderCards();
-  }
-
   function move(dx, dy) {
     var tiles = $('tiles').children, cardNodes = $('cards').children;
     switch (st.zone) {
@@ -1624,20 +1597,19 @@
         else if (dy > 0) { openDrawer(); return; }
         else if (dy < 0) {
           if (cards.length) { st.zone = Z.CARDS; st.card = nearest(cardNodes, centerX(tiles[st.shelf])); }
-          else if (!topEmpty()) { st.zone = Z.TOP; st.top = Data.hasKey() ? st.tab : 3; }
+          else if (topLast() >= 0) { st.zone = Z.TOP; st.top = 0; }
         }
         break;
       case Z.CARDS:
         if (dx) st.card = Math.max(0, Math.min(cards.length - 1, st.card + dx));
-        else if (dy < 0) { st.zone = Z.TOP; st.top = st.tab; }
+        else if (dy < 0) { if (topLast() >= 0) { st.zone = Z.TOP; st.top = 0; } }
         else if (shelf.length) { st.zone = Z.SHELF; st.shelf = nearest(tiles, centerX(cardNodes[st.card])); }
         break;
       case Z.TOP:
         if (dx) {
-          st.top = Math.max(topFirst(), Math.min(topLast(), st.top + dx));   // without the picks the tabs can't hold focus
-          if (st.top < 3) selectTab(st.top);   // as on Apple TV: focusing a tab selects it
+          st.top = Math.max(0, Math.min(topLast(), st.top + dx));
         } else if (dy > 0) {
-          if (cards.length) { st.zone = Z.CARDS; st.card = Math.min(cards.length - 1, st.top < 3 ? 0 : cards.length - 1); }
+          if (cards.length) { st.zone = Z.CARDS; st.card = cards.length - 1; }   // the values sit above the last card
           else st.zone = Z.SHELF;
         }
         break;
@@ -1708,10 +1680,9 @@
       if (saverOn || (sheetOpen() !== (SHEETS.indexOf(zone) >= 0))) return;
       if (zone === Z.DRAWER && st.zone !== Z.DRAWER) return;
       if (zone !== Z.DRAWER && st.zone === Z.DRAWER && zone !== Z.SHELF) return;
-      if (zone === Z.TOP && index < 3 && !Data.hasKey()) return;   // the tabs are hidden without the picks
       if (zone === Z.SHELF && st.zone === Z.DRAWER) closeDrawer();
       st.zone = zone;
-      if (zone === Z.TOP) { st.top = index; if (index < 3) selectTab(index); }
+      if (zone === Z.TOP) st.top = index;
       else if (zone === Z.CARDS) st.card = index;
       else if (zone === Z.SHELF) st.shelf = index;
       else if (zone === Z.DRAWER) st.drawer = index;
@@ -1755,7 +1726,7 @@
   var saverOn = false, idleAt = Date.now(), saverIndex = 0, saverTimer = 0, saverPick = null, SAVER_AFTER = 5 * 60000;
   var SAVER_CORNERS = ['bl', 'tl', 'br', 'tr'];   // home.css: bottom left, top left, bottom right, top right
 
-  /** The screensaver's photos: picks with an app on the TV. */
+  /** The screensaver's photos: this hour's picks and the next ones, with an app on the TV. */
   function saverPhotos() {
     return Data.showcase().filter(function (p) { return p.backdrop && Data.usable(p.app); });
   }
@@ -1926,13 +1897,12 @@
     });
   }
 
-  /** Back to the home screen (the app was opened again): the shelf, everything closed, the first tab. */
+  /** Back to the home screen (the app was opened again): the shelf, everything closed. */
   function reset() {
     hideSaver();
     closeSheets();
     st.zone = Z.SHELF;
     st.shelf = 0;
-    if (st.tab !== 0) { st.tab = 0; renderCards(); }
     updateFocus();
     restInDrawer();   // drawer_first: out again at once, not only after the TV lists its apps
   }

@@ -14,13 +14,6 @@ div#stage
           "Nothing is more hopeless than a scheme of merriment."
         p.author
           "Samuel Johnson"
-      div#tabs
-        button.tab.on
-          "Explore"
-        button.tab
-          "Movies"
-        button.tab
-          "Shows"
       div#hatop
       div#cards
         div.card.wide

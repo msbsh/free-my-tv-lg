@@ -35,21 +35,18 @@ test('dark and light themes', async ({page}) => {
   s.check();
 });
 
-test('the remote moves through the shelf, the picks and the tabs', async ({page}) => {
+test('the remote moves through the shelf and the picks; nothing above them without Home Assistant', async ({page}) => {
   const s = await m.open(page);
   await m.press(page, s.net, 'Right', 'Right', 'Right');
   await snap(page, 'shelf-right-3');
   await m.press(page, s.net, 'Left', 'Up');
   await snap(page, 'cards');
   await m.press(page, s.net, 'Right', 'Up');
-  await snap(page, 'tabs');
-  await m.press(page, s.net, 'Right');
-  await snap(page, 'tab-movies');
-  await m.press(page, s.net, 'Right');
-  await snap(page, 'tab-shows');
-  await m.press(page, s.net, 'Right');
-  await snap(page, 'tab-last');
-  await m.press(page, s.net, 'Down', 'Down');
+  await expect(page.locator('#cards .card.focus')).toHaveCount(1);
+  await snap(page, 'cards-up');
+  await m.press(page, s.net, 'Right', 'Right');
+  await snap(page, 'cards-last');
+  await m.press(page, s.net, 'Down');
   await snap(page, 'back-down');
   s.check();
 });
@@ -89,7 +86,7 @@ test('Home Settings: every row and its values', async ({page}) => {
   await m.moveTo(page, s.net, '#settings .row', 'Theme');
   await m.press(page, s.net, 'Right');
   await snap(page, 'settings-light');
-  await m.moveTo(page, s.net, '#settings .row', 'Picks per tab');
+  await m.moveTo(page, s.net, '#settings .row', 'Picks per hour');
   await m.press(page, s.net, 'Enter');
   await m.moveTo(page, s.net, '#settings .row', 'Forecast');
   await m.press(page, s.net, 'Right');
@@ -238,13 +235,14 @@ test('screensaver after 5 idle minutes, and waking up', async ({page}) => {
   s.check();
 });
 
-test('screensaver: the clock goes to another corner with every photo', async ({page}) => {
+test('screensaver: the clock goes to another corner with every photo, and the photos don\'t repeat soon', async ({page}) => {
   const s = await m.open(page);
   await page.clock.runFor(5.4 * 60000);   // the screensaver starts; the look is 6 s into its first photo
   await m.settle(page, s.net);
   const corner = () => page.evaluate(() => {
     const c = document.querySelector('#saver .clock');
-    return {at: ['bl', 'tl', 'br', 'tr'].filter((k) => c.classList.contains(k)), up: document.getElementById('saver').classList.contains('up')};
+    return {at: ['bl', 'tl', 'br', 'tr'].filter((k) => c.classList.contains(k)), up: document.getElementById('saver').classList.contains('up'),
+      title: c.querySelector('.title').textContent};
   });
   const seen = [await corner()];
   for (let i = 0; i < 12; i++) {
@@ -258,6 +256,7 @@ test('screensaver: the clock goes to another corner with every photo', async ({p
     if (i) expect(seen[i].at[0], 'never the same corner twice in a row').not.toBe(seen[i - 1].at[0]);
   }
   expect(new Set(seen.map((x) => x.at[0])).size, 'every corner in turn').toBe(4);
+  expect(new Set(seen.map((x) => x.title)).size, 'a new title with every photo').toBe(seen.length);
   s.check();
 });
 
@@ -271,7 +270,7 @@ test('screensaver: OK watches the title when Home Settings allows it', async ({p
   s.check();
 });
 
-test('opened again: back to the shelf, the first tab', async ({page}) => {
+test('opened again: back to the shelf', async ({page}) => {
   const s = await m.open(page);
   await m.press(page, s.net, 'Up', 'Up', 'Right', 'Down');
   await page.evaluate(() => document.dispatchEvent(new Event('webOSRelaunch')));
@@ -317,7 +316,7 @@ test('Home Assistant: values at the top, their day, and the card in the drawer',
   const s = await m.open(page, HA);
   await snap(page, 'ha-start');
   expect(await haSent(page)).toMatchSnapshot('ha-start-sent.json');
-  await m.press(page, s.net, 'Up', 'Up', 'Right', 'Right', 'Right');
+  await m.press(page, s.net, 'Up', 'Up');
   await snap(page, 'ha-top-focus');
   await m.press(page, s.net, 'Enter');
   await snap(page, 'ha-history');
@@ -481,7 +480,7 @@ test('Home Assistant: a lost connection comes back by itself', async ({page}) =>
 
 test('Home Assistant: at night', async ({page}) => {
   const s = await m.open(page, Object.assign({at: m.NIGHT}, HA));
-  await m.press(page, s.net, 'Up', 'Up', 'Right', 'Right', 'Right');
+  await m.press(page, s.net, 'Up', 'Up');
   await snap(page, 'ha-night');
   await m.press(page, s.net, 'Back', 'Down');
   await snap(page, 'ha-night-drawer');

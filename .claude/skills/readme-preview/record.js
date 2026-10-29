@@ -58,8 +58,8 @@ const POINTS = [
 
   const key = async (k, wait) => { await page.keyboard.press('Arrow' + k); await page.waitForTimeout(wait || 650); };
 
-  // A first round through the tabs puts every poster in the cache; opened again, the page starts on the shelf.
-  for (const k of ['Up', 'Up', 'Right', 'Right', 'Right', 'Left', 'Left', 'Left']) await key(k, 3000);
+  // A first round through the picks puts every poster and backdrop in the cache; opened again, the page starts on the shelf.
+  for (const k of ['Up', 'Right', 'Right', 'Right', 'Left', 'Left', 'Left']) await key(k, 3000);
   await page.reload();
   await page.waitForTimeout(6000);
 
@@ -71,19 +71,17 @@ const POINTS = [
   });
   await cdp.send('Page.startScreencast', {format: 'png', everyNthFrame: 1, maxWidth: 1920, maxHeight: 1080});
 
-  // The tour: it ends where it starts (the first app, Explore), so the loop doesn't jump.
+  // The tour: it ends where it starts (the first app), so the loop doesn't jump.
   await page.waitForTimeout(1400);
   await key('Right'); await key('Right', 800);               // along the shelf
   await key('Down', 2200);                                   // the drawer: weather, inputs, shortcuts
   await key('Right'); await key('Right', 1000);
   await key('Up', 900);                                      // the shelf
   await key('Up', 1200);                                     // the picks
-  await key('Right', 1200);
-  await key('Up', 700);                                      // the tabs
-  await key('Right', 2200);                                  // Movies
-  await key('Right', 2200);                                  // Shows
-  await key('Left', 350); await key('Left', 1600);           // Explore
-  await key('Down', 600); await key('Down', 700);            // the picks, the shelf
+  await key('Right', 2000);
+  await key('Right', 2000);
+  await key('Left', 350); await key('Left', 1600);           // the first pick
+  await key('Down', 700);                                    // the shelf
   for (let i = 0; i < 4; i++) await key('Left', 300);        // the first app
   await page.waitForTimeout(600);
 

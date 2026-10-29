@@ -14,13 +14,6 @@ div#stage
           "Wir sind so gern in der freien Natur, weil diese keine Meinung über uns hat."
         p.author
           "Friedrich Nietzsche"
-      div#tabs
-        button.tab.on
-          "Entdecken"
-        button.tab
-          "Filme"
-        button.tab
-          "Serien"
       div#hatop
       div#cards
         div.card.wide

@@ -47,9 +47,9 @@ linear: no merge commits. The main checkout may hold someone's uncommitted work;
 
 Installing on the TV stays in the main checkout: that's where their `config.properties` lives.
 
-The README's preview (`.github/preview.webp`) is an animated tour of the home screen: the header, the tabs and the
-picks, the shelf, and the drawer with the weather, the inputs and the shortcuts. When your change alters how any of
-these look, or adds or removes one, ask the person whether to record it again. On a yes, run the `readme-preview`
+The README's preview (`.github/preview.webp`) is an animated tour of the home screen: the header, the picks, the
+shelf, and the drawer with the weather, the inputs and the shortcuts. When your change alters how any of these look,
+or adds or removes one, ask the person whether to record it again. On a yes, run the `readme-preview`
 skill (`.claude/skills/readme-preview/`) in your worktree and commit the new preview with your change.
 
 ## Installing it on an LG TV

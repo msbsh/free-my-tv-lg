@@ -19,12 +19,12 @@ This fork keeps only the LG app; Google TV, Android TV and Samsung live upstream
 
 - **No ads.** No sponsored rows, banners or autoplaying promos.
 - **Your apps, front and center.** The streaming apps you use, on a glass shelf. Pick them and their order on the TV.
-- **Trending, not sponsored.** Three fresh picks every hour (up to six, in Home Settings) from what's trending this week and the latest releases, only from apps you already have. Movies and Shows get their own tabs.
+- **Trending, not sponsored.** Three fresh picks every hour (up to six, in Home Settings) from what's trending this week and the latest releases, only from apps you already have, movies and shows in one row.
 - **Weather and inputs, one press away.** ↓ opens a drawer with the hour-by-hour forecast (or the next 5 days), sunrise and sunset, and below it the antenna and HDMI inputs and shortcuts to All Apps and the settings.
 - **Your home at a glance (optional).** Up to three [Home Assistant](#home-assistant) values at the top right (OK shows their last 24 hours) and a card of them in the drawer, next to the weather. Read only, live.
 - **A thought to start with.** A short quote at the top, another with every start: Wilde, Twain, Shaw or Thoreau, and on a German TV also Goethe, Lichtenberg, Ebner-Eschenbach or Nietzsche, always in the words they wrote, with their name.
 - **Light by day, dark by night.** It follows your city's sunset.
-- **A screensaver to match.** Full-screen photos of the picks with a big clock that moves to another corner with every photo, so nothing stays in place on an OLED panel. Optionally (*Watch from the screensaver*), OK opens the title on screen in its app.
+- **A screensaver to match.** Full-screen photos of the next two dozen picks with a big clock that moves to another corner with every photo, so nothing stays in place on an OLED panel. Optionally (*Watch from the screensaver*), OK opens the title on screen in its app.
 - **Set up on the TV.** Language, city, temperature, theme, how many picks and which streaming services they come from, the weather card, the TMDB key, Home Assistant and the apps on the shelf, in *Home Settings*.
 - **Nothing changed on the TV.** It installs through LG's Developer Mode. LG's home screen stays; Free My TV (LG) is one press of a number key away.
 

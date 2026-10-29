@@ -29,15 +29,17 @@ import webapp  # noqa: E402  (config.properties as the package has it)
 
 # Files whose content may change, and why. Everything else in the baseline must stay byte for byte.
 CHANGED = {
-    'index.html': 'the title names the fork; no crypto quotes; Home Assistant at the top; a quote in place of "For You"',
+    'index.html': 'the title names the fork; no crypto quotes; Home Assistant at the top; a quote in place of "For You"; '
+                  'no tabs',
     'tv.js': 'Samsung and webOS 3-5 code removed, the fallback app id',
     'home.js': 'Samsung code removed, the About row names the fork; no crypto, the weather above the inputs; '
                'Home Assistant in place of the round buttons at the top (all three are in the drawer); '
-               'a quote in place of "For You"',
-    'data.js': 'the Intl fallback for Tizen 2 removed; no crypto prices; the Home Assistant settings',
+               'a quote in place of "For You"; one row of picks in place of the tabs, the screensaver from more of them',
+    'data.js': 'the Intl fallback for Tizen 2 removed; no crypto prices; the Home Assistant settings; '
+               'one row of picks in place of the tabs, from a longer list, the screensaver from more of them',
     'strings.js': 'polyfills for Chromium before 79 removed',
     'home.css': 'the lite mode for slow TVs removed; no crypto, the weather above the inputs; Home Assistant; '
-                'a quote in place of "For You"',
+                'a quote in place of "For You"; no tabs',
     'config.js': 'no show_crypto and currency; Home Assistant (ha_url, ha_token, ha_top, ha_panel)',
     'appinfo.json': 'id, version, title and vendor of the fork (compared field by field below)',
     'service/service.js': 'the Buffer fallback for old Node removed',

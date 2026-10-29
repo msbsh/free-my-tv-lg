@@ -14,13 +14,6 @@ div#stage
           "I never found the companion that was so companionable as solitude."
         p.author
           "Henry David Thoreau"
-      div#tabs
-        button.tab.on
-          "Обзор"
-        button.tab
-          "Фильмы"
-        button.tab
-          "Сериалы"
       div#hatop
       div#cards
         div.card.wide

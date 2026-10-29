@@ -14,13 +14,6 @@ div#stage
           "I never found the companion that was so companionable as solitude."
         p.author
           "Henry David Thoreau"
-      div#tabs
-        button.tab
-          "Explore"
-        button.tab
-          "Movies"
-        button.tab.on
-          "Shows"
       div#hatop
         button.value.focus
           span.sym
@@ -43,28 +36,28 @@ div#stage
       div#cards
         div.card.wide
           div.img
-            div.layer bg="url(\"https://image.tmdb.org/t/p/w342/tp401.jpg\")"
-            div.layer.back bg="url(\"https://image.tmdb.org/t/p/w1280/t401b.jpg\")"
+            div.layer bg="url(\"https://image.tmdb.org/t/p/w342/mp104.jpg\")"
+            div.layer.back bg="url(\"https://image.tmdb.org/t/p/w1280/m104b.jpg\")"
           div.name
-            "Show 401 (English)"
+            "Movie 104 (English)"
           div.meta
-            "Series · Sci-Fi & Fantasy · 2 seasons · Disney+"
+            "Action · 1h 39m · Disney+"
         div.card
           div.img
-            div.layer bg="url(\"https://image.tmdb.org/t/p/w342/tp402.jpg\")"
+            div.layer bg="url(\"https://image.tmdb.org/t/p/w342/tp204.jpg\")"
             div.layer.back
           div.name
-            "Show 402 (English)"
+            "Show 204 (English)"
           div.meta
-            "Series · Sci-Fi & Fantasy · 3 seasons · Netflix"
+            "Series · Sci-Fi & Fantasy · 1 season · Netflix"
         div.card
           div.img
-            div.layer bg="url(\"https://image.tmdb.org/t/p/w342/tp403.jpg\")"
+            div.layer bg="url(\"https://image.tmdb.org/t/p/w342/mp105.jpg\")"
             div.layer.back
           div.name
-            "Show 403 (English)"
+            "Movie 105 (English)"
           div.meta
-            "Series · Sci-Fi & Fantasy · 4 seasons · Prime Video"
+            "Action · 1h 40m · Netflix"
       div#clock
         span.time
           "10:00"

@@ -14,13 +14,6 @@ div#stage
           "I never found the companion that was so companionable as solitude."
         p.author
           "Henry David Thoreau"
-      div#tabs
-        button.tab.on
-          "Explore"
-        button.tab
-          "Movies"
-        button.tab
-          "Shows"
       div#hatop
         button.value
           span.sym
@@ -251,7 +244,7 @@ div#stage
               span.chev
                 "›"
           div.row
-            "Picks per tab"
+            "Picks per hour"
             span.value
               span.chev
                 "‹"

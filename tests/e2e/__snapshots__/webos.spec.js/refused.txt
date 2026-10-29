@@ -14,13 +14,6 @@ div#stage
           "There are nowadays professors of philosophy, but not philosophers."
         p.author
           "Henry David Thoreau"
-      div#tabs
-        button.tab.on
-          "Explore"
-        button.tab
-          "Movies"
-        button.tab
-          "Shows"
       div#hatop
       div#cards
         div.card.wide

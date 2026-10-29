@@ -11,6 +11,12 @@ GET https://api.tmdb.org/3/movie/106?language=en-US&api_key=0123456789abcdef0123
 GET https://api.tmdb.org/3/movie/106?language=ja-JP&append_to_response=watch/providers,images&include_image_language=null,ja,en&api_key=0123456789abcdef0123456789abcdef
 GET https://api.tmdb.org/3/movie/107?language=ja-JP&append_to_response=watch/providers,images&include_image_language=null,ja,en&api_key=0123456789abcdef0123456789abcdef
 GET https://api.tmdb.org/3/movie/108?language=ja-JP&append_to_response=watch/providers,images&include_image_language=null,ja,en&api_key=0123456789abcdef0123456789abcdef
+GET https://api.tmdb.org/3/movie/301?language=en-US&api_key=0123456789abcdef0123456789abcdef
+GET https://api.tmdb.org/3/movie/301?language=ja-JP&append_to_response=watch/providers,images&include_image_language=null,ja,en&api_key=0123456789abcdef0123456789abcdef
+GET https://api.tmdb.org/3/movie/302?language=ja-JP&append_to_response=watch/providers,images&include_image_language=null,ja,en&api_key=0123456789abcdef0123456789abcdef
+GET https://api.tmdb.org/3/movie/303?language=ja-JP&append_to_response=watch/providers,images&include_image_language=null,ja,en&api_key=0123456789abcdef0123456789abcdef
+GET https://api.tmdb.org/3/movie/304?language=en-US&api_key=0123456789abcdef0123456789abcdef
+GET https://api.tmdb.org/3/movie/304?language=ja-JP&append_to_response=watch/providers,images&include_image_language=null,ja,en&api_key=0123456789abcdef0123456789abcdef
 GET https://api.tmdb.org/3/trending/movie/week?language=ja-JP&api_key=0123456789abcdef0123456789abcdef
 GET https://api.tmdb.org/3/trending/tv/week?language=ja-JP&api_key=0123456789abcdef0123456789abcdef
 GET https://api.tmdb.org/3/tv/201?language=ja-JP&append_to_response=watch/providers,images&include_image_language=null,ja,en&api_key=0123456789abcdef0123456789abcdef
