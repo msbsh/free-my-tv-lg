@@ -447,7 +447,7 @@
 
   // MARK: - Picks and background
 
-  var cardScroll = 0, cardNodes = {};   // the first slot in view; the drawn slots' cards, by slot
+  var cardNodes = {};   // the drawn slots' cards, by slot
 
   /**
    * The picks run endlessly: st.card is a slot (any integer, also while focus is elsewhere), its pick the slot modulo
@@ -469,13 +469,8 @@
     holder.innerHTML = '';
     cardNodes = {};
     bgImages = {};
-    if (list.length < 2) st.card = cardScroll = 0;
-    else {
-      // Back near slot 0, a whole round at a time: the same picks in the same places, without the slots growing.
-      var rounds = Math.floor(cardScroll / list.length) * list.length;
-      st.card -= rounds;
-      cardScroll -= rounds;
-    }
+    // Back near slot 0, a whole round at a time: the same picks in the same places, without the slots growing.
+    st.card = list.length < 2 ? 0 : st.card - Math.floor(st.card / list.length) * list.length;
     if (!list.length && st.zone === Z.CARDS) st.zone = Z.SHELF;
     if (!list.length) backdrop('');
     updateFocus();
@@ -502,15 +497,14 @@
   }
 
   /**
-   * The card in slot st.card is the wide one, the others narrow; it moves right up to the third place, then the row
-   * runs on (the holder slides), and the cards at the edges lose their text. Only transforms and opacity animate (older
+   * The card in slot st.card is the wide one, always second in the row: the row runs on under it (the holder slides),
+   * the others narrow, and the cards at the edges lose their text. Only transforms and opacity animate (older
    * TVs): the cards slide, and each one's narrow and wide pictures fade into each other.
    */
   function layoutCards() {
     var holder = $('cards'), n = cards.length;
-    if (n < 2) st.card = cardScroll = 0;
-    cardScroll = Math.max(st.card - 2, Math.min(cardScroll, st.card));
-    var lo = n > 1 ? cardScroll - 2 : 0, hi = n > 1 ? cardScroll + 4 : n - 1, slot;
+    if (n < 2) st.card = 0;
+    var first = n > 1 ? st.card - 1 : 0, lo = n > 1 ? first - 2 : 0, hi = n > 1 ? first + 4 : n - 1, slot;
     for (slot in cardNodes) {
       if (slot < lo || slot > hi) { holder.removeChild(cardNodes[slot]); delete cardNodes[slot]; }
     }
@@ -522,7 +516,7 @@
         for (var s = slot + 1; s <= hi && !next; s++) next = cardNodes[s] || null;
         holder.insertBefore(node, next);
       }
-      var wide = slot === st.card, x = 80 + slot * 360 + (slot > st.card ? 720 : 0), at = x - cardScroll * 360;
+      var wide = slot === st.card, x = 80 + slot * 360 + (slot > st.card ? 720 : 0), at = x - first * 360;
       node.style.webkitTransform = node.style.transform = 'translateX(' + x + 'px)';
       node.style.width = (wide ? 1040 : 320) + 'px';
       setClass(node, 'wide', wide);
@@ -532,7 +526,7 @@
         node.querySelector('.back').style.backgroundImage = 'url(' + Data.image(cards[pickAt(slot)].backdrop, 'w1280') + ')';
       }
     }
-    holder.style.webkitTransform = holder.style.transform = 'translateX(' + (-cardScroll * 360) + 'px)';
+    holder.style.webkitTransform = holder.style.transform = 'translateX(' + (-first * 360) + 'px)';
     if (n) backdrop(Data.image(cards[pickAt(st.card)].backdrop, 'w300'));
   }
 

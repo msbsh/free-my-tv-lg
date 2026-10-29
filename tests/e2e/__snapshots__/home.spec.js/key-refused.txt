@@ -18,18 +18,6 @@ div#stage
       div#cards
         div.card.edge
           div.rise
-            div.img.narrow bg="url(\"https://image.tmdb.org/t/p/w342/tp201.jpg\")"
-            div.img.broad
-              div.layer bg="url(\"https://image.tmdb.org/t/p/w342/tp201.jpg\")"
-              div.layer.back bg="url(\"https://image.tmdb.org/t/p/w1280/t201b.jpg\")"
-            div.name
-              "Show 201 (English)"
-            div.meta
-              span.app
-                "Netflix"
-              "· Series · Sci-Fi & Fantasy · 2 seasons"
-        div.card.edge
-          div.rise
             div.img.narrow bg="url(\"https://image.tmdb.org/t/p/w342/mp303.jpg\")"
             div.img.broad
               div.layer bg="url(\"https://image.tmdb.org/t/p/w342/mp303.jpg\")"
@@ -40,7 +28,7 @@ div#stage
               span.app
                 "Netflix"
               "· Action · 1h 38m"
-        div.card
+        div.card.edge
           div.rise
             div.img.narrow bg="url(\"https://image.tmdb.org/t/p/w342/mp302.jpg\")"
             div.img.broad
@@ -76,7 +64,7 @@ div#stage
               span.app
                 "Netflix"
               "· Action · 1h 38m"
-        div.card.edge
+        div.card
           div.rise
             div.img.narrow bg="url(\"https://image.tmdb.org/t/p/w342/mp302.jpg\")"
             div.img.broad
@@ -100,6 +88,18 @@ div#stage
               span.app
                 "Netflix"
               "· Series · Sci-Fi & Fantasy · 2 seasons"
+        div.card.edge
+          div.rise
+            div.img.narrow bg="url(\"https://image.tmdb.org/t/p/w342/mp303.jpg\")"
+            div.img.broad
+              div.layer bg="url(\"https://image.tmdb.org/t/p/w342/mp303.jpg\")"
+              div.layer.back
+            div.name
+              "Movie 303 (English)"
+            div.meta
+              span.app
+                "Netflix"
+              "· Action · 1h 38m"
       div#clock
         span.time
           "10:01"

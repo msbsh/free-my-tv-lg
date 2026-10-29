@@ -18,18 +18,6 @@ div#stage
       div#cards
         div.card.edge
           div.rise
-            div.img.narrow bg="url(\"https://image.tmdb.org/t/p/w342/tp206.jpg\")"
-            div.img.broad
-              div.layer bg="url(\"https://image.tmdb.org/t/p/w342/tp206.jpg\")"
-              div.layer.back bg="url(\"https://image.tmdb.org/t/p/w1280/t206b.jpg\")"
-            div.name
-              "Show 206 (English)"
-            div.meta
-              span.app
-                "Disney+"
-              "· Series · Sci-Fi & Fantasy · 3 seasons"
-        div.card.edge
-          div.rise
             div.img.narrow bg="url(\"https://image.tmdb.org/t/p/w342/mp302.jpg\")"
             div.img.broad
               div.layer bg="url(\"https://image.tmdb.org/t/p/w342/mp302.jpg\")"
@@ -40,7 +28,7 @@ div#stage
               span.app
                 "Disney+"
               "· Action · 1h 37m"
-        div.card
+        div.card.edge
           div.rise
             div.img.narrow bg="url(\"https://image.tmdb.org/t/p/w342/mp101.jpg\")"
             div.img.broad
@@ -76,7 +64,7 @@ div#stage
               span.app
                 "Disney+"
               "· Series · Sci-Fi & Fantasy · 3 seasons"
-        div.card.edge
+        div.card
           div.rise
             div.img.narrow bg="url(\"https://image.tmdb.org/t/p/w342/mp302.jpg\")"
             div.img.broad
@@ -100,6 +88,18 @@ div#stage
               span.app
                 "Disney+"
               "· Action · 1h 36m"
+        div.card.edge
+          div.rise
+            div.img.narrow bg="url(\"https://image.tmdb.org/t/p/w342/mp107.jpg\")"
+            div.img.broad
+              div.layer bg="url(\"https://image.tmdb.org/t/p/w342/mp107.jpg\")"
+              div.layer.back
+            div.name
+              "Movie 107 (English)"
+            div.meta
+              span.app
+                "Disney+"
+              "· Action · 1h 42m"
       div#clock
         span.time
           "10:03"
