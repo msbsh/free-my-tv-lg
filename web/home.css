@@ -177,6 +177,8 @@ button { font: inherit; color: inherit; background: none; border: 0; padding: 0;
 
 /* MARK: - Picks: the card with focus is wide, the others narrow (posters); it grows 5%, rises and its edge lights up. */
 
+/* Halfway between the quote (ends at 150) and the glass (at 814, lower with smaller tiles: home.js moves #cards). */
+
 #cards {
   position: absolute;
   left: 0;
@@ -187,7 +189,7 @@ button { font: inherit; color: inherit; background: none; border: 0; padding: 0;
 
 .card {
   position: absolute;
-  top: 262px;
+  top: 214px;
   height: 442px;
   -webkit-transition: -webkit-transform 0.22s cubic-bezier(0.2, 0.9, 0.3, 1.15);
   transition: transform 0.22s cubic-bezier(0.2, 0.9, 0.3, 1.15);

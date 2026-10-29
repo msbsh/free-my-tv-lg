@@ -545,6 +545,8 @@
     platter.style.width = (width + 2 * pad) + 'px';
     platter.style.top = (814 + 126 - th) + 'px';
     platter.style.height = (th + 2 * pad) + 'px';
+    // The picks stay halfway between the quote and the glass.
+    $('cards').style.top = (n ? (126 - th) / 2 : 0) + 'px';
     var tiles = $('tiles');
     tiles.innerHTML = '';
     tileStep = tw + gap;
