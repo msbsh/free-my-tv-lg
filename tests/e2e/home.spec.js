@@ -324,7 +324,9 @@ test('Home Assistant: values at the top, their day, and the card in the drawer',
   await snap(page, 'ha-history-door');
   await m.press(page, s.net, 'Back', 'Right', 'Right');
   await snap(page, 'ha-top-last');
-  await m.press(page, s.net, 'Back', 'Down');
+  await m.press(page, s.net, 'Enter');
+  await snap(page, 'ha-history-climate');
+  await m.press(page, s.net, 'Back', 'Back', 'Down');
   await snap(page, 'ha-drawer');
   expect(await m.storage(page)).toMatchSnapshot('ha-storage.txt');
   s.check();
@@ -448,5 +450,52 @@ test('Home Assistant: another app in front closes the connection', async ({page}
   await visible(true);
   await m.settle(page, s.net);
   expect(await haSent(page)).toMatchSnapshot('ha-shown-sent.json');
+  s.check();
+});
+
+test('Home Assistant: a new ha_top or ha_panel wins once over the values picked on the TV', async ({page}) => {
+  const stamp = m.HA_CONFIG.haTop.join(',') + '|' + m.HA_CONFIG.haPanel.join(',');
+  const s = await m.open(page, Object.assign({prefs: {haConfig: 'sensor.old|', haTop: ['light.desk']}}, HA));
+  await expect(page.locator('#hatop .value')).toHaveCount(3);
+  await page.evaluate((v) => {
+    localStorage.setItem('fmtv.prefs', JSON.stringify({haConfig: v, haTop: ['light.desk']}));
+    location.reload();
+  }, stamp);
+  await m.settle(page, s.net);
+  await expect(page.locator('#hatop .value')).toHaveText([/^On/]);
+  s.check();
+});
+
+test('Home Assistant: a lost connection comes back by itself', async ({page}) => {
+  const s = await m.open(page, HA);
+  await page.evaluate(() => { window.__ha.length = 0; window.__haDrop(); });
+  await m.settle(page, s.net);   // the first try again is after 5 s
+  await expect(page.locator('#hatop')).not.toHaveClass(/stale/);
+  expect(await haSent(page)).toMatchSnapshot('ha-reconnect-sent.json');
+  await page.evaluate(() => { window.__ha.length = 0; window.__haDrop(); });
+  await m.press(page, s.net, 'Down');
+  await expect(page.locator('#hatop')).not.toHaveClass(/stale/);
+  s.check();
+});
+
+test('Home Assistant: at night', async ({page}) => {
+  const s = await m.open(page, Object.assign({at: m.NIGHT}, HA));
+  await m.press(page, s.net, 'Up', 'Up', 'Right', 'Right', 'Right');
+  await snap(page, 'ha-night');
+  await m.press(page, s.net, 'Back', 'Down');
+  await snap(page, 'ha-night-drawer');
+  s.check();
+});
+
+test('Home Assistant: in German', async ({page}) => {
+  const s = await m.open(page, Object.assign({prefs: {language: 'de'}}, HA));
+  await snap(page, 'ha-de');
+  await m.press(page, s.net, 'Down');
+  await snap(page, 'ha-drawer-de');
+  await m.moveTo(page, s.net, '#drawer .key', 'Startbildschirm', true);
+  await m.press(page, s.net, 'Enter');
+  await m.moveTo(page, s.net, '#settings .row', 'Home Assistant');
+  await m.press(page, s.net, 'Enter');
+  await snap(page, 'ha-sheet-de');
   s.check();
 });

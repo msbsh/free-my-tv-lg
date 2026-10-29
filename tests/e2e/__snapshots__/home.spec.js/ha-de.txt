@@ -1,0 +1,240 @@
+html.- body.-
+div#stage
+  div#sky.layer
+    div.grad.day
+    div.grad.night
+    canvas#bgA
+    canvas#bgB.on
+    div.veil
+    div.lift
+  div#home.layer
+    div#top.layer
+      h1#title
+        "Für dich"
+      div#tabs
+        button.tab.on
+          "Entdecken"
+        button.tab
+          "Filme"
+        button.tab
+          "Serien"
+      div#hatop
+        button.value
+          span.sym
+          span.v
+            "12,3°C"
+          div.tip
+            "Outside"
+        button.value.off
+          span.sym
+          span.v
+            "Geschlossen"
+          div.tip
+            "Front door"
+        button.value.last
+          span.sym
+          span.v
+            "21,5°"
+          div.tip
+            "Living room"
+      div#cards
+        div.card.wide
+          div.img
+            div.layer bg="url(\"https://image.tmdb.org/t/p/w342/mp104.jpg\")"
+            div.layer.back bg="url(\"https://image.tmdb.org/t/p/w1280/m104b.jpg\")"
+          div.name
+            "Movie 104"
+          div.meta
+            "Action · 1 h 39 min · Disney+"
+        div.card
+          div.img
+            div.layer bg="url(\"https://image.tmdb.org/t/p/w342/tp204.jpg\")"
+            div.layer.back
+          div.name
+            "Show 204"
+          div.meta
+            "Serie · Sci-Fi & Fantasy · 1 Staffel · Netflix"
+        div.card
+          div.img
+            div.layer bg="url(\"https://image.tmdb.org/t/p/w342/mp105.jpg\")"
+            div.layer.back
+          div.name
+            "Movie 105"
+          div.meta
+            "Action · 1 h 40 min · Netflix"
+      div#clock
+        span.time
+          "10:00"
+        span.date
+          "Dienstag, 20. Oktober"
+    div#platter
+      span.sym.more.back
+      span.sym.more
+    div#tiles
+      div.tile.focus bg="linear-gradient(rgb(10, 10, 10), rgb(0, 0, 0))"
+        div.word
+          "Netflix"
+      div.tile bg="linear-gradient(rgb(28, 28, 30), rgb(9, 9, 10))"
+        div.word
+          "YouTube"
+      div.tile bg="linear-gradient(rgb(42, 168, 255), rgb(10, 104, 212))"
+        div.word
+          "Prime Video"
+      div.tile bg="linear-gradient(rgb(23, 53, 132), rgb(8, 20, 63))"
+        div.word
+          "Disney+"
+      div.tile bg="linear-gradient(rgb(92, 48, 232), rgb(34, 22, 132))"
+        div.word
+          "Max"
+      div.tile bg="linear-gradient(rgb(28, 28, 30), rgb(0, 0, 0))"
+        div.word
+          "Apple TV"
+      div.tile bg="linear-gradient(rgb(255, 138, 31), rgb(255, 45, 90))"
+        div.word
+          "Globoplay"
+      div.tile bg="linear-gradient(rgb(29, 185, 84), rgb(15, 122, 54))"
+        div.word
+          "Spotify"
+  div#drawer.layer
+    div.row-title
+      "Eingänge"
+    div.key.glass
+      span.sym
+      div.label
+        "Live-TV"
+    div.key.glass
+      span.sym
+      div.label
+        "HDMI 1"
+    div.key.glass.off
+      span.sym
+      div.label
+        "HDMI 2"
+    div.key.glass.off
+      span.sym
+      div.label
+        "HDMI 3"
+    div.key.glass.off
+      span.sym
+      div.label
+        "HDMI 4"
+    div.row-title
+      "Schnellzugriff"
+    div.key.glass
+      span.sym
+      div.label
+        "Alle Apps"
+    div.key.glass
+      span.sym
+      div.label
+        "Startbildschirm"
+    div.key.glass
+      span.sym
+      div.label
+        "TV-Einstellungen"
+    div#ha.panel.glass
+      div.head
+        "Home Assistant"
+      div.hv
+        span.sym
+        div.v
+          "48,2%"
+        div.n
+          "Living room humidity"
+      div.hv
+        span.sym
+        div.v
+          "1.235 W"
+        div.n
+          "House power"
+      div.hv
+        span.sym
+        div.v
+          "Offen"
+        div.n
+          "Kitchen window"
+      div.hv
+        span.sym
+        div.v
+          "An"
+        div.n
+          "Desk lamp"
+      div.hv.off
+        span.sym
+        div.v
+          "Verriegelt"
+        div.n
+          "Front door lock"
+      div.hv
+        span.sym
+        div.v
+          "40%"
+        div.n
+          "Bedroom blinds"
+    div#weather.panel.glass
+      div.head
+        "Berlin"
+      div.now
+        span.sym
+        span.temp
+          "12°"
+      div.cond
+        "Teilweise bewölkt"
+      div.range
+        "H:14° T:6°"
+      div.split
+      div.hours
+        div.hour
+          div.t
+            "11 Uhr"
+          span.sym
+          div.d
+            "11°"
+        div.hour
+          div.t
+            "12 Uhr"
+          span.sym
+          div.d
+            "12°"
+        div.hour
+          div.t
+            "13 Uhr"
+          span.sym
+          div.d
+            "13°"
+        div.hour
+          div.t
+            "14 Uhr"
+          span.sym
+          div.d
+            "14°"
+      div.sun
+        span
+          span.sym
+          "07:35"
+        span
+          span.sym
+          "18:12"
+  div#apps.layer.sheet
+    h2
+    div.grid
+  div#settings.layer.sheet
+    div.box
+  div#shelfedit.layer.sheet
+    div.box
+  div#langpick.layer.sheet
+    div.box
+  div#citypick.layer.sheet
+    div.box
+  div#keypick.layer.sheet
+    div.box
+  div#about.layer.sheet
+    div.box
+  div#hahistory.layer.sheet
+    div.box
+  div#hapick.layer.sheet
+    div.box
+  div#haedit.layer.sheet
+    div.box
+  div#saver.layer
+  div#toast

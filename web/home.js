@@ -712,9 +712,10 @@
       var t = el('div', 'd', h, Data.degrees(days ? x.max : x.temp));
       if (days) el('span', 'low', t, Data.degrees(x.min));
     }
-    var sun = el('div', 'sun', card);
-    if (w.sunrise) { var a = el('span', '', sun); sym('sunrise', a); a.appendChild(document.createTextNode(trf('Sunrise {time}', {time: Data.time(w.sunrise)}))); }
-    if (w.sunset) { var b = el('span', '', sun); sym('sunset', b); b.appendChild(document.createTextNode(trf('Sunset {time}', {time: Data.time(w.sunset)}))); }
+    // Next to Home Assistant's card the words don't fit in every language: the times, by their symbols.
+    var sun = el('div', 'sun', card), short = width < 600;
+    if (w.sunrise) { var a = el('span', '', sun); sym('sunrise', a); a.appendChild(document.createTextNode(short ? Data.time(w.sunrise) : trf('Sunrise {time}', {time: Data.time(w.sunrise)}))); }
+    if (w.sunset) { var b = el('span', '', sun); sym('sunset', b); b.appendChild(document.createTextNode(short ? Data.time(w.sunset) : trf('Sunset {time}', {time: Data.time(w.sunset)}))); }
   }
 
   function openDrawer() {

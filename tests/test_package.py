@@ -16,6 +16,7 @@ import json
 import os
 import sys
 import tarfile
+import tempfile
 import unittest
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -24,6 +25,7 @@ BASELINE = os.path.join(ROOT, 'tests', 'baseline', 'package.json')
 TEXTS = os.path.join(ROOT, 'tests', 'baseline', 'i18n.json')
 sys.path.insert(0, os.path.join(ROOT, 'tools'))
 import translate  # noqa: E402  (the keys web/ calls)
+import webapp  # noqa: E402  (config.properties as the package has it)
 
 # Files whose content may change, and why. Everything else in the baseline must stay byte for byte.
 CHANGED = {
@@ -192,6 +194,22 @@ class Package(unittest.TestCase):
                      'appinfo.json', 'icon.png', 'largeIcon.png'):
             self.assertIn(name, now['files'])
         self.assertEqual(now['other'], [], 'files outside the app, its service and packageinfo.json')
+
+
+class Config(unittest.TestCase):
+    def test_home_assistant(self):
+        with tempfile.TemporaryDirectory() as d:
+            path = os.path.join(d, 'config.properties')
+            with open(path, 'w', encoding='utf-8') as f:
+                f.write('ha_url=http://192.168.1.20:8123/\nha_token=abc\n'
+                        'ha_top=sensor.a, sensor.b,,sensor.c,sensor.d\nha_panel=light.x\n')
+            c = webapp.read_config(path)
+        self.assertEqual(c['haUrl'], 'http://192.168.1.20:8123')
+        self.assertEqual(c['haToken'], 'abc')
+        self.assertEqual(c['haTop'], ['sensor.a', 'sensor.b', 'sensor.c'])   # up to 3
+        self.assertEqual(c['haPanel'], ['light.x'])
+        for key in ('haUrl', 'haToken', 'haTop', 'haPanel'):
+            self.assertFalse(webapp.GENERIC[key], '--generic builds without Home Assistant')
 
 
 if __name__ == '__main__':

@@ -37,7 +37,7 @@ You need an LG TV with webOS 6 or newer (tested: OLED48C11LB, webOS 6.5) and a c
    git clone https://github.com/msbsh/free-my-tv-lg && cd free-my-tv-lg
    python3 webos/build.py
    ```
-   The first build creates `config.properties`: put your city and your [TMDB key](#the-tmdb-key) there, then build again.
+   The first build creates `config.properties`: put your city and your [TMDB key](#the-tmdb-key) there (and, if you like, your [Home Assistant](#home-assistant)), then build again.
 3. **Install.** It builds the app again first. The first time, it asks for the TV's passphrase; updates don't:
    ```bash
    python3 webos/install.py 192.168.1.50

@@ -71,7 +71,8 @@ skill (`.claude/skills/readme-preview/`) in your worktree and commit the new pre
    the same command.
 6. **Tell them:** while the app is open, holding a number key pins it to that key (it's also in LG's app list).
    Developer Mode lasts about 40 days; *EXTEND* in that app renews it (if it runs out, the TV removes developer apps,
-   and installing again brings it back). `--uninstall` removes the app.
+   and installing again brings it back). `--uninstall` removes the app. With Home Assistant set up, *Home Settings* →
+   *Home Assistant* picks its values and their order on the TV.
 7. **App list:** webOS 6 denies `listLaunchPoints` to Developer Mode apps. Until the TV allows the remote control API
    (it asks once, on the TV), the shelf shows the known apps `getAppLoadStatus` finds. Tell them to allow it; the full
    list shows from the next start.

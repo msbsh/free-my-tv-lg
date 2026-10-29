@@ -205,10 +205,10 @@ div#stage
       div.sun
         span
           span.sym
-          "Sunrise 7:35 AM"
+          "7:35 AM"
         span
           span.sym
-          "Sunset 6:12 PM"
+          "6:12 PM"
   div#apps.layer.sheet
     h2
     div.grid

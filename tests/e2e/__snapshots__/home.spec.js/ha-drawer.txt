@@ -211,10 +211,10 @@ div#stage
       div.sun
         span
           span.sym
-          "Sunrise 7:35 AM"
+          "7:35 AM"
         span
           span.sym
-          "Sunset 6:12 PM"
+          "6:12 PM"
   div#apps.layer.sheet
     h2
     div.grid
@@ -234,14 +234,15 @@ div#stage
     div.box
       div.title
         span.sym
-        "Front door"
+        "Living room"
       div.now
-        "Closed"
+        "21.5°"
+        span.note
+          "Heat, set to 22°"
       div.chart
         svg
-          rect.track
-          rect.lit
-          rect.lit
+          path.area
+          path.line
           text
             "10 AM"
           text
@@ -252,6 +253,8 @@ div#stage
             "4 AM"
           text
             "10 AM"
+        div.range
+          "H:21.8° L:19.5°"
       div.hint
         "Last 24 hours · Back closes."
   div#hapick.layer.sheet

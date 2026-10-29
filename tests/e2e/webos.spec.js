@@ -225,3 +225,11 @@ test('an app gone: its logo goes too; an icon that doesn\'t load keeps its logo'
   expect(await page.evaluate(() => document.querySelector('#tiles .tile img').className)).toBe('logo');
   s.check();
 });
+
+test('Home Assistant beside the remote control API: two WebSockets', async ({page}) => {
+  const s = await m.open(page, {tv: {launchPoints: false, ws: 'ok'}, config: m.HA_CONFIG, ha: {}});
+  await expect(page.locator('#hatop .value')).toHaveCount(3);
+  expect(await page.evaluate(() => window.__ws.some((x) => x.open === 'ws://127.0.0.1:3000'))).toBe(true);
+  expect(await page.evaluate(() => window.__ha.some((x) => x.open === 'ws://ha.test:8123/api/websocket'))).toBe(true);
+  s.check();
+});

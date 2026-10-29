@@ -272,6 +272,8 @@ const HA_STATES = [
 const HA_HISTORY = {
   'sensor.outside_temperature': [9.1, 8.4, 7.2, 6.8, 7.5, 9.9, 11.2, 12.34].map((v, i) => ({s: String(v), lu: DAY_S - 86400 + i * 3 * 3600})),
   'binary_sensor.front_door': ['off', 'on', 'off', 'on', 'off'].map((v, i) => ({s: v, lu: DAY_S - 86400 + [0, 30000, 31000, 60000, 60600][i]})),
+  // A thermostat's comes with its attributes (no minimal_response): the temperature is one of them.
+  'climate.living_room': [19.5, 20.1, 21.0, 21.8, 21.53].map((v, i) => ({s: 'heat', a: {current_temperature: v, temperature: 22}, lu: DAY_S - 86400 + i * 5 * 3600})),
 };
 
 /** config.properties for these tests: Home Assistant at HA_URL, with a token it takes. */
@@ -286,7 +288,7 @@ const HA_CONFIG = {
  * Runs in the page before its scripts: a Home Assistant at ws://ha.test:8123 (its WebSocket API), and nothing at other
  * .test addresses. Other WebSockets go on to the one there was. ha.token: the token it takes; ha.reachable: false for none at that address.
  * window.__ha: what the page sent (the token only as whether it was the right one); window.__haChange(id, state,
- * attributes) changes a state, as subscribe_entities tells it.
+ * attributes) changes a state, as subscribe_entities tells it; window.__haDrop() ends the connection (a restart).
  */
 function fakeHA(ha) {
   window.__ha = [];
@@ -326,6 +328,7 @@ function fakeHA(ha) {
         reply({id: m.id, type: 'result', success: true, result: null});
       }
     };
+    ws.__drop = function () { drop(1006); };
     ws.__change = function (id, state, attributes) {
       if (sub) reply({id: sub, type: 'event', event: {c: {[id]: {'+': {s: state, a: attributes || {}, lc: Date.now() / 1000}}}}});
     };
@@ -333,6 +336,7 @@ function fakeHA(ha) {
     else reply({type: 'auth_required', ha_version: '2026.10.0'});
   };
   window.__haChange = function (id, state, attributes) { if (live) live.__change(id, state, attributes); };
+  window.__haDrop = function () { if (live) live.__drop(); };
 }
 
 // MARK: - Opening the home screen
