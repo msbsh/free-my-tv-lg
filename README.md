@@ -11,7 +11,7 @@ Trending picks from your own apps, the weather at a glance, and a look that foll
 Based on [simbasjungles/free-my-tv](https://github.com/simbasjungles/free-my-tv) by Simba ([@simbasjungles](https://github.com/simbasjungles)) and its [contributors](https://github.com/simbasjungles/free-my-tv/graphs/contributors).
 This fork keeps only the LG app; Google TV, Android TV and Samsung live upstream.
 
-<img src=".github/preview.webp" width="880" alt="The home screen: a quote at the top, trending picks, a glass shelf of apps, and a drawer with the weather and the inputs">
+<img src=".github/preview.webp" width="880" alt="The home screen: a quote at the top, trending picks taking turns, a glass shelf of apps, and a drawer with the weather and the inputs">
 
 </div>
 
@@ -19,7 +19,7 @@ This fork keeps only the LG app; Google TV, Android TV and Samsung live upstream
 
 - **No ads.** No sponsored rows, banners or autoplaying promos.
 - **Your apps, front and center.** The streaming apps you use, on a glass shelf. Pick them and their order on the TV.
-- **Trending, not sponsored.** Three fresh picks every hour (up to twelve, in Settings) from what's trending this week and the latest releases, only from apps you already have, movies and shows in one row. With ARD Mediathek, KiKA or ARTE on the TV, their top rows and live streams join in, mixed anew every hour (no TMDB key needed for those). Each pick names the app it plays in.
+- **Trending, not sponsored.** Three fresh picks every hour (up to twelve, in Settings) from what's trending this week and the latest releases, only from apps you already have, movies and shows in one row that runs on by itself: every few seconds the next one is large, with its details below. With ARD Mediathek, KiKA or ARTE on the TV, their top rows and live streams join in, mixed anew every hour (no TMDB key needed for those). Each pick names the app it plays in.
 - **Weather and inputs, one press away.** ↓ opens a drawer with the hour-by-hour forecast (or the next 5 days), sunrise and sunset, and below it the antenna, the HDMI inputs with a device plugged in, and shortcuts to All Apps and the settings.
 - **Your home at a glance (optional).** Up to three [Home Assistant](#home-assistant) values at the top right (OK shows their last 24 hours) and a card of them in the drawer, next to the weather. Read only, live.
 - **A thought to start with.** A short quote at the top, another with every start: Wilde, Twain, Shaw or Thoreau, and on a German TV also Goethe, Lichtenberg, Ebner-Eschenbach or Nietzsche, always in the words they wrote, with their name.
