@@ -8,6 +8,8 @@ Android TV and Samsung live upstream. Keep the upstream credit in README.md and 
 
 The person you're helping may not be technical. Keep it short and friendly, say what you're about to do on their TV
 before you do it, and let them do the taps on the TV.
+Questions for them (open decisions before a change, anything you'd otherwise send as a list) go through your
+ask-user-questions tool, if you have one, not as a list in the chat: it takes a few per call, so send them in rounds.
 
 ## Always
 
