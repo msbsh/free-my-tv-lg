@@ -53,6 +53,29 @@ test('the remote moves through the shelf and the picks; nothing above them witho
   s.check();
 });
 
+test('the picks take turns being the wide one, endlessly; not while one has focus, nor for 30 s after', async ({page}) => {
+  const s = await m.open(page);
+  const wide = () => page.evaluate(() => {
+    const w = document.querySelector('#cards .card.wide .name');
+    return [FreeMyTV.state.card, w && w.textContent];
+  });
+  const [first, title] = await wide();
+  await page.clock.runFor(6000);   // with open's 6 s: 12 s
+  expect((await wide())[0]).toBe(first + 1);
+  await page.clock.runFor(24000);   // past the last of the three picks: the first again, on the right
+  expect(await wide()).toEqual([first + 3, title]);
+  await m.press(page, s.net, 'Up');
+  const held = (await wide())[0];
+  await page.clock.runFor(60000);
+  expect((await wide())[0]).toBe(held);
+  await m.press(page, s.net, 'Down');   // 6 s
+  await page.clock.runFor(23000);
+  expect((await wide())[0]).toBe(held);
+  await page.clock.runFor(2000);
+  expect((await wide())[0]).toBe(held + 1);
+  s.check();
+});
+
 test('without a TMDB key nothing above the shelf takes the focus; the quote stays', async ({page}) => {
   const s = await m.open(page, {prefs: {tmdbKey: ''}});
   await m.press(page, s.net, 'Up');

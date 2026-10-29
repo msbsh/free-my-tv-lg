@@ -175,7 +175,7 @@ button { font: inherit; color: inherit; background: none; border: 0; padding: 0;
 .night #hatop .value.focus { background: #FFF; color: #1D1D1F; }
 .night #hatop .value.focus .tip { color: #F5F5F7; }
 
-/* MARK: - Picks: the card with focus is wide, the others narrow (posters); it grows 5%, rises and its edge lights up. */
+/* MARK: - Picks: one card is wide, the others narrow (posters); the one with focus grows 5%, rises and its edge lights up. */
 
 /* Halfway between the quote (ends at 150) and the glass (at 814, lower with smaller tiles: home.js moves #cards). */
 
@@ -183,22 +183,33 @@ button { font: inherit; color: inherit; background: none; border: 0; padding: 0;
   position: absolute;
   left: 0;
   top: 0;
-  -webkit-transition: -webkit-transform 0.32s cubic-bezier(0.2, 0.9, 0.3, 1);
-  transition: transform 0.32s cubic-bezier(0.2, 0.9, 0.3, 1);
+  -webkit-transition: -webkit-transform 0.45s cubic-bezier(0.2, 0.9, 0.3, 1);
+  transition: transform 0.45s cubic-bezier(0.2, 0.9, 0.3, 1);
 }
 
+/* home.js places each card with a transform: it slides when the wide one changes, as the row does. */
 .card {
   position: absolute;
+  left: 0;
   top: 214px;
   height: 442px;
-  -webkit-transition: -webkit-transform 0.22s cubic-bezier(0.2, 0.9, 0.3, 1.15);
-  transition: transform 0.22s cubic-bezier(0.2, 0.9, 0.3, 1.15);
+  -webkit-transition: -webkit-transform 0.45s cubic-bezier(0.2, 0.9, 0.3, 1);
+  transition: transform 0.45s cubic-bezier(0.2, 0.9, 0.3, 1);
 }
-.card .img {
+.card .rise {
   position: absolute;
   left: 0;
   top: 0;
   width: 100%;
+  height: 100%;
+  -webkit-transition: -webkit-transform 0.22s cubic-bezier(0.2, 0.9, 0.3, 1.15);
+  transition: transform 0.22s cubic-bezier(0.2, 0.9, 0.3, 1.15);
+}
+/* Two pictures, narrow and wide, that fade into each other: widths don't animate on older TVs. */
+.card .img {
+  position: absolute;
+  left: 0;
+  top: 0;
   height: 100%;
   border-radius: 18px;
   overflow: hidden;
@@ -206,9 +217,13 @@ button { font: inherit; color: inherit; background: none; border: 0; padding: 0;
   background-size: cover;
   background-position: center;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.14);
-  -webkit-transition: box-shadow 0.22s;
-  transition: box-shadow 0.22s;
+  -webkit-transition: box-shadow 0.22s, opacity 0.45s;
+  transition: box-shadow 0.22s, opacity 0.45s;
 }
+.card .narrow { width: 320px; }
+.card .broad { width: 1040px; opacity: 0; }
+.card.wide .narrow { opacity: 0; }
+.card.wide .broad { opacity: 1; }
 .card .layer {
   position: absolute;
   left: 0;
@@ -239,7 +254,8 @@ button { font: inherit; color: inherit; background: none; border: 0; padding: 0;
   -webkit-transition: opacity 0.17s;
   transition: opacity 0.17s;
 }
-.card.focus { -webkit-transform: translateY(-6px) scale(1.05); transform: translateY(-6px) scale(1.05); z-index: 2; }
+.card.focus { z-index: 2; }
+.card.focus .rise { -webkit-transform: translateY(-6px) scale(1.05); transform: translateY(-6px) scale(1.05); }
 .card.focus .img { box-shadow: 0 24px 46px rgba(0, 0, 0, 0.34); }
 .card.focus .img::after { opacity: 1; }
 .card .name {

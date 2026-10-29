@@ -16,36 +16,90 @@ div#stage
           "Henry David Thoreau"
       div#hatop
       div#cards
+        div.card.edge
+          div.rise
+            div.img.narrow bg="url(\"https://image.tmdb.org/t/p/w342/tp201.jpg\")"
+            div.img.broad
+              div.layer bg="url(\"https://image.tmdb.org/t/p/w342/tp201.jpg\")"
+              div.layer.back
+            div.name
+              "Show 201 (English)"
+            div.meta
+              span.app
+                "Netflix"
+              "· Series · Sci-Fi & Fantasy · 2 seasons"
+        div.card.edge
+          div.rise
+            div.img.narrow bg="url(\"https://image.tmdb.org/t/p/w342/tp202.jpg\")"
+            div.img.broad
+              div.layer bg="url(\"https://image.tmdb.org/t/p/w342/tp202.jpg\")"
+              div.layer.back
+            div.name
+              "Show 202 (English)"
+            div.meta
+              span.app
+                "Prime Video"
+              "· Series · Sci-Fi & Fantasy · 3 seasons"
         div.card.wide
-          div.img
-            div.layer bg="url(\"https://image.tmdb.org/t/p/w342/mp303.jpg\")"
-            div.layer.back bg="url(\"https://image.tmdb.org/t/p/w1280/m303b.jpg\")"
-          div.name
-            "Movie 303 (English)"
-          div.meta
-            span.app
-              "Netflix"
-            "· Action · 1h 38m"
+          div.rise
+            div.img.narrow bg="url(\"https://image.tmdb.org/t/p/w342/mp303.jpg\")"
+            div.img.broad
+              div.layer bg="url(\"https://image.tmdb.org/t/p/w342/mp303.jpg\")"
+              div.layer.back bg="url(\"https://image.tmdb.org/t/p/w1280/m303b.jpg\")"
+            div.name
+              "Movie 303 (English)"
+            div.meta
+              span.app
+                "Netflix"
+              "· Action · 1h 38m"
         div.card
-          div.img
-            div.layer bg="url(\"https://image.tmdb.org/t/p/w342/tp201.jpg\")"
-            div.layer.back
-          div.name
-            "Show 201 (English)"
-          div.meta
-            span.app
-              "Netflix"
-            "· Series · Sci-Fi & Fantasy · 2 seasons"
+          div.rise
+            div.img.narrow bg="url(\"https://image.tmdb.org/t/p/w342/tp201.jpg\")"
+            div.img.broad
+              div.layer bg="url(\"https://image.tmdb.org/t/p/w342/tp201.jpg\")"
+              div.layer.back
+            div.name
+              "Show 201 (English)"
+            div.meta
+              span.app
+                "Netflix"
+              "· Series · Sci-Fi & Fantasy · 2 seasons"
         div.card
-          div.img
-            div.layer bg="url(\"https://image.tmdb.org/t/p/w342/tp202.jpg\")"
-            div.layer.back
-          div.name
-            "Show 202 (English)"
-          div.meta
-            span.app
-              "Prime Video"
-            "· Series · Sci-Fi & Fantasy · 3 seasons"
+          div.rise
+            div.img.narrow bg="url(\"https://image.tmdb.org/t/p/w342/tp202.jpg\")"
+            div.img.broad
+              div.layer bg="url(\"https://image.tmdb.org/t/p/w342/tp202.jpg\")"
+              div.layer.back
+            div.name
+              "Show 202 (English)"
+            div.meta
+              span.app
+                "Prime Video"
+              "· Series · Sci-Fi & Fantasy · 3 seasons"
+        div.card.edge
+          div.rise
+            div.img.narrow bg="url(\"https://image.tmdb.org/t/p/w342/mp303.jpg\")"
+            div.img.broad
+              div.layer bg="url(\"https://image.tmdb.org/t/p/w342/mp303.jpg\")"
+              div.layer.back
+            div.name
+              "Movie 303 (English)"
+            div.meta
+              span.app
+                "Netflix"
+              "· Action · 1h 38m"
+        div.card.edge
+          div.rise
+            div.img.narrow bg="url(\"https://image.tmdb.org/t/p/w342/tp201.jpg\")"
+            div.img.broad
+              div.layer bg="url(\"https://image.tmdb.org/t/p/w342/tp201.jpg\")"
+              div.layer.back
+            div.name
+              "Show 201 (English)"
+            div.meta
+              span.app
+                "Netflix"
+              "· Series · Sci-Fi & Fantasy · 2 seasons"
       div#clock
         span.time
           "10:00"

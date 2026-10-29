@@ -32,7 +32,9 @@ GET https://api.tmdb.org/3/tv/402?language=ru-RU&append_to_response=watch/provid
 GET https://api.tmdb.org/3/tv/403?language=en-US&api_key=0123456789abcdef0123456789abcdef
 GET https://api.tmdb.org/3/tv/403?language=ru-RU&append_to_response=watch/providers,images&include_image_language=null,ru,en&api_key=0123456789abcdef0123456789abcdef
 GET https://api.tmdb.org/3/watch/providers/movie?language=ru-RU&watch_region=DE&api_key=0123456789abcdef0123456789abcdef
+GET https://image.tmdb.org/t/p/w1280/m302b.jpg
 GET https://image.tmdb.org/t/p/w1280/m303b.jpg
+GET https://image.tmdb.org/t/p/w300/m302b.jpg
 GET https://image.tmdb.org/t/p/w300/m303b.jpg
 GET https://image.tmdb.org/t/p/w342/mp302.jpg
 GET https://image.tmdb.org/t/p/w342/mp303.jpg

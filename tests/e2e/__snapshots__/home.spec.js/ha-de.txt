@@ -34,36 +34,90 @@ div#stage
           div.tip
             "Living room"
       div#cards
+        div.card.edge
+          div.rise
+            div.img.narrow bg="url(\"https://image.tmdb.org/t/p/w342/mp302.jpg\")"
+            div.img.broad
+              div.layer bg="url(\"https://image.tmdb.org/t/p/w342/mp302.jpg\")"
+              div.layer.back
+            div.name
+              "Movie 302"
+            div.meta
+              span.app
+                "Disney+"
+              "· Action · 1 h 37 min"
+        div.card.edge
+          div.rise
+            div.img.narrow bg="url(\"https://image.tmdb.org/t/p/w342/tp201.jpg\")"
+            div.img.broad
+              div.layer bg="url(\"https://image.tmdb.org/t/p/w342/tp201.jpg\")"
+              div.layer.back
+            div.name
+              "Show 201"
+            div.meta
+              span.app
+                "Netflix"
+              "· Serie · Sci-Fi & Fantasy · 2 Staffeln"
         div.card.wide
-          div.img
-            div.layer bg="url(\"https://image.tmdb.org/t/p/w342/mp303.jpg\")"
-            div.layer.back bg="url(\"https://image.tmdb.org/t/p/w1280/m303b.jpg\")"
-          div.name
-            "Movie 303"
-          div.meta
-            span.app
-              "Netflix"
-            "· Action · 1 h 38 min"
+          div.rise
+            div.img.narrow bg="url(\"https://image.tmdb.org/t/p/w342/mp303.jpg\")"
+            div.img.broad
+              div.layer bg="url(\"https://image.tmdb.org/t/p/w342/mp303.jpg\")"
+              div.layer.back bg="url(\"https://image.tmdb.org/t/p/w1280/m303b.jpg\")"
+            div.name
+              "Movie 303"
+            div.meta
+              span.app
+                "Netflix"
+              "· Action · 1 h 38 min"
         div.card
-          div.img
-            div.layer bg="url(\"https://image.tmdb.org/t/p/w342/mp302.jpg\")"
-            div.layer.back
-          div.name
-            "Movie 302"
-          div.meta
-            span.app
-              "Disney+"
-            "· Action · 1 h 37 min"
+          div.rise
+            div.img.narrow bg="url(\"https://image.tmdb.org/t/p/w342/mp302.jpg\")"
+            div.img.broad
+              div.layer bg="url(\"https://image.tmdb.org/t/p/w342/mp302.jpg\")"
+              div.layer.back
+            div.name
+              "Movie 302"
+            div.meta
+              span.app
+                "Disney+"
+              "· Action · 1 h 37 min"
         div.card
-          div.img
-            div.layer bg="url(\"https://image.tmdb.org/t/p/w342/tp201.jpg\")"
-            div.layer.back
-          div.name
-            "Show 201"
-          div.meta
-            span.app
-              "Netflix"
-            "· Serie · Sci-Fi & Fantasy · 2 Staffeln"
+          div.rise
+            div.img.narrow bg="url(\"https://image.tmdb.org/t/p/w342/tp201.jpg\")"
+            div.img.broad
+              div.layer bg="url(\"https://image.tmdb.org/t/p/w342/tp201.jpg\")"
+              div.layer.back
+            div.name
+              "Show 201"
+            div.meta
+              span.app
+                "Netflix"
+              "· Serie · Sci-Fi & Fantasy · 2 Staffeln"
+        div.card.edge
+          div.rise
+            div.img.narrow bg="url(\"https://image.tmdb.org/t/p/w342/mp303.jpg\")"
+            div.img.broad
+              div.layer bg="url(\"https://image.tmdb.org/t/p/w342/mp303.jpg\")"
+              div.layer.back
+            div.name
+              "Movie 303"
+            div.meta
+              span.app
+                "Netflix"
+              "· Action · 1 h 38 min"
+        div.card.edge
+          div.rise
+            div.img.narrow bg="url(\"https://image.tmdb.org/t/p/w342/mp302.jpg\")"
+            div.img.broad
+              div.layer bg="url(\"https://image.tmdb.org/t/p/w342/mp302.jpg\")"
+              div.layer.back
+            div.name
+              "Movie 302"
+            div.meta
+              span.app
+                "Disney+"
+              "· Action · 1 h 37 min"
       div#clock
         span.time
           "10:00"

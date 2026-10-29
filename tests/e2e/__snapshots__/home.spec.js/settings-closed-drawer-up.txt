@@ -16,46 +16,90 @@ div#stage
           "Henry David Thoreau"
       div#hatop
       div#cards
-        div.card.wide.focus
-          div.img
-            div.layer bg="url(\"https://image.tmdb.org/t/p/w342/mp302.jpg\")"
-            div.layer.back bg="url(\"https://image.tmdb.org/t/p/w1280/m302b.jpg\")"
-          div.name
-            "Movie 302 (English)"
-          div.meta
-            span.app
-              "Disney+"
-            "· Action · 1h 37m"
-        div.card
-          div.img
-            div.layer bg="url(\"https://image.tmdb.org/t/p/w342/mp101.jpg\")"
-            div.layer.back
-          div.name
-            "Movie 101 (English)"
-          div.meta
-            span.app
-              "Disney+"
-            "· Action · 1h 36m"
-        div.card
-          div.img
-            div.layer bg="url(\"https://image.tmdb.org/t/p/w342/mp107.jpg\")"
-            div.layer.back
-          div.name
-            "Movie 107 (English)"
-          div.meta
-            span.app
-              "Disney+"
-            "· Action · 1h 42m"
         div.card.edge
-          div.img
-            div.layer bg="url(\"https://image.tmdb.org/t/p/w342/tp206.jpg\")"
-            div.layer.back
-          div.name
-            "Show 206 (English)"
-          div.meta
-            span.app
-              "Disney+"
-            "· Series · Sci-Fi & Fantasy · 3 seasons"
+          div.rise
+            div.img.narrow bg="url(\"https://image.tmdb.org/t/p/w342/tp206.jpg\")"
+            div.img.broad
+              div.layer bg="url(\"https://image.tmdb.org/t/p/w342/tp206.jpg\")"
+              div.layer.back bg="url(\"https://image.tmdb.org/t/p/w1280/t206b.jpg\")"
+            div.name
+              "Show 206 (English)"
+            div.meta
+              span.app
+                "Disney+"
+              "· Series · Sci-Fi & Fantasy · 3 seasons"
+        div.card.edge
+          div.rise
+            div.img.narrow bg="url(\"https://image.tmdb.org/t/p/w342/mp302.jpg\")"
+            div.img.broad
+              div.layer bg="url(\"https://image.tmdb.org/t/p/w342/mp302.jpg\")"
+              div.layer.back bg="url(\"https://image.tmdb.org/t/p/w1280/m302b.jpg\")"
+            div.name
+              "Movie 302 (English)"
+            div.meta
+              span.app
+                "Disney+"
+              "· Action · 1h 37m"
+        div.card
+          div.rise
+            div.img.narrow bg="url(\"https://image.tmdb.org/t/p/w342/mp101.jpg\")"
+            div.img.broad
+              div.layer bg="url(\"https://image.tmdb.org/t/p/w342/mp101.jpg\")"
+              div.layer.back bg="url(\"https://image.tmdb.org/t/p/w1280/m101b.jpg\")"
+            div.name
+              "Movie 101 (English)"
+            div.meta
+              span.app
+                "Disney+"
+              "· Action · 1h 36m"
+        div.card
+          div.rise
+            div.img.narrow bg="url(\"https://image.tmdb.org/t/p/w342/mp107.jpg\")"
+            div.img.broad
+              div.layer bg="url(\"https://image.tmdb.org/t/p/w342/mp107.jpg\")"
+              div.layer.back bg="url(\"https://image.tmdb.org/t/p/w1280/m107b.jpg\")"
+            div.name
+              "Movie 107 (English)"
+            div.meta
+              span.app
+                "Disney+"
+              "· Action · 1h 42m"
+        div.card.wide.focus
+          div.rise
+            div.img.narrow bg="url(\"https://image.tmdb.org/t/p/w342/tp206.jpg\")"
+            div.img.broad
+              div.layer bg="url(\"https://image.tmdb.org/t/p/w342/tp206.jpg\")"
+              div.layer.back bg="url(\"https://image.tmdb.org/t/p/w1280/t206b.jpg\")"
+            div.name
+              "Show 206 (English)"
+            div.meta
+              span.app
+                "Disney+"
+              "· Series · Sci-Fi & Fantasy · 3 seasons"
+        div.card.edge
+          div.rise
+            div.img.narrow bg="url(\"https://image.tmdb.org/t/p/w342/mp302.jpg\")"
+            div.img.broad
+              div.layer bg="url(\"https://image.tmdb.org/t/p/w342/mp302.jpg\")"
+              div.layer.back
+            div.name
+              "Movie 302 (English)"
+            div.meta
+              span.app
+                "Disney+"
+              "· Action · 1h 37m"
+        div.card.edge
+          div.rise
+            div.img.narrow bg="url(\"https://image.tmdb.org/t/p/w342/mp101.jpg\")"
+            div.img.broad
+              div.layer bg="url(\"https://image.tmdb.org/t/p/w342/mp101.jpg\")"
+              div.layer.back
+            div.name
+              "Movie 101 (English)"
+            div.meta
+              span.app
+                "Disney+"
+              "· Action · 1h 36m"
       div#clock
         span.time
           "10:03"

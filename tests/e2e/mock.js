@@ -525,8 +525,16 @@ async function storage(page) {
 }
 
 /** The requests, sorted (some run side by side). */
+/**
+ * The requests, sorted; an image once however often it was asked for: drawn again, a card asks again unless
+ * Chromium's memory cache still holds it, and that varies between runs (routing turns the HTTP cache off).
+ */
 function requests(net) {
-  return net.requests.slice().sort().join('\n') + '\n';
+  const seen = {};
+  return net.requests.filter((r) => {
+    if (!/\/t\/p\/|\/image-service\/|\/img\//.test(r)) return true;
+    return seen[r] ? false : (seen[r] = true);
+  }).sort().join('\n') + '\n';
 }
 
 async function screenshot(page, name) {

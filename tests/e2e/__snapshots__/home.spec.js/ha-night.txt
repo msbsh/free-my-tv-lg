@@ -34,36 +34,90 @@ div#stage
           div.tip
             "Living room"
       div#cards
+        div.card.edge
+          div.rise
+            div.img.narrow bg="url(\"https://image.tmdb.org/t/p/w342/mp107.jpg\")"
+            div.img.broad
+              div.layer bg="url(\"https://image.tmdb.org/t/p/w342/mp107.jpg\")"
+              div.layer.back
+            div.name
+              "Movie 107 (English)"
+            div.meta
+              span.app
+                "Disney+"
+              "· Action · 1h 42m"
+        div.card.edge
+          div.rise
+            div.img.narrow bg="url(\"https://image.tmdb.org/t/p/w342/tp203.jpg\")"
+            div.img.broad
+              div.layer bg="url(\"https://image.tmdb.org/t/p/w342/tp203.jpg\")"
+              div.layer.back
+            div.name
+              "Show 203 (English)"
+            div.meta
+              span.app
+                "Disney+"
+              "· Series · Sci-Fi & Fantasy · 4 seasons"
         div.card.wide
-          div.img
-            div.layer bg="url(\"https://image.tmdb.org/t/p/w342/mp101.jpg\")"
-            div.layer.back bg="url(\"https://image.tmdb.org/t/p/w1280/m101b.jpg\")"
-          div.name
-            "Movie 101 (English)"
-          div.meta
-            span.app
-              "Disney+"
-            "· Action · 1h 36m"
+          div.rise
+            div.img.narrow bg="url(\"https://image.tmdb.org/t/p/w342/mp101.jpg\")"
+            div.img.broad
+              div.layer bg="url(\"https://image.tmdb.org/t/p/w342/mp101.jpg\")"
+              div.layer.back bg="url(\"https://image.tmdb.org/t/p/w1280/m101b.jpg\")"
+            div.name
+              "Movie 101 (English)"
+            div.meta
+              span.app
+                "Disney+"
+              "· Action · 1h 36m"
         div.card
-          div.img
-            div.layer bg="url(\"https://image.tmdb.org/t/p/w342/mp107.jpg\")"
-            div.layer.back
-          div.name
-            "Movie 107 (English)"
-          div.meta
-            span.app
-              "Disney+"
-            "· Action · 1h 42m"
+          div.rise
+            div.img.narrow bg="url(\"https://image.tmdb.org/t/p/w342/mp107.jpg\")"
+            div.img.broad
+              div.layer bg="url(\"https://image.tmdb.org/t/p/w342/mp107.jpg\")"
+              div.layer.back
+            div.name
+              "Movie 107 (English)"
+            div.meta
+              span.app
+                "Disney+"
+              "· Action · 1h 42m"
         div.card
-          div.img
-            div.layer bg="url(\"https://image.tmdb.org/t/p/w342/tp203.jpg\")"
-            div.layer.back
-          div.name
-            "Show 203 (English)"
-          div.meta
-            span.app
-              "Disney+"
-            "· Series · Sci-Fi & Fantasy · 4 seasons"
+          div.rise
+            div.img.narrow bg="url(\"https://image.tmdb.org/t/p/w342/tp203.jpg\")"
+            div.img.broad
+              div.layer bg="url(\"https://image.tmdb.org/t/p/w342/tp203.jpg\")"
+              div.layer.back
+            div.name
+              "Show 203 (English)"
+            div.meta
+              span.app
+                "Disney+"
+              "· Series · Sci-Fi & Fantasy · 4 seasons"
+        div.card.edge
+          div.rise
+            div.img.narrow bg="url(\"https://image.tmdb.org/t/p/w342/mp101.jpg\")"
+            div.img.broad
+              div.layer bg="url(\"https://image.tmdb.org/t/p/w342/mp101.jpg\")"
+              div.layer.back
+            div.name
+              "Movie 101 (English)"
+            div.meta
+              span.app
+                "Disney+"
+              "· Action · 1h 36m"
+        div.card.edge
+          div.rise
+            div.img.narrow bg="url(\"https://image.tmdb.org/t/p/w342/mp107.jpg\")"
+            div.img.broad
+              div.layer bg="url(\"https://image.tmdb.org/t/p/w342/mp107.jpg\")"
+              div.layer.back
+            div.name
+              "Movie 107 (English)"
+            div.meta
+              span.app
+                "Disney+"
+              "· Action · 1h 42m"
       div#clock
         span.time
           "9:30"

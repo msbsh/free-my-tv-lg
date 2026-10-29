@@ -249,9 +249,25 @@ const MEDIATHEKEN = m.LAUNCH_POINTS.concat([{id: 'ard.mediathek', title: 'ARD Me
   {id: 'de.kika.tvplayer.lge', title: 'KiKA'}, {id: 'com.3827031.168353', title: 'ARTE'}]);
 
 /** The picks as "Title | App · meta", in the row's order. */
+/** Every pick's card, in the row's order: only the ones near the view are drawn, so each is brought there in turn. */
+async function cards(page) {
+  return page.evaluate(() => {
+    const st = FreeMyTV.state, was = st.card, out = [];
+    for (let k = 0; k < Data.picks().length; k++) {
+      st.card = k;
+      FreeMyTV.move(0, 0);
+      const c = [...document.querySelectorAll('#cards .card')].find((x) => x.at === k), meta = c.querySelector('.meta');
+      out.push({text: c.querySelector('.name').textContent + ' | ' + (meta ? meta.textContent : ''),
+        art: c.querySelector('.layer').style.backgroundImage});
+    }
+    st.card = was;
+    FreeMyTV.move(0, 0);
+    return out;
+  });
+}
+
 async function picks(page) {
-  return page.$$eval('#cards .card', (cards) => cards.map((c) => c.querySelector('.name').textContent + ' | '
-    + (c.querySelector('.meta') ? c.querySelector('.meta').textContent : '')));
+  return (await cards(page)).map((c) => c.text);
 }
 
 const MEDIA_PICKS = [
@@ -270,11 +286,11 @@ const MEDIA_PICKS = [
 
 test('ARD Mediathek, KiKA and ARTE without a TMDB key: their top rows and live streams; OK opens the app', async ({page}) => {
   const s = await m.open(page, {tv: {launchPoints: true, points: MEDIATHEKEN}, prefs: {tmdbKey: '', cards: 12}});
+  expect(m.requests(s.net)).toMatchSnapshot('mediatheken-requests.txt');   // before picks() draws every card
   expect((await picks(page)).sort()).toEqual(MEDIA_PICKS);
-  expect(m.requests(s.net)).toMatchSnapshot('mediatheken-requests.txt');
   expect(s.net.requests.filter((r) => r.indexOf('api.tmdb.org') >= 0)).toEqual([]);
   // ARD's images at the card's width, ARTE's at its nearest size.
-  const art = await page.$$eval('#cards .card .layer:first-child', (l) => l.map((x) => x.style.backgroundImage));
+  const art = (await cards(page)).map((c) => c.art);
   expect(art.filter((u) => /ardmediathek/.test(u)).every((u) => /w=780/.test(u))).toBe(true);
   expect(art.filter((u) => /arte\.tv/.test(u)).every((u) => /\/1280x720/.test(u))).toBe(true);
 

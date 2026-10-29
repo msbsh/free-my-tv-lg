@@ -1,7 +1,8 @@
 /*
  * The home screen for LG webOS TVs:
  *  - top: a quote; at the right, up to three Home Assistant values;
- *  - three picks for this hour, movies and shows; the background is the first one's photo, blurred and almost white;
+ *  - three picks for this hour, movies and shows, taking turns as the wide one; the background is its photo, blurred
+ *    and almost white;
  *  - the glass shelf with the apps; ↓ opens the drawer (weather, then inputs and shortcuts); ↑ or Back closes it;
  *  - a night look from sunset to sunrise; a screensaver after a few idle minutes.
  * The remote's arrows, OK and Back move the focus; a pointer (LG's Magic Remote) focuses what it points at.
@@ -356,7 +357,7 @@
     for (i = 0; i < list.length; i++) setClass(list[i], 'focus', st.zone === Z.TOP && st.top === i);
     layoutCards();
     list = $('cards').children;
-    for (i = 0; i < list.length; i++) setClass(list[i], 'focus', st.zone === Z.CARDS && st.card === i);
+    for (i = 0; i < list.length; i++) setClass(list[i], 'focus', st.zone === Z.CARDS && st.card === list[i].at);
     list = $('tiles').children;
     for (i = 0; i < list.length; i++) setClass(list[i], 'focus', st.zone === Z.SHELF && st.shelf === i);
     revealShelf();
@@ -446,6 +447,14 @@
 
   // MARK: - Picks and background
 
+  var cardScroll = 0, cardNodes = {};   // the first slot in view; the drawn slots' cards, by slot
+
+  /**
+   * The picks run endlessly: st.card is a slot (any integer, also while focus is elsewhere), its pick the slot modulo
+   * their number. A slot's node is drawn while it's near the view; the row is rebuilt when the picks change.
+   */
+  function pickAt(slot) { var n = cards.length; return n ? (slot % n + n) % n : 0; }
+
   function renderCards() {
     var list = Data.picks();
     var holder = $('cards');
@@ -455,56 +464,81 @@
       same = list[i].id === cards[i].id && list[i].backdrop === cards[i].backdrop && list[i].meta === cards[i].meta
         && list[i].service === cards[i].service;
     }
-    if (same && holder.children.length === list.length) return;
+    if (same && (!list.length || holder.children.length)) return;
     cards = list;
     holder.innerHTML = '';
-    for (var c = 0; c < list.length; c++) {
-      var p = list[c], card = el('div', 'card', holder);
-      var img = el('div', 'img', card);
-      // Narrow: the poster (the backdrop cropped without one); the wide card fades its backdrop in over it, loaded then.
-      var poster = el('div', 'layer', img);
-      poster.style.backgroundImage = 'url(' + (p.poster ? Data.image(p.poster, 'w342') : Data.image(p.backdrop, 'w780')) + ')';
-      el('div', 'layer back', img);
-      el('div', 'name', card, p.title);
-      // The app it plays in first, a little stronger than the rest.
-      if (p.meta || p.service) {
-        var meta = el('div', 'meta', card);
-        if (p.service) el('span', 'app', meta, p.service);
-        if (p.meta) meta.appendChild(document.createTextNode((p.service ? ' · ' : '') + p.meta));
-      }
-      hover(card, Z.CARDS, c);
+    cardNodes = {};
+    bgImages = {};
+    if (list.length < 2) st.card = cardScroll = 0;
+    else {
+      // Back near slot 0, a whole round at a time: the same picks in the same places, without the slots growing.
+      var rounds = Math.floor(cardScroll / list.length) * list.length;
+      st.card -= rounds;
+      cardScroll -= rounds;
     }
-    st.card = Math.min(st.card, Math.max(0, list.length - 1));
     if (!list.length && st.zone === Z.CARDS) st.zone = Z.SHELF;
-    backdrop(list.length ? Data.image(list[0].backdrop, 'w300') : '');
+    if (!list.length) backdrop('');
     updateFocus();
   }
 
-  /**
-   * The card with focus (st.card, also while focus is elsewhere) is the wide one, the others narrow; past the third the
-   * row scrolls a card at a time (the holder slides), and the cards at the edges lose their text. Only the holder's
-   * transform and the backdrop's opacity animate: the widths change at once (older TVs).
-   */
-  function layoutCards() {
-    var holder = $('cards'), nodes = holder.children, left = 80, scroll = Math.max(0, st.card - 2) * 360;
-    for (var i = 0; i < nodes.length; i++) {
-      var wide = i === st.card, w = wide ? 1040 : 320, n = nodes[i], at = left - scroll;
-      n.style.left = left + 'px';
-      n.style.width = w + 'px';
-      setClass(n, 'wide', wide);
-      setClass(n, 'edge', at < 0 || at > 1740);
-      if (wide && !n.getAttribute('data-back') && cards[i]) {
-        n.setAttribute('data-back', '1');
-        n.querySelector('.back').style.backgroundImage = 'url(' + Data.image(cards[i].backdrop, 'w1280') + ')';
-      }
-      left += w + 40;
+  function makeCard(slot) {
+    var p = cards[pickAt(slot)], card = el('div', 'card'), rise = el('div', 'rise', card);
+    card.at = slot;   // not .slot: elements have one (Shadow DOM), a string
+    // Narrow: the poster (the backdrop cropped without one). Wide: the poster under the backdrop, loaded when it's wide.
+    var poster = 'url(' + (p.poster ? Data.image(p.poster, 'w342') : Data.image(p.backdrop, 'w780')) + ')';
+    el('div', 'img narrow', rise).style.backgroundImage = poster;
+    var wide = el('div', 'img broad', rise);
+    el('div', 'layer', wide).style.backgroundImage = poster;
+    el('div', 'layer back', wide);
+    el('div', 'name', rise, p.title);
+    // The app it plays in first, a little stronger than the rest.
+    if (p.meta || p.service) {
+      var meta = el('div', 'meta', rise);
+      if (p.service) el('span', 'app', meta, p.service);
+      if (p.meta) meta.appendChild(document.createTextNode((p.service ? ' · ' : '') + p.meta));
     }
-    holder.style.webkitTransform = holder.style.transform = 'translateX(' + (-scroll) + 'px)';
+    hover(card, Z.CARDS, slot);
+    return card;
   }
 
-  var bgUrl = null, bgFront = 'bgA';
+  /**
+   * The card in slot st.card is the wide one, the others narrow; it moves right up to the third place, then the row
+   * runs on (the holder slides), and the cards at the edges lose their text. Only transforms and opacity animate (older
+   * TVs): the cards slide, and each one's narrow and wide pictures fade into each other.
+   */
+  function layoutCards() {
+    var holder = $('cards'), n = cards.length;
+    if (n < 2) st.card = cardScroll = 0;
+    cardScroll = Math.max(st.card - 2, Math.min(cardScroll, st.card));
+    var lo = n > 1 ? cardScroll - 2 : 0, hi = n > 1 ? cardScroll + 4 : n - 1, slot;
+    for (slot in cardNodes) {
+      if (slot < lo || slot > hi) { holder.removeChild(cardNodes[slot]); delete cardNodes[slot]; }
+    }
+    for (slot = lo; slot <= hi; slot++) {
+      var node = cardNodes[slot];
+      if (!node) {
+        node = cardNodes[slot] = makeCard(slot);
+        var next = null;
+        for (var s = slot + 1; s <= hi && !next; s++) next = cardNodes[s] || null;
+        holder.insertBefore(node, next);
+      }
+      var wide = slot === st.card, x = 80 + slot * 360 + (slot > st.card ? 720 : 0), at = x - cardScroll * 360;
+      node.style.webkitTransform = node.style.transform = 'translateX(' + x + 'px)';
+      node.style.width = (wide ? 1040 : 320) + 'px';
+      setClass(node, 'wide', wide);
+      setClass(node, 'edge', at < 0 || at > 1740);
+      if (wide && !node.getAttribute('data-back')) {
+        node.setAttribute('data-back', '1');
+        node.querySelector('.back').style.backgroundImage = 'url(' + Data.image(cards[pickAt(slot)].backdrop, 'w1280') + ')';
+      }
+    }
+    holder.style.webkitTransform = holder.style.transform = 'translateX(' + (-cardScroll * 360) + 'px)';
+    if (n) backdrop(Data.image(cards[pickAt(st.card)].backdrop, 'w300'));
+  }
 
-  /** The first pick's photo as the background: drawn tiny and stretched, it's already as soft as a heavy blur. */
+  var bgUrl = null, bgFront = 'bgA', bgImages = {};   // the picks' photos, kept while they take turns
+
+  /** The wide pick's photo as the background: drawn tiny and stretched, it's already as soft as a heavy blur. */
   function backdrop(url) {
     if (url === bgUrl) return;
     bgUrl = url;
@@ -514,15 +548,18 @@
       setClass($('bgB'), 'on', false);
       return;
     }
-    var img = new Image();
-    img.onload = function () {
+    var img = bgImages[url];
+    function draw() {
       if (bgUrl !== url) return;
       var canvas = $(next), ctx = canvas.getContext('2d');
       ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
       setClass(canvas, 'on', true);
       setClass($(bgFront), 'on', false);
       bgFront = next;
-    };
+    }
+    if (img && img.complete && img.naturalWidth) { draw(); return; }
+    img = bgImages[url] = new Image();
+    img.onload = draw;
     img.src = url;
   }
 
@@ -1561,7 +1598,7 @@
         if (Prefs.haTop()[st.top]) openHistory(Prefs.haTop()[st.top]);
         return;
       case Z.CARDS:
-        var p = cards[st.card], app = p && Data.appFor(p.app);
+        var p = cards[pickAt(st.card)], app = p && Data.appFor(p.app);
         if (app) launcher(app.id, app.title)();
         return;
       case Z.SHELF:
@@ -1604,18 +1641,18 @@
   }
 
   function move(dx, dy) {
-    var tiles = $('tiles').children, cardNodes = $('cards').children;
+    var tiles = $('tiles').children;
     switch (st.zone) {
       case Z.SHELF:
         if (dx) st.shelf = Math.max(0, Math.min(shelf.length - 1, st.shelf + dx));
         else if (dy > 0) { openDrawer(); return; }
         else if (dy < 0) {
-          if (cards.length) { st.zone = Z.CARDS; st.card = nearest(cardNodes, centerX(tiles[st.shelf])); }
+          if (cards.length) st.zone = Z.CARDS;   // the wide one: its text is what's being read
           else if (topLast() >= 0) { st.zone = Z.TOP; st.top = 0; }
         }
         break;
       case Z.CARDS:
-        if (dx) st.card = Math.max(0, Math.min(cards.length - 1, st.card + dx));
+        if (dx) st.card += cards.length > 1 ? dx : 0;
         else if (dy < 0) { if (topLast() >= 0) { st.zone = Z.TOP; st.top = 0; } }
         else if (shelf.length) { st.zone = Z.SHELF; st.shelf = nearest(tiles, centerX(cardNodes[st.card])); }
         break;
@@ -1623,7 +1660,7 @@
         if (dx) {
           st.top = Math.max(0, Math.min(topLast(), st.top + dx));
         } else if (dy > 0) {
-          if (cards.length) { st.zone = Z.CARDS; st.card = cards.length - 1; }   // the values sit above the last card
+          if (cards.length) st.zone = Z.CARDS;   // the wide one
           else st.zone = Z.SHELF;
         }
         break;
@@ -2008,6 +2045,19 @@
     if (!saverOn && !sheetOpen() && Date.now() - idleAt > SAVER_AFTER) showSaver();
     if (saverOn) tickSaverClock($('saver').querySelector('.clock'));
   }, 30000);
+
+  // The picks take turns being the wide one: every 12 s, not while one has focus nor for 30 s after.
+  var ROTATE = 12000, HOLD = 30000, rotateAt = Date.now() + ROTATE;
+  setInterval(function () {
+    var now = Date.now();
+    if (st.zone === Z.CARDS) rotateAt = now + HOLD;
+    else if (saverOn || document.hidden || cards.length < 2) rotateAt = Math.max(rotateAt, now + ROTATE);
+    else if (now >= rotateAt) {
+      rotateAt = now + ROTATE;
+      st.card++;
+      updateFocus();
+    }
+  }, 1000);
 
   // For the browser preview and tests.
   window.FreeMyTV = {state: st, move: move, activate: activate, back: back, showSaver: showSaver, hideSaver: hideSaver, toast: toast};
