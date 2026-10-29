@@ -119,7 +119,7 @@ them remove the old one (LG's app list, edit mode) before the first install.
   each language lacks; translate those in every catalogue (or `--fill` with `ANTHROPIC_API_KEY`, which sends only the
   strings), and keep placeholders as they are. No right-to-left languages yet.
 - The quote at the top comes from `assets/quotes/<lang>.json`, packed into `quotes.js`: public-domain aphorisms in the
-  language they were written in (German on a German TV, English everywhere else), at most 110 characters (two lines),
+  language they were written in (German or English on a German TV, English everywhere else), at most 110 characters (two lines),
   each with its `source` (the Project Gutenberg id or URL it was checked against). Never a translation, never one from
   a quote website or from memory: copy it from the text and keep its wording. German ones are in today's spelling, and
   any text that differs from the source keeps the source's in `original`.

@@ -11,9 +11,9 @@ div#stage
     div#top.layer
       div#quote
         p.text
-          "Selbst der bescheidenste Mensch hält mehr von sich, als sein bester Freund von ihm hält."
+          "Silence is not always tact and it is tact that is golden, not silence."
         p.author
-          "Marie von Ebner-Eschenbach"
+          "Samuel Butler"
       div#tabs
         button.tab.on
           "Entdecken"

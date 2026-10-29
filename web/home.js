@@ -415,14 +415,17 @@
 
   var TAB_KIND = [null, 'movie', 'tv'];
 
-  // One per start, in the language it was written in: German on a German TV, English everywhere else. Date.now picks
-  // it rather than Math.random, which the screensaver's corners draw from.
+  // One per start, in the language it was written in: German or English on a German TV, English everywhere else.
+  // Date.now picks it rather than Math.random, which the screensaver's corners draw from.
   var quoteSeed = Date.now();
 
   function renderQuote() {
-    var all = window.QUOTES || {}, lang = all[I18N.base] ? I18N.base : 'en', list = all[lang] || [];
-    var q = list[quoteSeed % list.length], node = $('quote');
-    node.setAttribute('lang', lang);
+    var all = window.QUOTES || {}, langs = all[I18N.base] && I18N.base !== 'en' ? [I18N.base, 'en'] : ['en'], list = [];
+    langs.forEach(function (lang) {
+      (all[lang] || []).forEach(function (q) { list.push({q: q, lang: lang}); });
+    });
+    var pick = list[quoteSeed % list.length], q = pick && pick.q, node = $('quote');
+    node.setAttribute('lang', pick ? pick.lang : 'en');
     node.firstChild.textContent = q ? q.text : '';
     node.lastChild.textContent = q ? q.author : '';
   }
