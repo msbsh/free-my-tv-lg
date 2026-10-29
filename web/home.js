@@ -1363,7 +1363,6 @@
     el('div', 'time', clock);
     el('div', 'date', clock);
     el('div', 'title', clock);
-    var hint = el('div', 'hint', clock);
     var front = a, corner = '';
     // With every photo the clock goes to another corner, in no fixed order: on an OLED panel nothing stays in place.
     function place(to) {
@@ -1392,9 +1391,6 @@
         back.style.webkitTransform = back.style.transform = 'scale(1.0)';
         clock.children[2].textContent = p.title;
         saverPick = p;
-        // With Watch from the screensaver on, OK opens this title's app (any other key only closes).
-        var app = Prefs.saverWatch() && Data.appFor(p.app);
-        hint.textContent = app ? trf('Press OK to watch on {app} · any other button to close', {app: app.title}) : '';
         setTimeout(function () {
           setClass(back, 'on', true);
           setClass(front, 'on', false);

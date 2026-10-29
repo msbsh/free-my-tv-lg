@@ -209,6 +209,4 @@ div#stage
         "Tuesday, October 20"
       div.title
         "Movie 104 (English)"
-      div.hint
-        "Press OK to watch on Disney+ · any other button to close"
   div#toast
