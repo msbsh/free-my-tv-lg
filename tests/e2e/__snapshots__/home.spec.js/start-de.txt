@@ -11,9 +11,9 @@ div#stage
     div#top.layer
       div#quote
         p.text
-          "Silence is not always tact and it is tact that is golden, not silence."
+          "Wir sind so gern in der freien Natur, weil diese keine Meinung über uns hat."
         p.author
-          "Samuel Butler"
+          "Friedrich Nietzsche"
       div#tabs
         button.tab.on
           "Entdecken"
