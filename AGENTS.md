@@ -22,6 +22,9 @@ before you do it, and let them do the taps on the TV.
 - The TMDB key is theirs and secret: they paste it after `tmdb_key=` in `config.properties` themselves, or type it on
   the TV (*Home Settings* → *TMDB key*). Don't ask for it in the chat, never print it, never commit it. If they paste
   it in the chat anyway, put it only in `config.properties`. Without a key everything works except the picks.
+- The Home Assistant token (`ha_token`) is secret like the TMDB key, and stronger: Home Assistant has no read-only
+  tokens. They create it themselves (profile → *Security* → *Long-lived access tokens*, best for a user without admin
+  rights) and paste it into `config.properties`; it can't be typed on the TV. Same rules as the TMDB key.
 - Don't change the TV's picture, sound, network or account settings.
 
 ## Changing the repo
@@ -58,7 +61,8 @@ skill (`.claude/skills/readme-preview/`) in your worktree and commit the new pre
    passphrase.
 3. **Settings:** the first `python3 webos/build.py` creates `config.properties`. Fill in `latitude` and `longitude`
    (decimal degrees) and `city`, `tmdb_region` (two-letter country) and `temperature` to match. The TMDB key rules
-   above apply.
+   above apply. Home Assistant (optional): `ha_url`, `ha_token` (their part, as above), `ha_top` and `ha_panel`
+   (entity ids); they can pick the entities on the TV later.
 4. **Build:** `python3 webos/build.py` must end with `Built FreeMyTV-webos.ipk`.
 5. **Install:** the first time needs the TV's passphrase, typed by them: ask them to run
    `python3 webos/install.py <IP>` in their own terminal (yours can't answer its prompt, and the passphrase doesn't go
@@ -92,6 +96,11 @@ them remove the old one (LG's app list, edit mode) before the first install.
 - `web/home.js` draws the screen and handles the remote (arrows, OK, Back 461, the Magic Remote's pointer);
   `web/data.js` has the picks (TMDB), weather (Open-Meteo) and `Prefs` (Home Settings, in localStorage, winning over
   `config.properties`).
+- `web/ha.js` is Home Assistant, read only: its WebSocket API (`subscribe_entities`, `history/history_during_period`,
+  `get_states`), because Home Assistant answers the page's `file://` origin there without a CORS setting. The values sit
+  at the top right (`Prefs.haTop()`, up to 3, OK shows their 24 hours) and in a drawer card (`Prefs.haPanel()`); the
+  last ones stay in `fmtv.ha` for when it can't be reached. No connection while another app is in front. Never log the
+  token.
 - TMDB is reached at `api.tmdb.org`, TMDB's own mirror of `api.themoviedb.org` on the images' domain: some ISPs block
   the other name.
 - The TMDB key typed on the TV (`Prefs.tmdbKey()`) wins over `CONFIG.tmdbKey`; `Data.keyChanged()` fetches the picks

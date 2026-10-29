@@ -1,0 +1,28 @@
+[
+ {
+  "open": "ws://ha.test:8123/api/websocket"
+ },
+ {
+  "send": {
+   "type": "auth",
+   "right": true
+  }
+ },
+ {
+  "send": {
+   "type": "subscribe_entities",
+   "entity_ids": [
+    "sensor.outside_temperature",
+    "binary_sensor.front_door",
+    "climate.living_room",
+    "sensor.living_room_humidity",
+    "sensor.house_power",
+    "binary_sensor.kitchen_window",
+    "light.desk",
+    "lock.front_door",
+    "cover.bedroom_blinds",
+    "sensor.garage_temperature"
+   ]
+  }
+ }
+]

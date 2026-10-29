@@ -296,3 +296,157 @@ test('another app in front: no requests until the home screen shows again', asyn
   expect(s.net.requests.some((r) => r.indexOf('https://api.open-meteo.com/v1/forecast') >= 0)).toBe(true);
   s.check();
 });
+
+// MARK: - Home Assistant (mock.js fakes its WebSocket API)
+
+const HA = {config: m.HA_CONFIG, ha: {}};
+
+/** What the page sent Home Assistant, without the ids that count up. */
+async function haSent(page) {
+  return page.evaluate(() => JSON.stringify(window.__ha.map((x) => {
+    if (!x.send) return x;
+    const s = Object.assign({}, x.send);
+    delete s.id;
+    if (s.start_time) s.start_time = '…';
+    return {send: s};
+  }), null, 1) + '\n');
+}
+
+test('Home Assistant: values at the top, their day, and the card in the drawer', async ({page}) => {
+  const s = await m.open(page, HA);
+  await snap(page, 'ha-start');
+  expect(await haSent(page)).toMatchSnapshot('ha-start-sent.json');
+  await m.press(page, s.net, 'Up', 'Up', 'Right', 'Right', 'Right');
+  await snap(page, 'ha-top-focus');
+  await m.press(page, s.net, 'Enter');
+  await snap(page, 'ha-history');
+  await m.press(page, s.net, 'Back', 'Right', 'Enter');
+  await snap(page, 'ha-history-door');
+  await m.press(page, s.net, 'Back', 'Right', 'Right');
+  await snap(page, 'ha-top-last');
+  await m.press(page, s.net, 'Back', 'Down');
+  await snap(page, 'ha-drawer');
+  expect(await m.storage(page)).toMatchSnapshot('ha-storage.txt');
+  s.check();
+});
+
+test('Home Assistant: a change shows at once', async ({page}) => {
+  const s = await m.open(page, HA);
+  await page.evaluate(() => window.__haChange('sensor.outside_temperature', '13.9'));
+  await m.settle(page, s.net);
+  await expect(page.locator('#hatop .value').first()).toHaveText(/13\.9°C/);
+  await page.evaluate(() => window.__haChange('binary_sensor.front_door', 'on'));
+  await m.settle(page, s.net);
+  await expect(page.locator('#hatop .value').nth(1)).toHaveText(/^Open/);
+  s.check();
+});
+
+test('Home Assistant: the card alone, without the weather', async ({page}) => {
+  const s = await m.open(page, Object.assign({prefs: {weather: false}}, HA));
+  await m.press(page, s.net, 'Down');
+  await snap(page, 'ha-drawer-alone');
+  s.check();
+});
+
+test('Home Assistant: out of reach, the last values dimmed', async ({page}) => {
+  const cached = {url: m.HA_CONFIG.haUrl, at: Date.parse(m.DAY) - 3 * 3600000, states: {
+    'sensor.outside_temperature': {s: '9.5', a: {friendly_name: 'Outside', unit_of_measurement: '°C'}, lc: 0},
+    'sensor.living_room_humidity': {s: '51', a: {friendly_name: 'Living room humidity', unit_of_measurement: '%'}, lc: 0}}};
+  const s = await m.open(page, {config: m.HA_CONFIG, ha: {reachable: false}, storage: {'fmtv.ha': JSON.stringify(cached)}});
+  await m.press(page, s.net, 'Down');
+  await snap(page, 'ha-offline');
+  s.check();
+});
+
+test('Home Assistant: the token refused', async ({page}) => {
+  const s = await m.open(page, {config: m.HA_CONFIG, ha: {token: 'another-token'}});
+  await m.press(page, s.net, 'Down');
+  await snap(page, 'ha-rejected');
+  expect(await haSent(page)).toMatchSnapshot('ha-rejected-sent.json');
+  s.check();
+});
+
+test('Home Assistant: off in Home Settings, and back on', async ({page}) => {
+  const s = await m.open(page, HA);
+  await openSettings(page, s.net);
+  await m.moveTo(page, s.net, '#settings .row', 'Home Assistant');
+  await snap(page, 'ha-settings-row');
+  await m.press(page, s.net, 'Enter');
+  await snap(page, 'ha-sheet');
+  await m.press(page, s.net, 'Down', 'Down', 'Enter');
+  await snap(page, 'ha-sheet-off');
+  await expect(page.locator('#hatop .value')).toHaveCount(0);
+  await expect(page.locator('#drawer #ha')).toHaveCount(0);
+  await m.press(page, s.net, 'Enter');
+  await expect(page.locator('#hatop .value')).toHaveCount(3);
+  s.check();
+});
+
+test('Home Assistant: which values at the top, in what order', async ({page}) => {
+  const s = await m.open(page, HA);
+  await openSettings(page, s.net);
+  await m.moveTo(page, s.net, '#settings .row', 'Home Assistant');
+  await m.press(page, s.net, 'Enter', 'Down', 'Down', 'Down', 'Enter');
+  await snap(page, 'ha-edit-top');
+  await m.press(page, s.net, 'Down', 'Down', 'Down', 'Enter');
+  await snap(page, 'ha-edit-top-full');
+  await m.press(page, s.net, 'Up', 'Up', 'Up', 'Right');
+  await snap(page, 'ha-edit-top-moved');
+  await m.press(page, s.net, 'Enter', 'Back');
+  await snap(page, 'ha-edit-back');
+  await expect(page.locator('#hatop .value')).toHaveText([/^Closed/, /^21\.5°/]);
+  s.check();
+});
+
+test('Home Assistant: which values in the drawer', async ({page}) => {
+  const s = await m.open(page, HA);
+  await openSettings(page, s.net);
+  await m.moveTo(page, s.net, '#settings .row', 'Home Assistant');
+  await m.press(page, s.net, 'Enter', 'Down', 'Down', 'Down', 'Down', 'Enter', 'Enter');
+  await snap(page, 'ha-edit-drawer');
+  expect(await m.storage(page)).toMatchSnapshot('ha-edit-storage.txt');
+  s.check();
+});
+
+test('Home Assistant: an address typed on the TV', async ({page}) => {
+  const s = await m.open(page, {config: Object.assign({}, m.HA_CONFIG, {haUrl: ''}), ha: {}});
+  await expect(page.locator('#hatop .value')).toHaveCount(0);
+  await openSettings(page, s.net);
+  await m.moveTo(page, s.net, '#settings .row', 'Home Assistant');
+  await m.press(page, s.net, 'Enter');
+  await snap(page, 'ha-address');
+  await page.keyboard.type('not an address');
+  await m.press(page, s.net, 'Enter');
+  await snap(page, 'ha-address-malformed');
+  await m.press(page, s.net, 'Up', 'Enter');
+  await page.keyboard.press('ControlOrMeta+A');
+  await page.keyboard.type('elsewhere.test:8123');
+  await m.press(page, s.net, 'Enter');
+  await snap(page, 'ha-address-unreachable');
+  await m.press(page, s.net, 'Up', 'Enter');
+  await page.keyboard.press('ControlOrMeta+A');
+  await page.keyboard.type('ha.test:8123/');
+  await m.press(page, s.net, 'Enter');
+  await snap(page, 'ha-address-saved');
+  expect(await m.storage(page)).toMatchSnapshot('ha-address-storage.txt');
+  await expect(page.locator('#hatop .value')).toHaveCount(3);
+  s.check();
+});
+
+test('Home Assistant: another app in front closes the connection', async ({page}) => {
+  const s = await m.open(page, HA);
+  const visible = (shown) => page.evaluate((v) => {
+    window.__ha.length = 0;
+    Object.defineProperty(document, 'hidden', {configurable: true, get: () => !v});
+    Object.defineProperty(document, 'visibilityState', {configurable: true, get: () => (v ? 'visible' : 'hidden')});
+    document.dispatchEvent(new Event('visibilitychange'));
+  }, shown);
+  await visible(false);
+  await page.clock.runFor(10 * 60000);   // past every retry: none while hidden
+  await m.settle(page, s.net);
+  expect(await haSent(page)).toMatchSnapshot('ha-hidden-sent.json');
+  await visible(true);
+  await m.settle(page, s.net);
+  expect(await haSent(page)).toMatchSnapshot('ha-shown-sent.json');
+  s.check();
+});

@@ -249,6 +249,12 @@ div#stage
               span.chev
                 "›"
           div.row
+            "Home Assistant"
+            span.value
+              "Not set"
+              span.chev
+                "›"
+          div.row
             "Picks from"
             span.value
               span.chev
@@ -300,6 +306,12 @@ div#stage
   div#keypick.layer.sheet
     div.box
   div#about.layer.sheet
+    div.box
+  div#hahistory.layer.sheet
+    div.box
+  div#hapick.layer.sheet
+    div.box
+  div#haedit.layer.sheet
     div.box
   div#saver.layer
   div#toast

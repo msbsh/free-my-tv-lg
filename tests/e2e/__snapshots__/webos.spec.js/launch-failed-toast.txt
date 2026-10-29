@@ -201,6 +201,12 @@ div#stage
     div.box
   div#about.layer.sheet
     div.box
+  div#hahistory.layer.sheet
+    div.box
+  div#hapick.layer.sheet
+    div.box
+  div#haedit.layer.sheet
+    div.box
   div#saver.layer
   div#toast
     "Couldn't open Broken App."

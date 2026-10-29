@@ -132,6 +132,60 @@ button { font: inherit; color: inherit; background: none; border: 0; padding: 0;
 .night .tab { color: rgba(245, 245, 247, 0.62); }
 .night .tab.focus { color: #1D1D1F; box-shadow: 0 8px 26px rgba(0, 0, 0, 0.4); }
 
+/* Home Assistant's values at the top right: glass pills; the focused one turns white, with its name below. */
+#hatop { position: absolute; right: 80px; top: 69px; height: 68px; white-space: nowrap; }
+#hatop.stale { opacity: 0.55; }
+#hatop .value {
+  position: relative;
+  display: inline-block;
+  height: 68px;
+  max-width: 420px;
+  margin-left: 18px;
+  padding: 0 26px 0 22px;
+  border-radius: 34px;
+  background: -webkit-linear-gradient(top, rgba(255, 255, 255, 0.78), rgba(255, 255, 255, 0.5));
+  background: linear-gradient(rgba(255, 255, 255, 0.78), rgba(255, 255, 255, 0.5));
+  box-shadow: 0 6px 26px rgba(0, 0, 0, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.9), inset 0 0 0 1px rgba(255, 255, 255, 0.5);
+  color: #1D1D1F;
+  font-size: 30px;
+  font-weight: 600;
+  line-height: 68px;
+  vertical-align: top;
+  -webkit-transition: -webkit-transform 0.2s cubic-bezier(0.2, 0.9, 0.3, 1.2), box-shadow 0.2s, background-color 0.17s;
+  transition: transform 0.2s cubic-bezier(0.2, 0.9, 0.3, 1.2), box-shadow 0.2s, background-color 0.17s;
+}
+#hatop .value .sym { width: 30px; height: 30px; margin-right: 12px; vertical-align: -5px; }
+#hatop .value .v { display: inline-block; max-width: 340px; overflow: hidden; text-overflow: ellipsis; vertical-align: top; -webkit-font-feature-settings: 'tnum'; font-feature-settings: 'tnum'; }
+#hatop .value.off .sym, #hatop .value.off .v { opacity: 0.5; }
+#hatop .value.focus { background: #FFF; -webkit-transform: scale(1.08); transform: scale(1.08); box-shadow: 0 14px 30px rgba(0, 0, 0, 0.24); }
+#hatop .value .tip {
+  position: absolute;
+  top: 88px;
+  left: 50%;
+  width: 400px;
+  margin-left: -200px;
+  text-align: center;
+  font-size: 23px;
+  font-weight: 600;
+  line-height: normal;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  opacity: 0;
+  -webkit-transition: opacity 0.14s;
+  transition: opacity 0.14s;
+}
+#hatop .value.last .tip { left: auto; right: -10px; margin-left: 0; text-align: right; }
+#hatop .value.focus .tip { opacity: 1; }
+.night #hatop .value {
+  background: -webkit-linear-gradient(top, rgba(40, 40, 44, 0.8), rgba(17, 17, 19, 0.62));
+  background: linear-gradient(rgba(40, 40, 44, 0.8), rgba(17, 17, 19, 0.62));
+  box-shadow: 0 6px 26px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.14), inset 0 0 0 1px rgba(255, 255, 255, 0.08);
+  color: rgba(255, 255, 255, 0.92);
+}
+.night #hatop .value.focus { background: #FFF; color: #1D1D1F; }
+.night #hatop .value.focus .tip { color: #F5F5F7; }
+
 /* MARK: - Picks: the card with focus is wide, the others narrow (posters); it grows 5%, rises and its edge lights up. */
 
 #cards {
@@ -387,6 +441,17 @@ button { font: inherit; color: inherit; background: none; border: 0; padding: 0;
 #weather .sun span { margin-right: 36px; }
 .night #weather .range, .night #weather .hour .t, .night #weather .hour .low, .night #weather .sun { color: rgba(255, 255, 255, 0.68); }
 .night #weather .split { background: rgba(255, 255, 255, 0.14); }
+#weather .sun { right: 30px; overflow: hidden; }
+
+/* Home Assistant's card: two rows of values; dimmed with the time they're from while it can't be reached. */
+#ha.stale .hv { opacity: 0.5; }
+#ha .hv { position: absolute; height: 92px; }
+#ha .hv .sym { position: absolute; left: 0; top: 8px; width: 32px; height: 32px; }
+#ha .hv .v { position: absolute; left: 48px; right: 0; top: 0; font-size: 36px; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; -webkit-font-feature-settings: 'tnum'; font-feature-settings: 'tnum'; }
+#ha .hv .v .note { margin-left: 12px; font-size: 22px; color: #6E6E73; }
+#ha .hv .n { position: absolute; left: 48px; right: 0; top: 50px; font-size: 22px; font-weight: 500; color: #6E6E73; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+#ha .hv.off .sym, #ha .hv.off .v { opacity: 0.45; }
+.night #ha .hv .n, .night #ha .hv .v .note { color: rgba(255, 255, 255, 0.68); }
 
 /* MARK: - Sheets over the home screen: All Apps, Settings, Shelf, Language, About */
 
@@ -425,7 +490,7 @@ button { font: inherit; color: inherit; background: none; border: 0; padding: 0;
 .cell.focus .face { -webkit-transform: scale(1.08); transform: scale(1.08); box-shadow: 0 16px 34px rgba(0, 0, 0, 0.55), inset 0 0 0 2px rgba(255, 255, 255, 0.4); }
 .cell.focus .label { color: #FFF; }
 
-#settings .box, #shelfedit .box, #langpick .box, #citypick .box, #keypick .box, #about .box {
+#settings .box, #shelfedit .box, #langpick .box, #citypick .box, #keypick .box, #about .box, #hapick .box, #haedit .box, #hahistory .box {
   position: absolute;
   left: 560px;
   top: 150px;
@@ -448,7 +513,7 @@ button { font: inherit; color: inherit; background: none; border: 0; padding: 0;
 .box .row .value .sym { width: 26px; height: 26px; vertical-align: -3px; }
 .box .row.dim { color: rgba(255, 255, 255, 0.4); }
 #about .row .value { font-feature-settings: 'tnum'; }
-#citypick .row.field input, #keypick .row.field input {
+#citypick .row.field input, #keypick .row.field input, #hapick .row.field input {
   width: 100%;
   height: 70px;
   margin: 0;
@@ -460,11 +525,27 @@ button { font: inherit; color: inherit; background: none; border: 0; padding: 0;
   font: inherit;
   line-height: 70px;
 }
-#citypick .row.field, #keypick .row.field { box-shadow: inset 0 0 0 2px rgba(255, 255, 255, 0.18); }
-#citypick .row.field input::-webkit-input-placeholder, #keypick .row.field input::-webkit-input-placeholder { color: rgba(255, 255, 255, 0.4); }
-#citypick .row.field input::placeholder, #keypick .row.field input::placeholder { color: rgba(255, 255, 255, 0.4); }
+#citypick .row.field, #keypick .row.field, #hapick .row.field { box-shadow: inset 0 0 0 2px rgba(255, 255, 255, 0.18); }
+#citypick .row.field input::-webkit-input-placeholder, #keypick .row.field input::-webkit-input-placeholder, #hapick .row.field input::-webkit-input-placeholder { color: rgba(255, 255, 255, 0.4); }
+#citypick .row.field input::placeholder, #keypick .row.field input::placeholder, #hapick .row.field input::placeholder { color: rgba(255, 255, 255, 0.4); }
 #citypick .row { overflow: hidden; text-overflow: ellipsis; }
 #about .row .value.cut { overflow: hidden; text-overflow: ellipsis; }
+#haedit .row { overflow: hidden; text-overflow: ellipsis; padding-right: 150px; }
+
+/* A Home Assistant value's last 24 hours. */
+#hahistory .box { left: 280px; width: 1360px; }
+#hahistory .title { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+#hahistory .now { padding: 0 18px; font-size: 64px; font-weight: 300; -webkit-font-feature-settings: 'tnum'; font-feature-settings: 'tnum'; }
+#hahistory .now .note { margin-left: 18px; font-size: 28px; font-weight: 500; color: rgba(255, 255, 255, 0.6); }
+#hahistory .chart { position: relative; height: 340px; margin: 24px 18px 0; }
+#hahistory .chart .empty { padding-top: 140px; text-align: center; font-size: 26px; color: rgba(255, 255, 255, 0.5); }
+#hahistory .chart .range { position: absolute; right: 0; top: -58px; font-size: 24px; font-weight: 500; color: rgba(255, 255, 255, 0.6); }
+#hahistory svg { display: block; }
+#hahistory svg .line { fill: none; stroke: #6CC4FF; stroke-width: 4; stroke-linejoin: round; stroke-linecap: round; }
+#hahistory svg .area { fill: rgba(108, 196, 255, 0.14); }
+#hahistory svg .track { fill: rgba(255, 255, 255, 0.08); }
+#hahistory svg .lit { fill: #FFC266; }
+#hahistory svg text { fill: rgba(255, 255, 255, 0.5); font-size: 22px; font-weight: 500; }
 .box .hint { padding: 14px 18px 0; font-size: 22px; font-weight: 500; color: rgba(255, 255, 255, 0.5); }
 .box .hint.warn { color: #FFC266; }
 .box .hint.steps { white-space: pre-line; line-height: 1.4; }

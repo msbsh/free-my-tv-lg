@@ -40,6 +40,9 @@ var Prefs = (function () {
   // The crypto prices' settings, from before they were removed.
   if (v.quotes !== undefined || v.coins !== undefined) { delete v.quotes; delete v.coins; save(); }
   function pick(name, fallback) { return v[name] === undefined ? fallback : v[name]; }
+  // ha_top and ha_panel from a new build win once over the lists picked on the TV, as shelf_apps does.
+  var haConfig = (CONFIG.haTop || []).join(',') + '|' + (CONFIG.haPanel || []).join(',');
+  if ((v.haConfig || '|') !== haConfig) { delete v.haTop; delete v.haPanel; v.haConfig = haConfig; save(); }
   return {
     version: 0,
     language: function () { return pick('language', CONFIG.language || 'auto'); },
@@ -71,6 +74,15 @@ var Prefs = (function () {
       if (off) list.push(key);
       this.set('servicesOff', list);
     },
+    /** Home Assistant's address: typed on the TV, or config.properties' ('' for none). The token is only there. */
+    haUrl: function () { return String(pick('haUrl', CONFIG.haUrl || '')).trim().replace(/\/+$/, ''); },
+    haUrlOnTV: function () { return v.haUrl !== undefined; },
+    /** Home Assistant's values on the screen (Home Settings); off without an address or a token. */
+    haOn: function () { return pick('homeAssistant', true) === true; },
+    homeAssistant: function () { return this.haOn() && !!this.haUrl() && !!CONFIG.haToken; },
+    /** The entity ids at the top (up to 3) and in the drawer's card, in order. */
+    haTop: function () { return pick('haTop', CONFIG.haTop || []).slice(0, 3); },
+    haPanel: function () { return pick('haPanel', CONFIG.haPanel || []); },
     set: function (name, value) { v[name] = value; save(); this.version++; }
   };
 })();

@@ -237,6 +237,12 @@ div#stage
               span.chev
                 "›"
           div.row
+            "Home Assistant"
+            span.value
+              "Not set"
+              span.chev
+                "›"
+          div.row
             "Picks from"
             span.value
               span.chev
@@ -302,6 +308,12 @@ div#stage
       div.hint.steps
         "The key brings the picks: what's trending on your streaming apps, with their photos on the screensaver. Free, and it takes two minutes: 1. Create an account at themoviedb.org. 2. Open Settings → API and request a developer key."
   div#about.layer.sheet
+    div.box
+  div#hahistory.layer.sheet
+    div.box
+  div#hapick.layer.sheet
+    div.box
+  div#haedit.layer.sheet
     div.box
   div#saver.layer
   div#toast

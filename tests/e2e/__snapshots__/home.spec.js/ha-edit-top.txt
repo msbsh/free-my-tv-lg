@@ -1,0 +1,414 @@
+html.- body.-
+div#stage
+  div#sky.layer
+    div.grad.day
+    div.grad.night
+    canvas#bgA
+    canvas#bgB.on
+    div.veil
+    div.lift
+  div#home.layer
+    div#top.layer
+      h1#title
+        "For You"
+      div#tabs
+        button.tab.on
+          "Explore"
+        button.tab
+          "Movies"
+        button.tab
+          "Shows"
+      div#hatop
+        button.value
+          span.sym
+          span.v
+            "12.3°C"
+          div.tip
+            "Outside"
+        button.value.off
+          span.sym
+          span.v
+            "Closed"
+          div.tip
+            "Front door"
+        button.value.last
+          span.sym
+          span.v
+            "21.5°"
+          div.tip
+            "Living room"
+      div#cards
+        div.card.wide
+          div.img
+            div.layer bg="url(\"https://image.tmdb.org/t/p/w342/mp104.jpg\")"
+            div.layer.back bg="url(\"https://image.tmdb.org/t/p/w1280/m104b.jpg\")"
+          div.name
+            "Movie 104 (English)"
+          div.meta
+            "Action · 1h 39m · Disney+"
+        div.card
+          div.img
+            div.layer bg="url(\"https://image.tmdb.org/t/p/w342/tp204.jpg\")"
+            div.layer.back
+          div.name
+            "Show 204 (English)"
+          div.meta
+            "Series · Sci-Fi & Fantasy · 1 season · Netflix"
+        div.card
+          div.img
+            div.layer bg="url(\"https://image.tmdb.org/t/p/w342/mp105.jpg\")"
+            div.layer.back
+          div.name
+            "Movie 105 (English)"
+          div.meta
+            "Action · 1h 40m · Netflix"
+      div#clock
+        span.time
+          "10:02"
+        span.date
+          "Tuesday, October 20"
+    div#platter
+      span.sym.more.back
+      span.sym.more
+    div#tiles
+      div.tile bg="linear-gradient(rgb(10, 10, 10), rgb(0, 0, 0))"
+        div.word
+          "Netflix"
+      div.tile bg="linear-gradient(rgb(28, 28, 30), rgb(9, 9, 10))"
+        div.word
+          "YouTube"
+      div.tile bg="linear-gradient(rgb(42, 168, 255), rgb(10, 104, 212))"
+        div.word
+          "Prime Video"
+      div.tile bg="linear-gradient(rgb(23, 53, 132), rgb(8, 20, 63))"
+        div.word
+          "Disney+"
+      div.tile bg="linear-gradient(rgb(92, 48, 232), rgb(34, 22, 132))"
+        div.word
+          "Max"
+      div.tile bg="linear-gradient(rgb(28, 28, 30), rgb(0, 0, 0))"
+        div.word
+          "Apple TV"
+      div.tile bg="linear-gradient(rgb(255, 138, 31), rgb(255, 45, 90))"
+        div.word
+          "Globoplay"
+      div.tile bg="linear-gradient(rgb(29, 185, 84), rgb(15, 122, 54))"
+        div.word
+          "Spotify"
+  div#drawer.layer
+    div.row-title
+      "Inputs"
+    div.key.glass
+      span.sym
+      div.label
+        "Live TV"
+    div.key.glass
+      span.sym
+      div.label
+        "HDMI 1"
+    div.key.glass.off
+      span.sym
+      div.label
+        "HDMI 2"
+    div.key.glass.off
+      span.sym
+      div.label
+        "HDMI 3"
+    div.key.glass.off
+      span.sym
+      div.label
+        "HDMI 4"
+    div.row-title
+      "Shortcuts"
+    div.key.glass
+      span.sym
+      div.label
+        "All Apps"
+    div.key.glass
+      span.sym
+      div.label
+        "Home Settings"
+    div.key.glass
+      span.sym
+      div.label
+        "TV Settings"
+    div#ha.panel.glass
+      div.head
+        "Home Assistant"
+      div.hv
+        span.sym
+        div.v
+          "48.2%"
+        div.n
+          "Living room humidity"
+      div.hv
+        span.sym
+        div.v
+          "1,235 W"
+        div.n
+          "House power"
+      div.hv
+        span.sym
+        div.v
+          "Open"
+        div.n
+          "Kitchen window"
+      div.hv
+        span.sym
+        div.v
+          "On"
+        div.n
+          "Desk lamp"
+      div.hv.off
+        span.sym
+        div.v
+          "Locked"
+        div.n
+          "Front door lock"
+      div.hv
+        span.sym
+        div.v
+          "40%"
+        div.n
+          "Bedroom blinds"
+    div#weather.panel.glass
+      div.head
+        "Berlin"
+      div.now
+        span.sym
+        span.temp
+          "12°"
+      div.cond
+        "Partly Cloudy"
+      div.range
+        "H:14° L:6°"
+      div.split
+      div.hours
+        div.hour
+          div.t
+            "11 AM"
+          span.sym
+          div.d
+            "11°"
+        div.hour
+          div.t
+            "12 PM"
+          span.sym
+          div.d
+            "12°"
+        div.hour
+          div.t
+            "1 PM"
+          span.sym
+          div.d
+            "13°"
+        div.hour
+          div.t
+            "2 PM"
+          span.sym
+          div.d
+            "14°"
+      div.sun
+        span
+          span.sym
+          "Sunrise 7:35 AM"
+        span
+          span.sym
+          "Sunset 6:12 PM"
+  div#apps.layer.sheet
+    h2
+    div.grid
+  div#settings.layer.sheet
+    div.box
+      div.title
+        span.sym
+        "Home Settings"
+      div.list
+        div.rows
+          div.row
+            "Language"
+            span.value
+              "Automatic"
+              span.chev
+                "›"
+          div.row
+            "Temperature"
+            span.value
+              span.chev
+                "‹"
+              "Automatic"
+              span.chev
+                "›"
+          div.row
+            "Theme"
+            span.value
+              span.chev
+                "‹"
+              "Automatic"
+              span.chev
+                "›"
+          div.row
+            "Picks per tab"
+            span.value
+              span.chev
+                "‹"
+              "3"
+              span.chev
+                "›"
+          div.row
+            "Watch from the screensaver"
+            div.toggle
+          div.row
+            "Weather widget"
+            div.toggle.on
+          div.row
+            "City"
+            span.value
+              "Berlin"
+              span.chev
+                "›"
+          div.row
+            "Forecast"
+            span.value
+              span.chev
+                "‹"
+              "Next hours"
+              span.chev
+                "›"
+          div.row
+            "TMDB key"
+            span.value
+              "•••• cdef"
+              span.chev
+                "›"
+          div.row
+            "Home Assistant"
+            span.value
+              "Connected"
+              span.chev
+                "›"
+          div.row
+            "Picks from"
+            span.value
+              span.chev
+                "‹"
+              "All"
+              span.chev
+                "›"
+          div.row
+            "Netflix"
+            div.toggle.on
+          div.row
+            "Prime Video"
+            div.toggle.on
+          div.row
+            "Disney+"
+            div.toggle.on
+          div.row
+            "Globoplay"
+            div.toggle.on
+          div.row
+            "Max"
+            div.toggle.on
+          div.row
+            "Apple TV"
+            div.toggle.on
+          div.row
+            "Crunchyroll"
+            div.toggle.on
+          div.row
+            "Shelf"
+            span.value
+              "›"
+          div.row
+            "About this TV"
+            span.value
+              "›"
+          div.row
+            "TV Settings"
+            span.value
+              "›"
+      div.hint
+        "OK or the arrows change the value."
+  div#shelfedit.layer.sheet
+    div.box
+  div#langpick.layer.sheet
+    div.box
+  div#citypick.layer.sheet
+    div.box
+  div#keypick.layer.sheet
+    div.box
+  div#about.layer.sheet
+    div.box
+  div#hahistory.layer.sheet
+    div.box
+  div#hapick.layer.sheet
+    div.box
+      div.title
+        span.sym
+        "Home Assistant"
+      div.list
+        div.rows
+          div.row.field
+            input aria-label="Address" autocapitalize="none" placeholder="http://homeassistant.local:8123" type="text" value="http://ha.test:8123"
+          div.row
+            "Save"
+            span.value
+              span.sym
+          div.row
+            "Show on the home screen"
+            div.toggle.on
+          div.row
+            "At the top"
+            span.value
+              "3"
+              span.chev
+                "›"
+          div.row
+            "In the drawer"
+            span.value
+              "7"
+              span.chev
+                "›"
+      div.hint
+        "Connected"
+  div#haedit.layer.sheet.open
+    div.box
+      div.title
+        span.sym
+        "At the top"
+      div.list
+        div.rows
+          div.row.focus
+            "Outside"
+            span.value
+              "#1"
+              span.sym
+          div.row
+            "Front door"
+            span.value
+              "#2"
+              span.sym
+          div.row
+            "Living room"
+            span.value
+              "#3"
+              span.sym
+          div.row
+            "Bedroom blinds"
+          div.row
+            "Desk lamp"
+          div.row
+            "Front door lock"
+          div.row
+            "Garage temperature"
+          div.row
+            "House power"
+          div.row
+            "Kitchen window"
+          div.row
+            "Living room humidity"
+      div.hint
+        "OK adds or removes a value. ← → change the order."
+  div#saver.layer
+  div#toast

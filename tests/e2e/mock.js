@@ -1,5 +1,6 @@
-// What the tests put around the home screen: the internet (TMDB, Open-Meteo), a fixed clock, and for the
-// webOS runs a fake TV (Luna's PalmServiceBridge, PalmSystem, the remote control API's WebSocket).
+// What the tests put around the home screen: the internet (TMDB, Open-Meteo), a fixed clock, a Home Assistant (its
+// WebSocket API), and for the webOS runs a fake TV (Luna's PalmServiceBridge, PalmSystem, the remote control API's
+// WebSocket).
 const path = require('path');
 const zlib = require('zlib');
 const {expect} = require('@playwright/test');
@@ -247,13 +248,100 @@ function fakeWebOS(tv) {
   };
 }
 
+// MARK: - Home Assistant
+
+const HA_URL = 'http://ha.test:8123';
+const DAY_S = Date.parse(DAY) / 1000;
+
+/** What a Home Assistant has (get_states), the same every run. */
+const HA_STATES = [
+  ['sensor.outside_temperature', '12.34', {friendly_name: 'Outside', unit_of_measurement: '°C', device_class: 'temperature'}],
+  ['sensor.living_room_humidity', '48.2', {friendly_name: 'Living room humidity', unit_of_measurement: '%', device_class: 'humidity'}],
+  ['sensor.house_power', '1234.5', {friendly_name: 'House power', unit_of_measurement: 'W', device_class: 'power'}],
+  ['binary_sensor.front_door', 'off', {friendly_name: 'Front door', device_class: 'door'}],
+  ['binary_sensor.kitchen_window', 'on', {friendly_name: 'Kitchen window', device_class: 'window'}],
+  ['climate.living_room', 'heat', {friendly_name: 'Living room', current_temperature: 21.53, temperature: 22}],
+  ['light.desk', 'on', {friendly_name: 'Desk lamp'}],
+  ['lock.front_door', 'locked', {friendly_name: 'Front door lock'}],
+  ['cover.bedroom_blinds', 'open', {friendly_name: 'Bedroom blinds', current_position: 40}],
+  ['sensor.garage_temperature', 'unavailable', {friendly_name: 'Garage temperature', unit_of_measurement: '°C'}],
+  ['media_player.tv', 'playing', {friendly_name: 'TV'}],
+].map(([id, s, a], i) => ({entity_id: id, state: s, attributes: a, last_changed: new Date((DAY_S - 600 * (i + 1)) * 1000).toISOString()}));
+
+/** Their last 24 hours (history/history_during_period, minimal_response): the outside temperature and the front door. */
+const HA_HISTORY = {
+  'sensor.outside_temperature': [9.1, 8.4, 7.2, 6.8, 7.5, 9.9, 11.2, 12.34].map((v, i) => ({s: String(v), lu: DAY_S - 86400 + i * 3 * 3600})),
+  'binary_sensor.front_door': ['off', 'on', 'off', 'on', 'off'].map((v, i) => ({s: v, lu: DAY_S - 86400 + [0, 30000, 31000, 60000, 60600][i]})),
+};
+
+/** config.properties for these tests: Home Assistant at HA_URL, with a token it takes. */
+const HA_CONFIG = {
+  haUrl: HA_URL, haToken: 'test-token',
+  haTop: ['sensor.outside_temperature', 'binary_sensor.front_door', 'climate.living_room'],
+  haPanel: ['sensor.living_room_humidity', 'sensor.house_power', 'binary_sensor.kitchen_window', 'light.desk',
+    'lock.front_door', 'cover.bedroom_blinds', 'sensor.garage_temperature'],
+};
+
+/**
+ * Runs in the page before its scripts: a Home Assistant at ws://ha.test:8123 (its WebSocket API), and nothing at other
+ * .test addresses. Other WebSockets go on to the one there was. ha.token: the token it takes; ha.reachable: false for none at that address.
+ * window.__ha: what the page sent (the token only as whether it was the right one); window.__haChange(id, state,
+ * attributes) changes a state, as subscribe_entities tells it.
+ */
+function fakeHA(ha) {
+  window.__ha = [];
+  var Before = window.WebSocket, later = function (fn) { Promise.resolve().then(fn); };
+  var byId = {};
+  ha.states.forEach(function (x) { byId[x.entity_id] = x; });
+  function compressed(x) { var t = Date.parse(x.last_changed) / 1000; return {s: x.state, a: x.attributes, c: 'ctx', lc: t, lu: t}; }
+  var live = null;
+  window.WebSocket = function (url) {
+    if (!/^wss?:\/\/[^\/]+\.test[:\/]/.test(url)) return new Before(url);
+    var ws = this, open = true, sub = 0, there = url.indexOf('ws://ha.test:8123/') === 0;
+    window.__ha.push({open: url});
+    function reply(m) { later(function () { if (open && ws.onmessage) ws.onmessage({data: JSON.stringify(m)}); }); }
+    function drop(code) { later(function () { if (!open) return; open = false; if (live === ws) live = null; if (ws.onclose) ws.onclose({code: code}); }); }
+    ws.close = function () { window.__ha.push({close: true}); drop(1000); };
+    ws.send = function (text) {
+      var m = JSON.parse(text);
+      window.__ha.push({send: m.type === 'auth' ? {type: 'auth', right: m.access_token === ha.token} : m});
+      if (m.type === 'auth') {
+        if (m.access_token === ha.token) { live = ws; reply({type: 'auth_ok', ha_version: '2026.10.0'}); }
+        else { reply({type: 'auth_invalid', message: 'Invalid access token or password'}); drop(1000); }
+      } else if (m.type === 'ping') {
+        reply({id: m.id, type: 'pong'});
+      } else if (m.type === 'subscribe_entities') {
+        sub = m.id;
+        reply({id: m.id, type: 'result', success: true, result: null});
+        var a = {};
+        m.entity_ids.forEach(function (id) { if (byId[id]) a[id] = compressed(byId[id]); });
+        reply({id: m.id, type: 'event', event: {a: a}});
+      } else if (m.type === 'get_states') {
+        reply({id: m.id, type: 'result', success: true, result: ha.states});
+      } else if (m.type === 'history/history_during_period') {
+        var out = {};
+        m.entity_ids.forEach(function (id) { if (ha.history[id]) out[id] = ha.history[id]; });
+        reply({id: m.id, type: 'result', success: true, result: out});
+      } else {
+        reply({id: m.id, type: 'result', success: true, result: null});
+      }
+    };
+    ws.__change = function (id, state, attributes) {
+      if (sub) reply({id: sub, type: 'event', event: {c: {[id]: {'+': {s: state, a: attributes || {}, lc: Date.now() / 1000}}}}});
+    };
+    if (ha.reachable === false || !there) drop(1006);   // nothing at another .test address
+    else reply({type: 'auth_required', ha_version: '2026.10.0'});
+  };
+  window.__haChange = function (id, state, attributes) { if (live) live.__change(id, state, attributes); };
+}
+
 // MARK: - Opening the home screen
 
 /**
  * Opens the home screen at `at` (DAY or NIGHT) with these settings (Home Settings' fmtv.prefs), on a webOS TV when
  * `tv` is given, else in the browser stand-in. Fails the test on a script error or a request the fixtures don't know.
  */
-async function open(page, {at = DAY, prefs = null, tv = null, storage = {}} = {}) {
+async function open(page, {at = DAY, prefs = null, tv = null, storage = {}, config = null, ha = null} = {}) {
   const errors = [];
   page.on('pageerror', (e) => errors.push(String(e)));
   page.on('console', (m) => { if (m.type() === 'error' && !/Failed to load resource/.test(m.text())) errors.push(m.text()); });
@@ -278,6 +366,14 @@ async function open(page, {at = DAY, prefs = null, tv = null, storage = {}} = {}
       Object.keys(s).forEach((k) => localStorage.setItem(k, s[k]));
     }, start);
   }
+  if (config) {
+    // config.js sets window.CONFIG: these values go over the test build's.
+    await page.addInitScript((extra) => {
+      let c;
+      Object.defineProperty(window, 'CONFIG', {configurable: true, get: () => c, set: (v) => { c = Object.assign({}, v, extra); }});
+    }, config);
+  }
+  if (ha) await page.addInitScript(fakeHA, Object.assign({token: 'test-token', reachable: true, states: HA_STATES, history: HA_HISTORY}, ha));
   const net = await internet(page);
   await page.goto(APP);
   await settle(page, net);
@@ -350,7 +446,7 @@ async function storage(page) {
     const out = {};
     for (let i = 0; i < localStorage.length; i++) {
       const k = localStorage.key(i);
-      if (/^fmtv\.(prefs|ssapKey|ssapRefused|night)$/.test(k)) out[k] = localStorage.getItem(k);
+      if (/^fmtv\.(prefs|ssapKey|ssapRefused|night|ha)$/.test(k)) out[k] = localStorage.getItem(k);
     }
     return JSON.stringify(out, Object.keys(out).sort(), 1) + '\n';
   });
@@ -379,4 +475,4 @@ async function moveTo(page, net, selector, text, horizontal) {
   for (let i = 0; i < Math.abs(n); i++) await press(page, net, key);
 }
 
-module.exports = {DAY, NIGHT, LAUNCH_POINTS, open, settle, press, dom, storage, requests, screenshot, moveTo};
+module.exports = {DAY, NIGHT, LAUNCH_POINTS, HA_CONFIG, HA_STATES, open, settle, press, dom, storage, requests, screenshot, moveTo};

@@ -237,6 +237,12 @@ div#stage
               span.chev
                 "›"
           div.row
+            "Home Assistant"
+            span.value
+              "Not set"
+              span.chev
+                "›"
+          div.row
             "Picks from"
             span.value
               span.chev
@@ -325,5 +331,11 @@ div#stage
               "preview"
       div.hint
         "Back closes."
+  div#hahistory.layer.sheet
+    div.box
+  div#hapick.layer.sheet
+    div.box
+  div#haedit.layer.sheet
+    div.box
   div#saver.layer
   div#toast

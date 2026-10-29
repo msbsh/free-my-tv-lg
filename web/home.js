@@ -342,11 +342,13 @@
 
   // MARK: - Focus
 
-  var Z = {TOP: 'top', CARDS: 'cards', SHELF: 'shelf', DRAWER: 'drawer', APPS: 'apps', SETTINGS: 'settings', EDIT: 'edit', LANG: 'lang', CITY: 'city', KEY: 'key', ABOUT: 'about'};
-  var st = {zone: Z.SHELF, top: 0, tab: 0, card: 0, shelf: 0, drawer: 0, grid: 0, row: 0, edit: 0, lang: 0, city: 0, key: 0};
+  var Z = {TOP: 'top', CARDS: 'cards', SHELF: 'shelf', DRAWER: 'drawer', APPS: 'apps', SETTINGS: 'settings', EDIT: 'edit', LANG: 'lang', CITY: 'city', KEY: 'key', ABOUT: 'about',
+    HIST: 'hist', HA: 'ha', HAEDIT: 'haedit'};
+  var SHEETS = [Z.APPS, Z.SETTINGS, Z.EDIT, Z.LANG, Z.CITY, Z.KEY, Z.ABOUT, Z.HIST, Z.HA, Z.HAEDIT];
+  var st = {zone: Z.SHELF, top: 0, tab: 0, card: 0, shelf: 0, drawer: 0, grid: 0, row: 0, edit: 0, lang: 0, city: 0, key: 0, ha: 0, haedit: 0};
   var cards = [];
 
-  function sheetOpen() { return st.zone === Z.APPS || st.zone === Z.SETTINGS || st.zone === Z.EDIT || st.zone === Z.LANG || st.zone === Z.CITY || st.zone === Z.KEY || st.zone === Z.ABOUT; }
+  function sheetOpen() { return SHEETS.indexOf(st.zone) >= 0; }
 
   function updateFocus() {
     var i, list;
@@ -375,6 +377,8 @@
     if (langHint) langHint.textContent = (st.lang + 1) + ' / ' + languageChoices().length + '  ·  ' + tr('OK picks, Back cancels.');
     focusRows($('citypick'), st.city, st.zone === Z.CITY);
     focusRows($('keypick'), st.key, st.zone === Z.KEY);
+    focusRows($('hapick'), st.ha, st.zone === Z.HA);
+    focusRows($('haedit'), st.haedit, st.zone === Z.HAEDIT);
     setClass(body, 'drawer-open', st.zone === Z.DRAWER);
   }
 
@@ -419,6 +423,25 @@
     for (var i = 0; i < 3; i++) {
       var t = el('button', 'tab', tabs, names[i]);
       hover(t, Z.TOP, i);
+    }
+    renderHaTop();
+  }
+
+  /** Home Assistant's values at the top right (Home Settings → Home Assistant → At the top); OK shows their day. */
+  function renderHaTop() {
+    var holder = $('hatop'), ids = HA.status === 'off' ? [] : Prefs.haTop();
+    holder.innerHTML = '';
+    setClass(holder, 'stale', HA.status === 'offline' || HA.status === 'rejected');
+    for (var i = 0; i < ids.length; i++) {
+      var v = HA.view(ids[i]), b = el('button', 'value' + (v.on === false || v.missing ? ' off' : '') + (i === ids.length - 1 ? ' last' : ''), holder);
+      sym(v.symbol, b);
+      el('span', 'v', b, v.value);
+      el('div', 'tip', b, v.name);
+      hover(b, Z.TOP, 3 + i);
+    }
+    if (st.zone === Z.TOP && st.top > topLast()) {
+      if (topEmpty()) st.zone = Z.SHELF;
+      else st.top = topLast();
     }
   }
 
@@ -615,17 +638,52 @@
     updateFocus();
   }
 
-  /** The weather card, above the inputs and shortcuts; without it (Home Settings), the keys take its place. */
+  var HA_COLUMN = 236, WEATHER_LEAST = 780;
+
+  /**
+   * The weather card and Home Assistant's, above the inputs and shortcuts: Home Assistant's as wide as its values need
+   * (two rows), the weather the rest. Without both (Home Settings), the keys take their place.
+   */
   function renderPanels() {
-    var d = $('drawer'), old = d.querySelector('.panel'), wx = Prefs.weather();
-    if (old) d.removeChild(old);
-    setClass(d, 'bare', !wx);
+    var d = $('drawer'), old = d.querySelectorAll('.panel'), wx = Prefs.weather();
+    for (var o = 0; o < old.length; o++) d.removeChild(old[o]);
+    var ids = HA.status === 'off' ? [] : Prefs.haPanel();
+    setClass(d, 'bare', !wx && !ids.length);
+    var haWidth = 0;
+    if (ids.length) {
+      var most = Math.floor(((wx ? 1760 - 16 - WEATHER_LEAST : 1760) - 68) / HA_COLUMN);
+      var columns = Math.min(most, Math.ceil(ids.length / 2));
+      haWidth = wx ? 68 + columns * HA_COLUMN : 1760;
+      var h = el('div', 'panel glass', d);
+      h.id = 'ha';
+      h.style.left = (1840 - haWidth) + 'px';
+      h.style.width = haWidth + 'px';
+      renderHaPanel(h, ids.slice(0, (wx ? columns : most) * 2), wx ? HA_COLUMN : (1760 - 68) / most);
+    }
     if (!wx) return;
     var w = el('div', 'panel glass', d);
     w.id = 'weather';
     w.style.left = '80px';
-    w.style.width = '1760px';
+    w.style.width = (haWidth ? 1760 - 16 - haWidth : 1760) + 'px';
     renderWeather(w);
+  }
+
+  function renderHaPanel(card, ids, column) {
+    el('div', 'head', card, 'Home Assistant');
+    var status = HA.status;
+    setClass(card, 'stale', status === 'offline' || status === 'rejected');
+    if (status === 'rejected') el('div', 'side', card, tr('ha|Token rejected'));
+    else if (status === 'offline' && HA.at) el('div', 'side', card, trf('ha|As of {time}', {time: Data.time(HA.at)}));
+    for (var i = 0; i < ids.length; i++) {
+      var v = HA.view(ids[i]), c = el('div', 'hv' + (v.on === false || v.missing ? ' off' : ''), card);
+      c.style.left = (34 + Math.floor(i / 2) * column) + 'px';
+      c.style.top = (88 + (i % 2) * 104) + 'px';
+      c.style.width = (column - 24) + 'px';
+      sym(v.symbol, c);
+      var value = el('div', 'v', c, v.value);
+      if (v.note) el('span', 'note', value, v.note);
+      el('div', 'n', c, v.name);
+    }
   }
 
   function renderWeather(card) {
@@ -642,8 +700,9 @@
     el('div', 'range', card, trf('H:{max}', {max: Data.degrees(w.max)}) + '   ' + trf('L:{min}', {min: Data.degrees(w.min)}));
     el('div', 'split', card);
     // Home Settings → Forecast: the next 6 hours or the next 5 days (the hours until a forecast has days).
-    var days = Prefs.forecast() === 'days' && w.days && w.days.length > 0, list = days ? w.days : w.hours, n = days ? 5 : 6;
-    var hours = el('div', 'hours', card), width = parseFloat(card.style.width) - 30 - 422, hw = width / n;
+    var days = Prefs.forecast() === 'days' && w.days && w.days.length > 0, list = days ? w.days : w.hours;
+    var hours = el('div', 'hours', card), width = parseFloat(card.style.width) - 30 - 422;
+    var n = Math.max(2, Math.min(days ? 5 : 6, Math.floor(width / 110))), hw = width / n;   // fewer next to Home Assistant
     for (var i = 0; list && i < list.length && i < n; i++) {
       var h = el('div', 'hour', hours), x = list[i];
       h.style.left = (hw * i) + 'px';
@@ -705,8 +764,12 @@
     setClass($('shelfedit'), 'open', false);
     setClass($('langpick'), 'open', false);
     setClass($('about'), 'open', false);
+    setClass($('hahistory'), 'open', false);
+    setClass($('haedit'), 'open', false);
     closeField('citypick');
     closeField('keypick');
+    closeField('hapick');
+    setClass($('hapick'), 'open', false);
     setClass($('citypick'), 'open', false);
     setClass($('keypick'), 'open', false);
     langHint = null;
@@ -739,6 +802,7 @@
     ];
     rows.push({label: tr('TMDB key'), value: Prefs.tmdbKey().length >= 4 ? '•••• ' + Prefs.tmdbKey().slice(-4) : tr('Not set'), opens: true, tmdb: true,
       step: function (d) { if (d >= 0) openKey(); }});
+    rows.push({label: 'Home Assistant', value: haSummary(), opens: true, ha: true, step: function (d) { if (d >= 0) openHa(); }});
     var sv = Data.services();
     if (sv.length) {
       var someOff = false;   // only the services this TV has count
@@ -1193,6 +1257,279 @@
     renderShelfEdit();
   }
 
+  // MARK: - Home Assistant: a value's last 24 hours (OK on one at the top)
+
+  var histId = '', histSeq = 0;
+
+  function openHistory(id) {
+    histId = id;
+    st.zone = Z.HIST;
+    renderHistory(null);
+    setClass($('hahistory'), 'open', true);
+    updateFocus();
+    var mine = ++histSeq;
+    HA.history(id, function (err, points) {
+      if (mine === histSeq && st.zone === Z.HIST) renderHistory(err ? false : points);
+    });
+  }
+
+  function closeHistory() {
+    histSeq++;
+    setClass($('hahistory'), 'open', false);
+    st.zone = Z.TOP;
+    updateFocus();
+  }
+
+  /** points: null while they load, false when they couldn't, else HA.history's. */
+  function renderHistory(points) {
+    var box = $('hahistory').firstChild, v = HA.view(histId);
+    box.innerHTML = '';
+    var title = el('div', 'title', box);
+    sym(v.symbol, title);
+    title.appendChild(document.createTextNode(v.name));
+    var now = el('div', 'now', box, v.value);
+    if (v.note) el('span', 'note', now, v.note);
+    var chart = el('div', 'chart', box);
+    if (points === null) el('div', 'empty', chart, tr('ha|Loading…'));
+    else if (!points || !points.length) el('div', 'empty', chart, tr('ha|No history for this one.'));
+    else drawHistory(chart, points);
+    el('div', 'hint', box, tr('ha|Last 24 hours') + '  ·  ' + tr('Back closes.'));
+  }
+
+  var SVG = 'http://www.w3.org/2000/svg', CHART_W = 1280, CHART_H = 300;
+
+  function svgEl(tag, attrs, parent) {
+    var e = document.createElementNS(SVG, tag);
+    for (var k in attrs) if (attrs.hasOwnProperty(k)) e.setAttribute(k, attrs[k]);
+    if (parent) parent.appendChild(e);
+    return e;
+  }
+
+  /** Numbers as a line (the low and the high beside it), states that are on or off as a bar lit where they were on. */
+  function drawHistory(chart, points) {
+    var end = Date.now(), start = end - 864e5, svg = svgEl('svg', {width: CHART_W, height: CHART_H + 40}, chart);
+    function x(t) { return Math.round((t - start) / 864e5 * CHART_W); }
+    var numbers = points.filter(function (p) { return p.v !== null; });
+    if (numbers.length) {
+      var lo = Math.min.apply(null, numbers.map(function (p) { return p.v; }));
+      var hi = Math.max.apply(null, numbers.map(function (p) { return p.v; }));
+      var pad = (hi - lo) * 0.12 || 1;
+      var y = function (v) { return Math.round(CHART_H - 20 - (v - lo + pad) / (hi - lo + 2 * pad) * (CHART_H - 40)); };
+      var line = '';
+      for (var i = 0; i < numbers.length; i++) line += (i ? ' L' : 'M') + x(numbers[i].t) + ' ' + y(numbers[i].v);
+      line += ' L' + CHART_W + ' ' + y(numbers[numbers.length - 1].v);
+      svgEl('path', {'class': 'area', d: line + ' L' + CHART_W + ' ' + CHART_H + ' L' + x(numbers[0].t) + ' ' + CHART_H + ' Z'}, svg);
+      svgEl('path', {'class': 'line', d: line}, svg);
+      var range = el('div', 'range', chart);
+      range.textContent = trf('H:{max}', {max: HA.amountOf(histId, hi)}) + '   ' + trf('L:{min}', {min: HA.amountOf(histId, lo)});
+    } else {
+      svgEl('rect', {'class': 'track', x: 0, y: CHART_H / 2 - 40, width: CHART_W, height: 80, rx: 16}, svg);
+      for (var j = 0; j < points.length; j++) {
+        if (!HA.isOn(histId, points[j].s)) continue;
+        var from = x(points[j].t), to = j + 1 < points.length ? x(points[j + 1].t) : CHART_W;
+        svgEl('rect', {'class': 'lit', x: from, y: CHART_H / 2 - 40, width: Math.max(4, to - from), height: 80, rx: 8}, svg);
+      }
+    }
+    for (var h = 0; h <= 4; h++) {   // the hours under it: 24 hours ago, every 6 hours, now
+      var t = start + h * 6 * 3600000;
+      svgEl('text', {x: Math.min(CHART_W - 2, Math.max(2, x(t))), y: CHART_H + 34, 'text-anchor': h === 0 ? 'start' : h === 4 ? 'end' : 'middle'}, svg).textContent = Data.hour(t);
+    }
+  }
+
+  // MARK: - Home Assistant in Home Settings: the address (the token is only in config.properties), on or off, the values
+
+  var haStatus = '', haWarn = false, haTimer = 0, haSeq = 0;
+
+  function haSummary() {
+    if (!Prefs.haOn()) return tr('ha|Off');
+    if (!Prefs.haUrl() || !HA.hasToken()) return tr('Not set');
+    var s = HA.status;
+    return s === 'live' ? tr('ha|Connected') : s === 'rejected' ? tr('ha|Token rejected') : s === 'offline' ? tr("ha|Can't reach it") : tr('ha|Connecting…');
+  }
+
+  /** The address, Save, on or off, At the top, In the drawer. */
+  function haRows() { return 5; }
+
+  function renderHa() {
+    var box = $('hapick').firstChild, old = fieldOf('hapick'), typed = old ? old.value : Prefs.haUrl(), inField = typingIn('hapick');
+    box.innerHTML = '';
+    var title = el('div', 'title', box);
+    sym('home', title);
+    title.appendChild(document.createTextNode('Home Assistant'));
+    var list = el('div', 'list', box), holder = el('div', 'rows', list);
+    list.style.height = haRows() * 78 + 'px';
+    var field = textField(holder, Z.HA, typed, 'http://homeassistant.local:8123', tr('ha|Address'));
+    field.setAttribute('autocapitalize', 'none');
+    field.setAttribute('autocorrect', 'off');
+    var save = el('div', 'row', holder, tr('Save'));
+    sym('chevron_right', el('span', 'value', save));
+    hover(save, Z.HA, 1);
+    var show = el('div', 'row', holder, tr('ha|Show on the home screen'));
+    setClass(el('div', 'toggle', show), 'on', Prefs.haOn());
+    hover(show, Z.HA, 2);
+    var lists = [[tr('ha|At the top'), Prefs.haTop().length], [tr('ha|In the drawer'), Prefs.haPanel().length]];
+    for (var i = 0; i < 2; i++) {
+      var row = el('div', 'row', holder, lists[i][0]), v = el('span', 'value', row);
+      v.appendChild(document.createTextNode(String(lists[i][1])));
+      el('span', 'chev', v, '›');
+      hover(row, Z.HA, 3 + i);
+    }
+    var line = haStatus, warn = haWarn;
+    if (!line) {
+      if (!HA.hasToken()) { line = tr('ha|The token goes in config.properties (ha_token), then install again.'); warn = true; }
+      else if (Prefs.haUrl() && Prefs.haOn()) { line = haSummary(); warn = HA.status === 'rejected' || HA.status === 'offline'; }
+    }
+    if (line) setClass(el('div', 'hint', box, line), 'warn', warn);
+    if (inField) openField('hapick');
+    updateFocus();
+  }
+
+  function openHa() {
+    setClass($('settings'), 'open', false);
+    st.zone = Z.HA;
+    st.ha = 0;
+    haStatus = '';
+    $('hapick').firstChild.innerHTML = '';
+    renderHa();
+    setClass($('hapick'), 'open', true);
+  }
+
+  function setHaStatus(text, warn) {
+    haStatus = text;
+    haWarn = !!warn;
+    clearTimeout(haTimer);
+    if (text && text !== tr('ha|Checking…')) haTimer = setTimeout(function () {
+      haStatus = '';
+      if (st.zone === Z.HA && !typingIn('hapick')) renderHa();
+    }, 6000);
+    if (st.zone === Z.HA) renderHa();
+  }
+
+  /** "homeassistant.local:8123/" → "http://homeassistant.local:8123"; '' when it isn't an address. */
+  function cleanUrl(typed) {
+    var url = typed.replace(/\s+/g, '').replace(/\/+$/, '');
+    if (url && !/^https?:\/\//i.test(url)) url = 'http://' + url;
+    return /^https?:\/\/[^\/?#]+(\/[^?#]*)?$/i.test(url) ? url : '';
+  }
+
+  function saveHaUrl() {
+    var f = fieldOf('hapick'), typed = f ? f.value : '', url = cleanUrl(typed);
+    closeField('hapick');
+    if (!typed.replace(/\s+/g, '')) { Prefs.set('haUrl', undefined); HA.restart(); setHaStatus(''); return; }   // config.properties' again
+    if (haStatus === tr('ha|Checking…')) return;
+    if (!url) { setHaStatus(tr("ha|That doesn't look like an address."), true); return; }
+    if (f) f.value = url;
+    if (!HA.hasToken()) { Prefs.set('haUrl', url); HA.restart(); setHaStatus(''); return; }
+    setHaStatus(tr('ha|Checking…'));
+    var mine = ++haSeq;
+    HA.check(url, function (result) {
+      if (mine !== haSeq || st.zone !== Z.HA) return;
+      if (result === 'unreachable') { setHaStatus(tr("ha|Can't reach Home Assistant at that address."), true); return; }
+      Prefs.set('haUrl', url);
+      HA.restart();
+      setHaStatus(result === 'rejected' ? tr('ha|Token rejected') : tr('ha|Saved.'), result === 'rejected');
+    });
+  }
+
+  function closeHa() {
+    closeField('hapick');
+    setClass($('hapick'), 'open', false);
+    haSeq++;
+    clearTimeout(haTimer);
+    haStatus = '';
+    var f = fieldOf('hapick');
+    if (f) f.value = '';
+    $('hapick').firstChild.innerHTML = '';
+    openSettings();
+    for (var i = 0; i < rowsNow.length; i++) if (rowsNow[i].ha) st.row = i;
+    updateFocus();
+  }
+
+  function activateHa() {
+    if (st.ha === 0) openField('hapick');
+    else if (st.ha === 1) saveHaUrl();
+    else if (st.ha === 2) { Prefs.set('homeAssistant', !Prefs.haOn()); HA.restart(); renderHa(); }
+    else openHaEdit(st.ha === 3 ? 'top' : 'panel');
+  }
+
+  // MARK: - Home Assistant's values: which, in what order (as the shelf editor)
+
+  var haFor = 'top', haList = null, haNote = '';   // haList: null while it loads, false when it couldn't
+
+  function haChosen() { return haFor === 'top' ? Prefs.haTop() : Prefs.haPanel(); }
+
+  /** The values chosen, in their order, then the others Home Assistant has, by name. */
+  function haEditRows() {
+    var ids = haChosen(), rows = ids.map(function (id) { return {id: id, name: HA.view(id).name}; });
+    if (haList) for (var i = 0; i < haList.length; i++) if (ids.indexOf(haList[i].id) < 0) rows.push(haList[i]);
+    return {ids: ids, rows: rows};
+  }
+
+  function renderHaEdit() {
+    var box = $('haedit').firstChild, e = haEditRows();
+    box.innerHTML = '';
+    var title = el('div', 'title', box);
+    sym('home', title);
+    title.appendChild(document.createTextNode(haFor === 'top' ? tr('ha|At the top') : tr('ha|In the drawer')));
+    var list = el('div', 'list', box), holder = el('div', 'rows', list);
+    list.style.height = Math.max(1, Math.min(e.rows.length, 7)) * 78 + 'px';
+    for (var i = 0; i < e.rows.length; i++) {
+      var r = e.rows[i], at = e.ids.indexOf(r.id), row = el('div', 'row', holder, r.name);
+      if (at >= 0) sym('check', el('span', 'value', row, '#' + (at + 1))).style.marginLeft = '16px';   // not "Off": a lamp's state
+      hover(row, Z.HAEDIT, i);
+    }
+    var hint = haNote || (haList === null ? tr('ha|Loading…') : haList === false ? tr("ha|Can't reach it")
+      : tr('ha|OK adds or removes a value. ← → change the order.'));
+    setClass(el('div', 'hint', box, hint), 'warn', !!haNote || haList === false);
+    updateFocus();
+  }
+
+  function openHaEdit(which) {
+    setClass($('hapick'), 'open', false);
+    closeField('hapick');
+    haFor = which;
+    haList = null;
+    haNote = '';
+    st.zone = Z.HAEDIT;
+    st.haedit = 0;
+    renderHaEdit();
+    setClass($('haedit'), 'open', true);
+    HA.entities(function (err, list) {
+      haList = err ? false : list;
+      if (st.zone === Z.HAEDIT) renderHaEdit();
+    });
+  }
+
+  function closeHaEdit() {
+    setClass($('haedit'), 'open', false);
+    var which = haFor;
+    openHa();
+    st.ha = which === 'top' ? 3 : 4;
+    updateFocus();
+  }
+
+  function editHa(dx) {
+    var e = haEditRows(), r = e.rows[st.haedit];
+    if (!r) return;
+    var ids = e.ids.slice(), at = ids.indexOf(r.id);
+    haNote = '';
+    if (dx === 0) {
+      if (at >= 0) ids.splice(at, 1);
+      else if (haFor === 'top' && ids.length >= 3) haNote = tr('ha|Up to 3 at the top.');
+      else ids.push(r.id);
+    } else {
+      if (at < 0) return;
+      var to = Math.max(0, Math.min(ids.length - 1, at + dx));
+      ids.splice(at, 1);
+      ids.splice(to, 0, r.id);
+    }
+    Prefs.set(haFor === 'top' ? 'haTop' : 'haPanel', ids);
+    HA.listsChanged();
+    var again = haEditRows();
+    for (var i = 0; i < again.rows.length; i++) if (again.rows[i].id === r.id) st.haedit = i;
+    renderHaEdit();
+  }
+
   // MARK: - Opening things
 
   function launcher(id, name) {
@@ -1212,6 +1549,7 @@
   function activate() {
     switch (st.zone) {
       case Z.TOP:
+        if (st.top >= 3 && Prefs.haTop()[st.top - 3]) openHistory(Prefs.haTop()[st.top - 3]);
         return;
       case Z.CARDS:
         var p = cards[st.card], app = p && Data.appFor(p.app);
@@ -1243,6 +1581,15 @@
         return;
       case Z.ABOUT:
         closeAbout();
+        return;
+      case Z.HIST:
+        closeHistory();
+        return;
+      case Z.HA:
+        activateHa();
+        return;
+      case Z.HAEDIT:
+        editHa(0);
         return;
     }
   }
@@ -1306,6 +1653,14 @@
       case Z.KEY:
         if (dy) st.key = Math.max(0, Math.min(keyRows() - 1, st.key + dy));
         break;
+      case Z.HA:
+        if (dy) st.ha = Math.max(0, Math.min(haRows() - 1, st.ha + dy));
+        else if (dx && st.ha === 2) activateHa();
+        break;
+      case Z.HAEDIT:
+        if (dy) st.haedit = Math.max(0, Math.min(haEditRows().rows.length - 1, st.haedit + dy));
+        else if (dx) editHa(dx);
+        break;
     }
     updateFocus();
   }
@@ -1322,6 +1677,9 @@
     if (st.zone === Z.CITY) { closeCities(false); return; }
     if (st.zone === Z.KEY) { if (keyAsking) askRemoveKey(false); else closeKey(); return; }
     if (st.zone === Z.ABOUT) { closeAbout(); return; }
+    if (st.zone === Z.HIST) { closeHistory(); return; }
+    if (st.zone === Z.HA) { closeHa(); return; }
+    if (st.zone === Z.HAEDIT) { closeHaEdit(); return; }
     if (sheetOpen()) { closeSheets(); return; }
     if (st.zone === Z.DRAWER) { closeDrawer(); return; }
     if (st.zone !== Z.SHELF && shelf.length) { st.zone = Z.SHELF; updateFocus(); return; }
@@ -1331,7 +1689,7 @@
   /** The pointer focuses what it's over (the Magic Remote, or a mouse when previewing). */
   function hover(node, zone, index) {
     node.onmouseover = function () {
-      if (saverOn || (sheetOpen() !== (zone === Z.APPS || zone === Z.SETTINGS || zone === Z.EDIT || zone === Z.LANG || zone === Z.CITY || zone === Z.KEY || zone === Z.ABOUT))) return;
+      if (saverOn || (sheetOpen() !== (SHEETS.indexOf(zone) >= 0))) return;
       if (zone === Z.DRAWER && st.zone !== Z.DRAWER) return;
       if (zone !== Z.DRAWER && st.zone === Z.DRAWER && zone !== Z.SHELF) return;
       if (zone === Z.TOP && index < 3 && !Data.hasKey()) return;   // the tabs are hidden without the picks
@@ -1347,6 +1705,8 @@
       else if (zone === Z.LANG) st.lang = index;
       else if (zone === Z.CITY) st.city = index;
       else if (zone === Z.KEY) st.key = index;
+      else if (zone === Z.HA) st.ha = index;
+      else if (zone === Z.HAEDIT) st.haedit = index;
       updateFocus();
     };
     node.onclick = function () { node.onmouseover(); activate(); };
@@ -1483,9 +1843,9 @@
    * field. True: handled here.
    */
   function typing(k) {
-    var sheet = st.zone === Z.CITY ? 'citypick' : st.zone === Z.KEY ? 'keypick' : '';
+    var sheet = st.zone === Z.CITY ? 'citypick' : st.zone === Z.KEY ? 'keypick' : st.zone === Z.HA ? 'hapick' : '';
     if (!sheet || !typingIn(sheet)) return false;
-    if (k === TV.keys.ok) { if (st.zone === Z.CITY) searchCity(); else saveKey(); }
+    if (k === TV.keys.ok) { if (st.zone === Z.CITY) searchCity(); else if (st.zone === Z.KEY) saveKey(); else saveHaUrl(); }
     else if (k === TV.keys.back || k === 27) { closeField(sheet); updateFocus(); }
     else if (k === TV.keys.up || k === TV.keys.down) { closeField(sheet); move(0, k === TV.keys.up ? -1 : 1); }
     return true;   // anything else types into the field
@@ -1567,6 +1927,13 @@
     checkNight();
   });
 
+  HA.onChange(function () {
+    renderHaTop();
+    renderPanels();
+    if (st.zone === Z.HA && !typingIn('hapick')) renderHa();
+    updateFocus();
+  });
+
   /** drawer_first: the home screen rests with the drawer open (shelf in the middle, weather and inputs below). */
   function restInDrawer() {
     if (!CONFIG.drawerFirst || !drawerItems.length || st.zone !== Z.SHELF) return;
@@ -1590,7 +1957,8 @@
   window.addEventListener('resize', fit);
   document.addEventListener('webOSRelaunch', reopened);   // LG: opened again while running
   document.addEventListener('visibilitychange', function () {
-    if (document.hidden) { hideSaver(); return; }
+    if (document.hidden) { hideSaver(); HA.pause(); return; }
+    HA.start();
     idleAt = Date.now();
     checkNight();
     loadApps(function (changed) {
@@ -1608,6 +1976,7 @@
   fit();
   renderTop();
   tickClock();
+  HA.start();
   // The apps of the last start at once, and drawn again only if the TV lists others now.
   var early = !!lastApps;
   if (early) { useApps(lastApps); renderAll(); }
