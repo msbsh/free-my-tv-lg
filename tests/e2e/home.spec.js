@@ -17,6 +17,8 @@ async function openSettings(page, net) {
 test('start: picks, shelf and weather', async ({page}) => {
   const s = await m.open(page);
   await snap(page, 'start');
+  // Only titles with their details show: each card names its app.
+  expect(await page.$$eval('#cards .card', (c) => c.filter((x) => !x.querySelector('.meta .app')).length)).toBe(0);
   expect(m.requests(s.net)).toMatchSnapshot('start-requests.txt');
   expect(await m.storage(page)).toMatchSnapshot('start-storage.txt');
   s.check();
@@ -257,6 +259,17 @@ test('screensaver: the clock goes to another corner with every photo, and the ph
   }
   expect(new Set(seen.map((x) => x.at[0])).size, 'every corner in turn').toBe(4);
   expect(new Set(seen.map((x) => x.title)).size, 'a new title with every photo').toBe(seen.length);
+  // The next photo: the clock fades out with the last title and app, and comes back with the new ones in its new place.
+  const before = await corner(), app = () => page.$eval('#saver .clock .app', (e) => e.textContent);
+  const lastApp = await app();
+  await page.clock.runFor(6300);
+  expect(await page.$eval('#saver .clock', (c) => c.classList.contains('away'))).toBe(true);
+  expect(await corner()).toEqual(before);
+  expect(await app()).toBe(lastApp);
+  await page.clock.runFor(400);
+  const after = await corner();
+  expect(after.title).not.toBe(before.title);
+  expect(after.at[0]).not.toBe(before.at[0]);
   s.check();
 });
 

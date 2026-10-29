@@ -1769,13 +1769,19 @@
       setClass(s, 'up', to.charAt(0) === 't');   // the shade follows the clock, for its contrast
       corner = to;
     }
-    function move() {
+    /** The photo's title and app, written while the clock is out of sight: they change with its place, not before. */
+    function label(p) {
+      clock.children[2].textContent = p ? p.title : '';
+      clock.children[3].textContent = p && p.service || '';
+    }
+    function move(p) {
       var others = SAVER_CORNERS.filter(function (c) { return c !== corner; });
       var to = others[Math.floor(Math.random() * others.length)];
-      if (!corner) { place(to); return; }
+      if (!corner) { label(p); place(to); return; }
       setClass(clock, 'away', true);
       setTimeout(function () {
         if (!clock.parentNode) return;   // the screensaver closed (or opened again) meanwhile
+        label(p);
         place(to);
         setClass(clock, 'away', false);
       }, 600);
@@ -1787,8 +1793,6 @@
       if (p) {
         back.style.backgroundImage = 'url(' + Data.image(p.backdrop, 'original') + ')';
         back.style.webkitTransform = back.style.transform = 'scale(1.0)';
-        clock.children[2].textContent = p.title;
-        clock.children[3].textContent = p.service || '';
         saverPick = p;
         setTimeout(function () {
           setClass(back, 'on', true);
@@ -1797,7 +1801,7 @@
           front = back;
         }, 60);
       }
-      move();
+      move(p || saverPick);
       tickSaverClock(clock);
       saverTimer = setTimeout(next, 12000);
     }

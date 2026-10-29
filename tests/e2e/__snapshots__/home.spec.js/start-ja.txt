@@ -18,34 +18,34 @@ div#stage
       div#cards
         div.card.wide
           div.img
+            div.layer bg="url(\"https://image.tmdb.org/t/p/w342/mp303.jpg\")"
+            div.layer.back bg="url(\"https://image.tmdb.org/t/p/w1280/m303b.jpg\")"
+          div.name
+            "Movie 303"
+          div.meta
+            span.app
+              "Netflix"
+            "· Action · 1時間38分"
+        div.card
+          div.img
+            div.layer bg="url(\"https://image.tmdb.org/t/p/w342/mp302.jpg\")"
+            div.layer.back
+          div.name
+            "Movie 302"
+          div.meta
+            span.app
+              "Disney+"
+            "· Action · 1時間37分"
+        div.card
+          div.img
             div.layer bg="url(\"https://image.tmdb.org/t/p/w342/tp201.jpg\")"
-            div.layer.back bg="url(\"https://image.tmdb.org/t/p/w1280/t201b.jpg\")"
+            div.layer.back
           div.name
             "Show 201"
           div.meta
             span.app
               "Netflix"
             "· シリーズ · SF＆ファンタジー · 2シーズン"
-        div.card
-          div.img
-            div.layer bg="url(\"https://image.tmdb.org/t/p/w342/tp206.jpg\")"
-            div.layer.back
-          div.name
-            "Show 206"
-          div.meta
-            span.app
-              "Disney+"
-            "· シリーズ · SF＆ファンタジー · 3シーズン"
-        div.card
-          div.img
-            div.layer bg="url(\"https://image.tmdb.org/t/p/w342/mp104.jpg\")"
-            div.layer.back
-          div.name
-            "Movie 104"
-          div.meta
-            span.app
-              "Disney+"
-            "· Action · 1時間39分"
       div#clock
         span.time
           "10:00"

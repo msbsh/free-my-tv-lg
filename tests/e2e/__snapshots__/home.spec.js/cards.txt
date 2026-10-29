@@ -18,34 +18,34 @@ div#stage
       div#cards
         div.card.wide.focus
           div.img
+            div.layer bg="url(\"https://image.tmdb.org/t/p/w342/mp303.jpg\")"
+            div.layer.back bg="url(\"https://image.tmdb.org/t/p/w1280/m303b.jpg\")"
+          div.name
+            "Movie 303 (English)"
+          div.meta
+            span.app
+              "Netflix"
+            "· Action · 1h 38m"
+        div.card
+          div.img
+            div.layer bg="url(\"https://image.tmdb.org/t/p/w342/mp302.jpg\")"
+            div.layer.back
+          div.name
+            "Movie 302 (English)"
+          div.meta
+            span.app
+              "Disney+"
+            "· Action · 1h 37m"
+        div.card
+          div.img
             div.layer bg="url(\"https://image.tmdb.org/t/p/w342/tp201.jpg\")"
-            div.layer.back bg="url(\"https://image.tmdb.org/t/p/w1280/t201b.jpg\")"
+            div.layer.back
           div.name
             "Show 201 (English)"
           div.meta
             span.app
               "Netflix"
             "· Series · Sci-Fi & Fantasy · 2 seasons"
-        div.card
-          div.img
-            div.layer bg="url(\"https://image.tmdb.org/t/p/w342/tp206.jpg\")"
-            div.layer.back
-          div.name
-            "Show 206 (English)"
-          div.meta
-            span.app
-              "Disney+"
-            "· Series · Sci-Fi & Fantasy · 3 seasons"
-        div.card
-          div.img
-            div.layer bg="url(\"https://image.tmdb.org/t/p/w342/mp104.jpg\")"
-            div.layer.back
-          div.name
-            "Movie 104 (English)"
-          div.meta
-            span.app
-              "Disney+"
-            "· Action · 1h 39m"
       div#clock
         span.time
           "10:00"

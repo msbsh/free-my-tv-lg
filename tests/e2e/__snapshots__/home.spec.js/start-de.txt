@@ -18,34 +18,34 @@ div#stage
       div#cards
         div.card.wide
           div.img
+            div.layer bg="url(\"https://image.tmdb.org/t/p/w342/mp303.jpg\")"
+            div.layer.back bg="url(\"https://image.tmdb.org/t/p/w1280/m303b.jpg\")"
+          div.name
+            "Movie 303"
+          div.meta
+            span.app
+              "Netflix"
+            "· Action · 1 h 38 min"
+        div.card
+          div.img
+            div.layer bg="url(\"https://image.tmdb.org/t/p/w342/mp302.jpg\")"
+            div.layer.back
+          div.name
+            "Movie 302"
+          div.meta
+            span.app
+              "Disney+"
+            "· Action · 1 h 37 min"
+        div.card
+          div.img
             div.layer bg="url(\"https://image.tmdb.org/t/p/w342/tp201.jpg\")"
-            div.layer.back bg="url(\"https://image.tmdb.org/t/p/w1280/t201b.jpg\")"
+            div.layer.back
           div.name
             "Show 201"
           div.meta
             span.app
               "Netflix"
             "· Serie · Sci-Fi & Fantasy · 2 Staffeln"
-        div.card
-          div.img
-            div.layer bg="url(\"https://image.tmdb.org/t/p/w342/tp206.jpg\")"
-            div.layer.back
-          div.name
-            "Show 206"
-          div.meta
-            span.app
-              "Disney+"
-            "· Serie · Sci-Fi & Fantasy · 3 Staffeln"
-        div.card
-          div.img
-            div.layer bg="url(\"https://image.tmdb.org/t/p/w342/mp104.jpg\")"
-            div.layer.back
-          div.name
-            "Movie 104"
-          div.meta
-            span.app
-              "Disney+"
-            "· Action · 1 h 39 min"
       div#clock
         span.time
           "10:00"

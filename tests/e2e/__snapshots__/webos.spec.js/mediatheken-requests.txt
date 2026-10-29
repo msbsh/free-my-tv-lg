@@ -4,11 +4,11 @@ GET https://api-cdn.arte.tv/img/v2/image/100003-001-A/1280x720
 GET https://api.ardmediathek.de/image-service/images/urn:ard:image:ard1?w=780
 GET https://api.ardmediathek.de/image-service/images/urn:ard:image:ard2?w=780
 GET https://api.ardmediathek.de/image-service/images/urn:ard:image:ard5?w=780
+GET https://api.ardmediathek.de/image-service/images/urn:ard:image:kika1?w=1280
+GET https://api.ardmediathek.de/image-service/images/urn:ard:image:kika1?w=300
 GET https://api.ardmediathek.de/image-service/images/urn:ard:image:kika1?w=780
 GET https://api.ardmediathek.de/image-service/images/urn:ard:image:kika2?w=780
 GET https://api.ardmediathek.de/image-service/images/urn:ard:image:live1?w=780
-GET https://api.ardmediathek.de/image-service/images/urn:ard:image:live3?w=1280
-GET https://api.ardmediathek.de/image-service/images/urn:ard:image:live3?w=300
 GET https://api.ardmediathek.de/image-service/images/urn:ard:image:live3?w=780
 GET https://api.ardmediathek.de/image-service/images/urn:ard:image:live4?w=780
 GET https://api.ardmediathek.de/page-gateway/pages/ard/home?embedded=true

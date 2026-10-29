@@ -25,8 +25,8 @@ GET https://api.tmdb.org/3/tv/401?language=en-US&append_to_response=watch/provid
 GET https://api.tmdb.org/3/tv/402?language=en-US&append_to_response=watch/providers,images&include_image_language=null,en,en&api_key=0123456789abcdef0123456789abcdef
 GET https://api.tmdb.org/3/tv/403?language=en-US&append_to_response=watch/providers,images&include_image_language=null,en,en&api_key=0123456789abcdef0123456789abcdef
 GET https://api.tmdb.org/3/watch/providers/movie?language=en-US&watch_region=DE&api_key=0123456789abcdef0123456789abcdef
-GET https://image.tmdb.org/t/p/w1280/t201b.jpg
-GET https://image.tmdb.org/t/p/w300/t201b.jpg
-GET https://image.tmdb.org/t/p/w342/mp104.jpg
+GET https://image.tmdb.org/t/p/w1280/m303b.jpg
+GET https://image.tmdb.org/t/p/w300/m303b.jpg
+GET https://image.tmdb.org/t/p/w342/mp302.jpg
+GET https://image.tmdb.org/t/p/w342/mp303.jpg
 GET https://image.tmdb.org/t/p/w342/tp201.jpg
-GET https://image.tmdb.org/t/p/w342/tp206.jpg

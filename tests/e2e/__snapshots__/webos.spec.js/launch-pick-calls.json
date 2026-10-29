@@ -15,7 +15,7 @@
   {
    "uri": "luna://com.webos.applicationManager/launch",
    "params": {
-    "id": "com.disney.disneyplus-prod"
+    "id": "netflix"
    }
   }
  ],

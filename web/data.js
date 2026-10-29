@@ -305,24 +305,25 @@ var Data = (function () {
   /** The screensaver's photos: this hour's picks and the ones after them, about 5 minutes at 12 s each. */
   var SHOWCASE = 24;
 
-  /** The list in an order of its own for each hour (the same all hour long, for the row and the screensaver). */
-  function shuffled(list, seed) {
-    var out = list.slice(), s = seed >>> 0;
-    for (var i = out.length - 1; i > 0; i--) {
-      s = (Math.imul(s, 1103515245) + 12345) >>> 0;
-      var j = (s >>> 8) % (i + 1), t = out[i];
-      out[i] = out[j];
-      out[j] = t;
-    }
-    return out;
+  /**
+   * A pick's place in this hour's order: from the hour and the pick alone (FNV-1a), so the order holds all hour long
+   * while titles get their details or a source comes and goes.
+   */
+  function rank(p, hour) {
+    var k = keyOf(p) + '@' + hour, h = 2166136261;
+    for (var i = 0; i < k.length; i++) h = Math.imul(h ^ k.charCodeAt(i), 16777619);
+    return h >>> 0;
   }
 
-  /** count picks for this hour, TMDB's and the Mediatheken's mixed, one per franchise. */
-  function upcoming(count) {
+  /**
+   * count picks for this hour, TMDB's and the Mediatheken's mixed, one per franchise. Only TMDB's titles with their
+   * details (genre, length, app) show; waiting includes the others, to fetch theirs.
+   */
+  function upcoming(count, waiting) {
     var list = [], now = Date.now();
     for (var i = 0; KEY && i < picks.length; i++) {
       var p = picks[i];
-      if (!p.detailed || (p.app && usable(p.app))) list.push(p);
+      if (p.detailed ? p.app && usable(p.app) : waiting) list.push(p);
     }
     for (var k = 0; k < media.length; k++) {
       var x = media[k];
@@ -331,7 +332,9 @@ var Data = (function () {
       list.push(x);
     }
     if (!list.length) return list;
-    list = shuffled(list, Math.floor(now / 3600000));
+    var hour = Math.floor(now / 3600000), ranks = {};
+    for (var r = 0; r < list.length; r++) ranks[keyOf(list[r])] = rank(list[r], hour);
+    list.sort(function (a, b) { return ranks[keyOf(a)] - ranks[keyOf(b)]; });
     var out = [], seen = {};
     for (var j = 0; j < list.length && out.length < count; j++) {
       var f = franchise(list[j].title);
@@ -507,7 +510,7 @@ var Data = (function () {
     var t = Date.now(), p = hourPeriod(new Date()), st = sourceStamp();
     if (st === stamp && failedAt && t - failedAt < 10 * 60000 && t >= failedAt) return;
     var stale = st !== stamp || p !== period || t - listAt > 6 * 3600000 || t < listAt || !picks.length || listLang !== I18N.lang;
-    var wanted = upcoming(SHOWCASE), missing = false;
+    var wanted = upcoming(SHOWCASE, true), missing = false;
     for (var i = 0; i < wanted.length; i++) missing = missing || !wanted[i].detailed;
     if (!stale && !missing) return;
     fetchingRecs = true;
@@ -519,7 +522,7 @@ var Data = (function () {
       changed();
     }
     function detailWanted() {
-      var todo = upcoming(SHOWCASE).filter(function (x) { return !x.detailed; });
+      var todo = upcoming(SHOWCASE, true).filter(function (x) { return !x.detailed; });
       each(todo, function (x, next) { details(x, function () { next(); }); }, function () { finish(null); });
     }
     if (stale) {

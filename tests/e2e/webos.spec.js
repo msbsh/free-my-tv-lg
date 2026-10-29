@@ -284,6 +284,7 @@ test('Mediatheken: mixed with TMDB\'s picks; Picks from and Live streams switch 
   const s = await m.open(page, {tv: {launchPoints: true, points: MEDIATHEKEN}, prefs: {cards: 12}});
   let list = await picks(page);
   expect(list.length).toBe(12);
+  expect(list.filter((p) => !/ \| (Netflix|Prime Video|Disney\+|ARD Mediathek|KiKA|ARTE)( · |$)/.test(p))).toEqual([]);
   expect(list.some((p) => /^(Movie|Show) /.test(p))).toBe(true);
   expect(list.some((p) => MEDIA_PICKS.indexOf(p) >= 0)).toBe(true);
 
